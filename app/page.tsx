@@ -1,5 +1,11 @@
+import GeneralFacts from '@/app/components/home/general-facts'
 import HomeHero from '@/app/components/home/hero'
-import type { HomeHeroContent } from '@/app/types/home'
+import type { GeneralFactsContent, HomeHeroContent } from '@/app/types/home'
+
+const sharedImage = {
+  src: '/images/home_slider_1.jpg',
+  alt: 'Hninn dining room with an olive tree at the center table',
+}
 
 const homeHero: HomeHeroContent = {
   title: 'A Modern Taste of Myanmar, Right Here in Bangkok',
@@ -38,6 +44,45 @@ const homeHero: HomeHeroContent = {
   ],
 }
 
+const generalFacts: GeneralFactsContent = {
+  facts: [
+    {
+      title: 'Good Food',
+      titleAlign: 'left',
+      offset: 'left',
+      leftImages: [sharedImage, sharedImage],
+      rightImages: [sharedImage, sharedImage],
+    },
+    {
+      title: 'Amazing Space',
+      titleLines: ['Amazing', 'Space'],
+      titleAlign: 'right',
+      offset: 'right',
+      leftImages: [sharedImage, sharedImage],
+      rightImages: [sharedImage, sharedImage],
+    },
+    {
+      title: 'Paws Included',
+      titleLines: ['Paws', 'Included'],
+      titleAlign: 'left',
+      offset: 'left',
+      leftImages: [sharedImage, sharedImage],
+      rightImages: [sharedImage, sharedImage],
+    },
+  ],
+  cta: {
+    label: 'Explore Gallery',
+    href: '/gallery',
+    color: 'sand',
+    hoverColor: 'olive',
+  },
+}
+
 export default function Home() {
-  return <HomeHero {...homeHero} />
+  return (
+    <>
+      <HomeHero {...homeHero} />
+      <GeneralFacts {...generalFacts} />
+    </>
+  )
 }
