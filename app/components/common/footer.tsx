@@ -30,7 +30,7 @@ export default function Footer({
         <Pattern color="brown-muted" opacity={0.2} className="w-[175vw]" />
       </div>
 
-      <div className="flex flex-col gap-13 px-6 pb-6 pt-13">
+      <div className="flex flex-col gap-13 px-6 pb-24 pt-13">
         <div className="flex flex-col gap-23 text-sm leading-[1.39] md:pl-88">
           <nav
             className="grid grid-cols-1 gap-4 md:grid-cols-3"

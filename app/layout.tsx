@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
-import { Footer } from '@/app/components/common'
+import { Footer, Navbar } from '@/app/components/common'
 import type { FooterContent } from '@/app/components/common/footer'
+import type { NavbarContent } from '@/app/components/common/navbar'
 import './globals.css'
 
 const poppins = Poppins({
@@ -15,6 +16,20 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Hninn',
   description: 'The Restaurant',
+}
+
+const navbar: NavbarContent = {
+  hours: ['Open 7:00 - 23:00', 'closed on wed'],
+  gallery: { label: 'gallery', href: '/gallery' },
+  reservation: { label: 'Make a reservation', href: '/reservation' },
+  menuLinks: [
+    { label: 'Menu', href: '/menu' },
+    { label: 'Gallery', href: '/gallery' },
+    { label: 'Concept', href: '/concept' },
+    { label: 'host an event', href: '/events' },
+    { label: 'getting here', href: '/getting-here' },
+    { label: 'contact', href: '/contact' },
+  ],
 }
 
 const footer: FooterContent = {
@@ -41,6 +56,7 @@ export default function RootLayout({
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-cream font-sans text-brown">
         <main className="flex-1">{children}</main>
+        <Navbar {...navbar} />
         <Footer {...footer} />
       </body>
     </html>

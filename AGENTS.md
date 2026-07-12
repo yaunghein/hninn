@@ -20,4 +20,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - But sometimes Tailwind will show warning for usage like: The class `px-[1.5rem]` can be written as `px-6`, The class `max-w-[32.125rem]` can be written as `max-w-128.5`, then make sure you use appropriate tailwind to solve those warning. Not juse this two examples, we should not be seeing any tailwind warning.
 - Aspect ration should not be use big number. one should always should be 1 and calculate the other side.
 - Use zustand to share client side states.
-- Treeshake everything under /components.
+- Treeshake everything under /components and make sure all import from treeshake index.ts file if existed.
