@@ -41,3 +41,22 @@ export type GeneralFactsContent = {
     hoverColor: Color
   }
 }
+
+export type HomeMenuItem = {
+  name: string
+  src: string
+  alt: string
+}
+
+export type HomeMenuContent = {
+  title: string
+  description: string
+  duration: number
+  items: HomeMenuItem[]
+  cta: {
+    label: string
+    href: string
+    color: Color
+    hoverColor: Color
+  }
+}

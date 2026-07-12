@@ -1,4 +1,4 @@
-import Button from '@/app/components/button'
+import { Button } from '@/app/components/common'
 import FactBlock from '@/app/components/home/fact-block'
 import PatternBackdrop from '@/app/components/home/pattern-backdrop'
 import type { GeneralFactsContent } from '@/app/types/home'

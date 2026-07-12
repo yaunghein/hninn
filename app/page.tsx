@@ -1,10 +1,25 @@
 import GeneralFacts from '@/app/components/home/general-facts'
 import HomeHero from '@/app/components/home/hero'
-import type { GeneralFactsContent, HomeHeroContent } from '@/app/types/home'
+import HomeMenu from '@/app/components/home/menu'
+import type {
+  GeneralFactsContent,
+  HomeHeroContent,
+  HomeMenuContent,
+} from '@/app/types/home'
 
 const sharedImage = {
   src: '/images/home_slider_1.jpg',
   alt: 'Hninn dining room with an olive tree at the center table',
+}
+
+const menuImage = {
+  src: '/images/home_menu_1.png',
+  alt: 'Hninn dish with tea service',
+}
+
+const menuImage2 = {
+  src: '/images/home_menu_2.png',
+  alt: 'Hninn dish with tea service',
 }
 
 const homeHero: HomeHeroContent = {
@@ -78,11 +93,57 @@ const generalFacts: GeneralFactsContent = {
   },
 }
 
+const homeMenu: HomeMenuContent = {
+  title: 'Bright, Bold, and Brunch-Ready',
+  description:
+    "See what you'd like to try before you even walk through the doors.",
+  duration: 4000,
+  items: [
+    {
+      name: 'Signature Tea Leaf Salad',
+      src: menuImage.src,
+      alt: menuImage.alt,
+    },
+    {
+      name: "Hninn's Brunch Mohinga",
+      src: menuImage2.src,
+      alt: menuImage2.alt,
+    },
+    {
+      name: 'Signature House Blend Coffee',
+      src: menuImage.src,
+      alt: menuImage.alt,
+    },
+    {
+      name: 'Signature Tea Leaf Salad 2',
+      src: menuImage2.src,
+      alt: menuImage2.alt,
+    },
+    {
+      name: "Hninn's Brunch Mohinga 2",
+      src: menuImage.src,
+      alt: menuImage.alt,
+    },
+    {
+      name: 'Signature House Blend Coffee 2',
+      src: menuImage2.src,
+      alt: menuImage2.alt,
+    },
+  ],
+  cta: {
+    label: 'Explore the Full Menu',
+    href: '/menu',
+    color: 'olive',
+    hoverColor: 'cream',
+  },
+}
+
 export default function Home() {
   return (
     <>
       <HomeHero {...homeHero} />
       <GeneralFacts {...generalFacts} />
+      <HomeMenu {...homeMenu} />
     </>
   )
 }
