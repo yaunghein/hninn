@@ -1,10 +1,10 @@
 'use client'
 
-import { Pattern } from '@/app/components/svgs'
-import { cn } from '@/app/lib/utils/cn'
-import { useHomeSliderStore } from '@/app/stores/home-slider'
-import { bgColorClass } from '@/app/lib/constants/colors'
-import type { HomeHeroContent } from '@/app/types/home'
+import { Pattern } from '@/components/svgs'
+import { cn } from '@/lib/utils/cn'
+import { useHomeSliderStore } from '@/stores/home-slider'
+import { bgColorClass } from '@/lib/constants/colors'
+import type { HomeHeroContent } from '@/types/home'
 
 type ContentPanelProps = {
   title: string

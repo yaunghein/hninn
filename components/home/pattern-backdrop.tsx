@@ -1,5 +1,5 @@
-import { Pattern } from '@/app/components/svgs'
-import type { Color } from '@/app/lib/constants/colors'
+import { Pattern } from '@/components/svgs'
+import type { Color } from '@/lib/constants/colors'
 
 const PATTERN_ROWS = 120
 

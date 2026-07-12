@@ -1,13 +1,13 @@
-import HomeFindUs from '@/app/components/home/find-us'
-import GeneralFacts from '@/app/components/home/general-facts'
-import HomeHero from '@/app/components/home/hero'
-import HomeMenu from '@/app/components/home/menu'
+import HomeFindUs from '@/components/home/find-us'
+import GeneralFacts from '@/components/home/general-facts'
+import HomeHero from '@/components/home/hero'
+import HomeMenu from '@/components/home/menu'
 import type {
   GeneralFactsContent,
   HomeFindUsContent,
   HomeHeroContent,
   HomeMenuContent,
-} from '@/app/types/home'
+} from '@/types/home'
 
 const menuImage = {
   src: '/images/home_menu_1.png',

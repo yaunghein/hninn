@@ -8,10 +8,10 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/effect-fade'
 
-import SlideProgress from '@/app/components/home/slide-progress'
-import { Logo } from '@/app/components/svgs'
-import { useHomeSliderStore } from '@/app/stores/home-slider'
-import type { HomeSlide } from '@/app/types/home'
+import SlideProgress from '@/components/home/slide-progress'
+import { Logo } from '@/components/svgs'
+import { useHomeSliderStore } from '@/stores/home-slider'
+import type { HomeSlide } from '@/types/home'
 
 type ImageSliderProps = {
   slides: HomeSlide[]

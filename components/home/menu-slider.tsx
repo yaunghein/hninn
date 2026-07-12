@@ -7,9 +7,9 @@ import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
-import MenuTabs from '@/app/components/home/menu-tabs'
-import { useHomeMenuStore } from '@/app/stores/home-menu'
-import type { HomeMenuItem } from '@/app/types/home'
+import MenuTabs from '@/components/home/menu-tabs'
+import { useHomeMenuStore } from '@/stores/home-menu'
+import type { HomeMenuItem } from '@/types/home'
 
 type MenuSliderProps = {
   title: string

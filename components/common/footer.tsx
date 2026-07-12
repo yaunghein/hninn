@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Logo, Pattern } from '@/app/components/svgs'
+import { Logo, Pattern } from '@/components/svgs'
 
 export type FooterLink = {
   label: string

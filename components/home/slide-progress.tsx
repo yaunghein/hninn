@@ -1,7 +1,7 @@
 'use client'
 
-import { cn } from '@/app/lib/utils/cn'
-import { useHomeSliderStore } from '@/app/stores/home-slider'
+import { cn } from '@/lib/utils/cn'
+import { useHomeSliderStore } from '@/stores/home-slider'
 
 type SlideProgressProps = {
   count: number

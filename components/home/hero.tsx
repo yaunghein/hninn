@@ -1,6 +1,6 @@
-import ContentPanel from '@/app/components/home/content-panel'
-import ImageSlider from '@/app/components/home/image-slider'
-import type { HomeHeroContent } from '@/app/types/home'
+import ContentPanel from '@/components/home/content-panel'
+import ImageSlider from '@/components/home/image-slider'
+import type { HomeHeroContent } from '@/types/home'
 
 type HomeHeroProps = HomeHeroContent
 

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
-import { Button } from '@/app/components/common'
-import type { HomeFindUsContent } from '@/app/types/home'
+import { Button } from '@/components/common'
+import type { HomeFindUsContent } from '@/types/home'
 
 type HomeFindUsProps = HomeFindUsContent
 

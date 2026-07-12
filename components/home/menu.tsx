@@ -1,6 +1,6 @@
-import { Button } from '@/app/components/common'
-import MenuSlider from '@/app/components/home/menu-slider'
-import type { HomeMenuContent } from '@/app/types/home'
+import { Button } from '@/components/common'
+import MenuSlider from '@/components/home/menu-slider'
+import type { HomeMenuContent } from '@/types/home'
 
 type HomeMenuProps = HomeMenuContent
 

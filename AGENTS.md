@@ -9,7 +9,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Use Figma, Next.js and Tailwind MCPs to inspect and implement pixel perfect designs
 - Use other available MCPs when needed as well, e.g. Swiper MCP, GSAP
 - Page level component should never be a client component.
-- When client interactions are needed, create components under /app/components folder.
+- When client interactions are needed, create components under /components folder.
 - Don't be afraid to create more nested folder to make components organized.
 - Don't nested more than one level under /components folder.
 - Always driven data from page level component.
@@ -21,3 +21,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Aspect ration should not be use big number. one should always should be 1 and calculate the other side.
 - Use zustand to share client side states.
 - Treeshake everything under /components and make sure all import from treeshake index.ts file if existed.
+- Make sure html markups are semantic and accessible.

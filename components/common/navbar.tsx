@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-import { Logo, Menu, Pattern } from '@/app/components/svgs'
-import { cn } from '@/app/lib/utils/cn'
+import { Logo, Menu, Pattern } from '@/components/svgs'
+import { cn } from '@/lib/utils/cn'
 
 export type NavbarLink = {
   label: string
@@ -90,8 +90,8 @@ export default function Navbar({
             menuOpen ? 'text-cream' : 'text-olive',
           )}
         >
-          <span>{hours[0]}</span>
-          <span>{hours[1]}</span>
+          <span className="whitespace-nowrap">{hours[0]}</span>
+          <span className="whitespace-nowrap">{hours[1]}</span>
         </p>
 
         {!menuOpen && (

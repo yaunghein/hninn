@@ -5,9 +5,9 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-import FactImage from '@/app/components/home/fact-image'
-import { cn } from '@/app/lib/utils/cn'
-import type { GeneralFact } from '@/app/types/home'
+import FactImage from '@/components/home/fact-image'
+import { cn } from '@/lib/utils/cn'
+import type { GeneralFact } from '@/types/home'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 

@@ -1,7 +1,7 @@
-import { Button } from '@/app/components/common'
-import FactBlock from '@/app/components/home/fact-block'
-import PatternBackdrop from '@/app/components/home/pattern-backdrop'
-import type { GeneralFactsContent } from '@/app/types/home'
+import { Button } from '@/components/common'
+import FactBlock from '@/components/home/fact-block'
+import PatternBackdrop from '@/components/home/pattern-backdrop'
+import type { GeneralFactsContent } from '@/types/home'
 
 type GeneralFactsProps = GeneralFactsContent
 

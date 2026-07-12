@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import type { MouseEventHandler } from 'react'
 
-import { Paren } from '@/app/components/svgs'
+import { Paren } from '@/components/svgs'
 import {
   groupHoverTextColorClass,
   hoverBgColorClass,
   textColorClass,
   type Color,
-} from '@/app/lib/constants/colors'
-import { cn } from '@/app/lib/utils/cn'
+} from '@/lib/constants/colors'
+import { cn } from '@/lib/utils/cn'
 
 type ButtonBaseProps = {
   label: string

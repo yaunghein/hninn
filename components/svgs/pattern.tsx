@@ -1,5 +1,5 @@
-import { textColorClass, type Color } from '@/app/lib/constants/colors'
-import { cn } from '@/app/lib/utils/cn'
+import { textColorClass, type Color } from '@/lib/constants/colors'
+import { cn } from '@/lib/utils/cn'
 
 type PatternProps = {
   color?: Color

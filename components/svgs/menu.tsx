@@ -1,5 +1,5 @@
-import { textColorClass, type Color } from '@/app/lib/constants/colors'
-import { cn } from '@/app/lib/utils/cn'
+import { textColorClass, type Color } from '@/lib/constants/colors'
+import { cn } from '@/lib/utils/cn'
 
 type MenuProps = {
   color?: Color
@@ -39,10 +39,7 @@ export default function Menu({
         />
       </g>
       <g
-        className={cn(
-          'transition-transform duration-300',
-          open && 'rotate-45',
-        )}
+        className={cn('transition-transform duration-300', open && 'rotate-45')}
         style={{ transformOrigin: '22.224px 9.777px' }}
       >
         <path

@@ -1,4 +1,4 @@
-import type { Color } from '@/app/lib/constants/colors'
+import type { Color } from '@/lib/constants/colors'
 
 export type HomeSlide = {
   src: string

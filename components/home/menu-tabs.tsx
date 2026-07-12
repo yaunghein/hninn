@@ -2,9 +2,9 @@
 
 import { useEffect, useState, useSyncExternalStore } from 'react'
 
-import { cn } from '@/app/lib/utils/cn'
-import { useHomeMenuStore } from '@/app/stores/home-menu'
-import type { HomeMenuItem } from '@/app/types/home'
+import { cn } from '@/lib/utils/cn'
+import { useHomeMenuStore } from '@/stores/home-menu'
+import type { HomeMenuItem } from '@/types/home'
 
 type MenuTabsProps = {
   items: HomeMenuItem[]
