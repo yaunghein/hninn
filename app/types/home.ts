@@ -60,3 +60,17 @@ export type HomeMenuContent = {
     hoverColor: Color
   }
 }
+
+export type HomeFindUsContent = {
+  title: string
+  map: {
+    src: string
+    alt: string
+  }
+  cta: {
+    label: string
+    href: string
+    color: Color
+    hoverColor: Color
+  }
+}
