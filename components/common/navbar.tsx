@@ -77,6 +77,7 @@ export default function Navbar({
           href="/"
           className="flex w-21 shrink-0 items-start pb-0.5 pl-2"
           aria-label="Hninn home"
+          onClick={() => setMenuOpen(false)}
         >
           <Logo
             color={menuOpen ? 'cream' : 'olive'}
