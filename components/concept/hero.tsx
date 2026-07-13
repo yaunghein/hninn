@@ -22,7 +22,7 @@ export default function ConceptHero({ title, blocks }: ConceptHeroProps) {
             <h2 className="text-base font-semibold uppercase leading-normal">
               {block.title}
             </h2>
-            <p className="text-sm leading-normal">{block.body}</p>
+            <p className="text-sm leading-normal pr-7">{block.body}</p>
           </article>
         ))}
       </div>

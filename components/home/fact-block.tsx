@@ -93,11 +93,11 @@ export default function FactBlock({
         ))}
       </h2>
 
-      <div className="grid grid-cols-2 gap-x-10 px-21">
+      <div className="grid grid-cols-2 gap-x-5 px-8">
         <div
           ref={leftRef}
           className={cn(
-            'flex flex-col gap-10 will-change-transform',
+            'flex flex-col gap-10 will-change-transform pr-2.5 pl-8',
             offset === 'left' && 'pt-53',
           )}
         >
@@ -113,7 +113,7 @@ export default function FactBlock({
         <div
           ref={rightRef}
           className={cn(
-            'flex flex-col gap-10 will-change-transform',
+            'flex flex-col gap-10 will-change-transform pl-2.5 pr-8',
             offset === 'right' && 'pt-53',
           )}
         >

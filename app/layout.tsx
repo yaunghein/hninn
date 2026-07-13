@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
-import { Footer, GridGuide, Navbar } from '@/components/common'
+// import { Footer, GridGuide, Navbar } from '@/components/common'
 import type { FooterContent } from '@/components/common/footer'
 import type { NavbarContent } from '@/components/common/navbar'
 import './globals.css'
@@ -55,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-cream font-sans text-brown">
-        {process.env.NODE_ENV === 'development' ? <GridGuide /> : null}
+        {/* {process.env.NODE_ENV === 'development' ? <GridGuide /> : null} */}
         <main className="flex-1">{children}</main>
         <Navbar {...navbar} />
         <Footer {...footer} />

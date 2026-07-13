@@ -1,6 +1,6 @@
 const COLUMNS = 8
 
-/** Dev overlay matching Figma’s 8-column layout grid. */
+/** Dev-only visual overlay. Layout code does not need to match this. */
 export default function GridGuide() {
   return (
     <div

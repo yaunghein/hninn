@@ -17,9 +17,6 @@ export type FooterContent = {
 
 type FooterProps = FooterContent
 
-/** Matches GridGuide: 8 cols, gap-x-3, px-6 */
-const GRID = 'grid grid-cols-1 gap-x-3 px-6 md:grid-cols-8'
-
 export default function Footer({
   social,
   address,
@@ -36,7 +33,7 @@ export default function Footer({
         <Pattern color="brown-muted" opacity={0.2} className="w-[175vw]" />
       </div>
 
-      <div className={`${GRID} pb-24 pt-13 text-sm leading-[1.39]`}>
+      <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 pt-13 text-sm leading-[1.39] md:grid-cols-8">
         <nav className="contents" aria-label="Social">
           {instagram && (
             <Link

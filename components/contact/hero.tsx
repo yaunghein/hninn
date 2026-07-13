@@ -16,7 +16,6 @@ export default function ContactHero({
 }: ContactHeroProps) {
   return (
     <section className="grid min-h-dvh md:grid-cols-2">
-      {/* <div className="h-px w-full fixed bg-[#ff0000] top-64 z-10"></div> */}
       <div className="flex flex-col items-center bg-olive px-6 pb-32 pt-18 text-sand md:pt-26.5">
         <h1 className="text-center text-[3.25rem] font-semibold uppercase leading-none tracking-[-0.02em]">
           {title}
@@ -61,7 +60,7 @@ export default function ContactHero({
           </ul>
         </div>
 
-        <p className="mt-auto mb-6 text-center text-sm leading-normal max-w-48">
+        <p className="mt-auto mb-6 max-w-48 text-center text-sm leading-normal">
           <span>{hours.open} </span>
           <span className="italic">{hours.closed}</span>
         </p>

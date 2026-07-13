@@ -13,10 +13,10 @@ export default function EventsHero({
   return (
     <section className="flex min-h-dvh flex-col bg-peach-light pb-40">
       <div className="flex w-full flex-col items-center px-6 pt-18 text-center">
-        <h1 className="text-center text-[3.25rem] font-semibold uppercase leading-none tracking-[-0.02em] text-brown-muted">
+        <h1 className="text-[3.25rem] font-semibold uppercase leading-none tracking-[-0.02em] text-brown-muted">
           {title}
         </h1>
-        <p className="mx-auto max-w-148 mt-13 text-sm leading-normal text-brown-muted">
+        <p className="mx-auto mt-13 max-w-148 text-sm leading-normal text-brown-muted">
           {description}
         </p>
 

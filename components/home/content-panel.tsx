@@ -27,11 +27,11 @@ export default function ContentPanel({
         bgColorClass[slide.background],
       )}
     >
-      <div className="relative z-10 flex flex-1 flex-col px-6 pt-6 pb-28">
+      <div className="relative flex flex-col z-10 flex-1 px-6 pt-6 pb-28">
         <h1 className="text-5xl font-semibold uppercase leading-[1.15] tracking-tight text-brown">
           {title}
         </h1>
-        <p className="my-auto max-w-lg text-base leading-snug text-brown ml-36 translate-y-10">
+        <p className="my-auto max-w-lg text-base leading-snug text-brown ml-39 translate-y-10">
           {description}
         </p>
       </div>
