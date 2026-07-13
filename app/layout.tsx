@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
-// import { Footer, GridGuide, Navbar } from '@/components/common'
+import { Footer, GridGuide, Navbar } from '@/components/common'
 import type { FooterContent } from '@/components/common/footer'
 import type { NavbarContent } from '@/components/common/navbar'
 import './globals.css'
