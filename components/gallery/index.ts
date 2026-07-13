@@ -1,2 +1,5 @@
 export { default as GalleryTabs } from './tabs'
 export type { GalleryTab } from './tabs'
+export { default as GalleryCanvas } from './canvas'
+export { default as GalleryLoader } from './loader'
+export { InfiniteCanvas } from './infinite-canvas'

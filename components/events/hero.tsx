@@ -11,7 +11,7 @@ export default function EventsHero({
   images,
 }: EventsHeroProps) {
   return (
-    <section className="flex min-h-dvh flex-col bg-peach-light pb-40">
+    <section className="flex min-h-dvh flex-col bg-peach-light pb-20">
       <div className="flex w-full flex-col items-center px-6 pt-18 text-center">
         <h1 className="text-[3.25rem] font-semibold uppercase leading-none tracking-[-0.02em] text-brown-muted">
           {title}
@@ -25,11 +25,13 @@ export default function EventsHero({
           href={cta.href}
           color={cta.color}
           hoverColor={cta.hoverColor}
-          className="mt-12 mb-18"
+          className="mt-12"
         />
       </div>
 
-      <EventsSlider images={images} />
+      <div className="flex-1 grid place-items-center">
+        <EventsSlider images={images} />
+      </div>
     </section>
   )
 }

@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
-import { Footer, GridGuide, Navbar } from '@/components/common'
-import type { FooterContent } from '@/components/common/footer'
+import { Navbar } from '@/components/common'
 import type { NavbarContent } from '@/components/common/navbar'
 import './globals.css'
 
@@ -32,21 +31,6 @@ const navbar: NavbarContent = {
   ],
 }
 
-const footer: FooterContent = {
-  social: [
-    { label: 'Instagram', href: 'https://instagram.com' },
-    { label: 'Facebook', href: 'https://facebook.com' },
-    { label: 'Tiktok', href: 'https://tiktok.com' },
-  ],
-  address: '1980 Phetchaburi Rd, Bang Kapi, Huai Khwang, Bangkok 10310',
-  hours: '7:00 AM – 9:00 PM\n(Closed Wednesdays)',
-  legal: [
-    { label: 'Terms & Conditions', href: '/terms' },
-    { label: 'Privacy Policy', href: '/privacy' },
-  ],
-  copyright: '© 2026 Hninn. All rights reserved.',
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -55,10 +39,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-cream font-sans text-brown">
-        {/* {process.env.NODE_ENV === 'development' ? <GridGuide /> : null} */}
         <main className="flex-1">{children}</main>
         <Navbar {...navbar} />
-        <Footer {...footer} />
       </body>
     </html>
   )
