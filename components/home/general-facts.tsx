@@ -7,16 +7,16 @@ type GeneralFactsProps = GeneralFactsContent
 
 export default function GeneralFacts({ facts, cta }: GeneralFactsProps) {
   return (
-    <section className="relative overflow-hidden bg-olive pt-24 pb-20">
+    <section className="relative overflow-hidden bg-olive pt-16 pb-16 xs:pt-24 xs:pb-20">
       <PatternBackdrop color="olive-dark" />
 
-      <div className="relative z-10 flex flex-col gap-30">
+      <div className="relative z-10 flex flex-col gap-16 xs:gap-30">
         {facts.map((fact) => (
           <FactBlock key={fact.title} {...fact} />
         ))}
       </div>
 
-      <div className="relative z-10 mt-16 flex justify-center">
+      <div className="relative z-10 mt-12 flex justify-center xs:mt-16">
         <Button
           label={cta.label}
           href={cta.href}

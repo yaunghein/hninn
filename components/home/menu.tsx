@@ -12,17 +12,22 @@ export default function HomeMenu({
   cta,
 }: HomeMenuProps) {
   return (
-    <section className="bg-cream pb-24">
-      <MenuSlider title={title} items={items} duration={duration} />
+    <section className="bg-cream pb-13 xs:pb-24">
+      <MenuSlider
+        title={title}
+        description={description}
+        items={items}
+        duration={duration}
+      />
 
-      <div className="mt-20 flex flex-col items-center gap-10 px-6 xs:flex-row xs:items-end xs:justify-between xs:px-[12.5%]">
+      <div className="mt-8 flex flex-col items-center gap-10 px-6 xs:mt-20 xs:flex-row xs:items-end xs:justify-between xs:px-[12.5%]">
         <Button
           label={cta.label}
           href={cta.href}
           color={cta.color}
           hoverColor={cta.hoverColor}
         />
-        <p className="max-w-84 pb-24 text-base leading-[1.39] text-olive xs:pb-0">
+        <p className="hidden max-w-84 text-base leading-[1.39] text-olive xs:block">
           {description}
         </p>
       </div>

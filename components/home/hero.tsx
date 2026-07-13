@@ -11,7 +11,7 @@ export default function HomeHero({
   duration,
 }: HomeHeroProps) {
   return (
-    <section className="grid h-dvh grid-cols-2 overflow-hidden">
+    <section className="flex flex-col xs:grid xs:h-dvh xs:grid-cols-2 overflow-hidden">
       <ImageSlider slides={slides} duration={duration} />
       <ContentPanel title={title} description={description} slides={slides} />
     </section>

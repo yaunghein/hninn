@@ -74,13 +74,14 @@ export default function Navbar({
     <div
       className={cn(
         'fixed bottom-4 xs:bottom-6 left-1/2 z-50 -translate-x-1/2',
-        // Shell width always matches the closed bar so the menu icon can stay pinned.
-        'w-[min(23.25rem,calc(100%-1.75rem))] xs:w-[min(54.0625rem,calc(100%-2.5rem))]',
+        menuOpen
+          ? 'w-[min(23.25rem,calc(100%-1.75rem))]'
+          : 'w-[min(23.25rem,calc(100%-1.75rem))] xs:w-[min(54.0625rem,calc(100%-2.5rem))]',
       )}
     >
       {menuOpen && (
         <div
-          className="absolute bottom-17.5 w-full overflow-hidden rounded-lg border-2 border-olive-light bg-olive px-2.5 py-13 xs:right-0 xs:w-93"
+          className="absolute bottom-17.5 w-full overflow-hidden rounded-lg border-2 border-olive-light bg-olive px-2.5 py-13"
           role="dialog"
           aria-label="Site menu"
         >
@@ -114,7 +115,7 @@ export default function Navbar({
         className={cn(
           'relative flex h-14 w-full items-center justify-between border-2 px-2 xs:px-5',
           menuOpen
-            ? 'rounded-lg border-olive-light bg-olive xs:ml-auto xs:w-93'
+            ? 'rounded-lg border-olive-light bg-olive'
             : 'rounded-[1.75rem] border-sand bg-cream',
         )}
         aria-label="Primary"

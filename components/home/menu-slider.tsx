@@ -13,6 +13,7 @@ import type { HomeMenuItem } from '@/types/home'
 
 type MenuSliderProps = {
   title: string
+  description: string
   items: HomeMenuItem[]
   duration: number
 }
@@ -33,6 +34,7 @@ function slidesForLoop(items: HomeMenuItem[]) {
 
 export default function MenuSlider({
   title,
+  description,
   items,
   duration,
 }: MenuSliderProps) {
@@ -47,21 +49,28 @@ export default function MenuSlider({
   }
 
   return (
-    <div>
-      <MenuTabs
-        items={items}
-        onSelect={(index) => swiperRef.current?.slideToLoop(index)}
-        onPrev={() => swiperRef.current?.slidePrev()}
-        onNext={() => swiperRef.current?.slideNext()}
-      />
+    <div className="flex flex-col">
+      <div className="order-2 xs:order-1">
+        <MenuTabs
+          items={items}
+          onSelect={(index) => swiperRef.current?.slideToLoop(index)}
+          onPrev={() => swiperRef.current?.slidePrev()}
+          onNext={() => swiperRef.current?.slideNext()}
+        />
+      </div>
 
-      <h2 className="mt-20 max-w-lg px-6 text-5xl font-semibold uppercase leading-[1.15] tracking-tight text-olive">
-        {title}
-      </h2>
+      <div className="order-1 flex flex-col gap-13 px-6 pt-6 pb-8 xs:order-2 xs:mt-20 xs:gap-0 xs:p-0">
+        <h2 className="text-3xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:px-6 xs:text-5xl xs:leading-[1.15] xs:tracking-tight">
+          {title}
+        </h2>
+        <p className="max-w-45.5 self-end text-sm leading-[1.39] text-olive xs:hidden">
+          {description}
+        </p>
+      </div>
 
-      <div className="mt-20">
+      <div className="order-3 mt-6 xs:mt-20">
         <Swiper
-          className="home-menu-swiper w-full [&_.swiper-wrapper]:px-6 [&_.swiper-slide]:h-auto"
+          className="home-menu-swiper w-full [&_.swiper-wrapper]:px-2.5 xs:[&_.swiper-wrapper]:px-6 [&_.swiper-slide]:h-auto"
           modules={[Autoplay]}
           loop={slides.length >= 2}
           loopAdditionalSlides={itemCount}
@@ -88,13 +97,13 @@ export default function MenuSlider({
           }}
         >
           {slides.map(({ item, key }) => (
-            <SwiperSlide key={key} className="w-[43.13rem]!">
-              <div className="relative aspect-[1.36/1] w-full overflow-hidden">
+            <SwiperSlide key={key} className="w-[17.3rem]! xs:w-[43.13rem]!">
+              <div className="relative aspect-277/415 w-full overflow-hidden xs:aspect-1.36/1">
                 <Image
                   src={item.src}
                   alt={item.alt}
                   fill
-                  sizes="43.13rem"
+                  sizes="(max-width: 479px) 17.3rem, 43.13rem"
                   className="object-cover"
                 />
               </div>

@@ -30,8 +30,8 @@ const homeHero: HomeHeroContent = {
     {
       src: '/images/home_slider_1.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
-      background: 'peach',
-      pattern: 'sand',
+      background: 'peach-light',
+      pattern: 'brown-muted',
       logo: 'cream',
     },
     {
@@ -52,8 +52,8 @@ const homeHero: HomeHeroContent = {
       src: '/images/home_paws_included_1.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
       background: 'sand',
-      pattern: 'peach',
-      logo: 'cream',
+      pattern: 'brown',
+      logo: 'brown',
     },
   ],
 }

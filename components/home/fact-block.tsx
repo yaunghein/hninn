@@ -37,43 +37,46 @@ export default function FactBlock({
 
       const mm = gsap.matchMedia()
 
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        const scrollTrigger = {
-          trigger: rootRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          // Number = seconds to catch up — smoother than scrub: true
-          scrub: 1.2,
-        } as const
+      mm.add(
+        '(min-width: 480px) and (prefers-reduced-motion: no-preference)',
+        () => {
+          const scrollTrigger = {
+            trigger: rootRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            // Number = seconds to catch up — smoother than scrub: true
+            scrub: 1.2,
+          } as const
 
-        // Offset-left: left rises, right falls. Offset-right (middle): reverse.
-        const leftFrom = offset === 'right' ? `-${PARALLAX_Y}` : PARALLAX_Y
-        const leftTo = offset === 'right' ? PARALLAX_Y : `-${PARALLAX_Y}`
-        const rightFrom = offset === 'right' ? PARALLAX_Y : `-${PARALLAX_Y}`
-        const rightTo = offset === 'right' ? `-${PARALLAX_Y}` : PARALLAX_Y
+          // Offset-left: left rises, right falls. Offset-right (middle): reverse.
+          const leftFrom = offset === 'right' ? `-${PARALLAX_Y}` : PARALLAX_Y
+          const leftTo = offset === 'right' ? PARALLAX_Y : `-${PARALLAX_Y}`
+          const rightFrom = offset === 'right' ? PARALLAX_Y : `-${PARALLAX_Y}`
+          const rightTo = offset === 'right' ? `-${PARALLAX_Y}` : PARALLAX_Y
 
-        gsap.fromTo(
-          left,
-          { y: leftFrom },
-          {
-            y: leftTo,
-            ease: 'none',
-            force3D: true,
-            scrollTrigger: { ...scrollTrigger },
-          },
-        )
+          gsap.fromTo(
+            left,
+            { y: leftFrom },
+            {
+              y: leftTo,
+              ease: 'none',
+              force3D: true,
+              scrollTrigger: { ...scrollTrigger },
+            },
+          )
 
-        gsap.fromTo(
-          right,
-          { y: rightFrom },
-          {
-            y: rightTo,
-            ease: 'none',
-            force3D: true,
-            scrollTrigger: { ...scrollTrigger },
-          },
-        )
-      })
+          gsap.fromTo(
+            right,
+            { y: rightFrom },
+            {
+              y: rightTo,
+              ease: 'none',
+              force3D: true,
+              scrollTrigger: { ...scrollTrigger },
+            },
+          )
+        },
+      )
     },
     { scope: rootRef, dependencies: [offset] },
   )
@@ -82,7 +85,7 @@ export default function FactBlock({
     <div ref={rootRef} className="relative">
       <h2
         className={cn(
-          'pointer-events-none absolute top-32 z-10 px-6 text-8xl font-semibold uppercase leading-none tracking-[-0.02em] text-cream',
+          'pointer-events-none absolute top-10 z-10 px-6 text-5xl font-semibold uppercase leading-none tracking-[-0.02em] text-cream xs:top-32 xs:text-8xl',
           titleAlign === 'left' ? 'left-0 text-left' : 'right-0 text-right',
         )}
       >
@@ -93,12 +96,12 @@ export default function FactBlock({
         ))}
       </h2>
 
-      <div className="grid grid-cols-2 gap-x-5 px-8">
+      <div className="grid grid-cols-2 gap-x-3 px-6 xs:gap-x-5 xs:px-8">
         <div
           ref={leftRef}
           className={cn(
-            'flex flex-col gap-10 will-change-transform pr-2.5 pl-8',
-            offset === 'left' && 'pt-53',
+            'flex flex-col gap-6 will-change-transform xs:gap-10 xs:pr-2.5 xs:pl-8',
+            offset === 'left' && 'pt-24 xs:pt-53',
           )}
         >
           {leftImages.map((image, index) => (
@@ -113,8 +116,8 @@ export default function FactBlock({
         <div
           ref={rightRef}
           className={cn(
-            'flex flex-col gap-10 will-change-transform pl-2.5 pr-8',
-            offset === 'right' && 'pt-53',
+            'flex flex-col gap-6 will-change-transform xs:gap-10 xs:pl-2.5 xs:pr-8',
+            offset === 'right' && 'pt-24 xs:pt-53',
           )}
         >
           {rightImages.map((image, index) => (
