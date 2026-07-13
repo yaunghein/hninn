@@ -3,8 +3,8 @@ import type { MouseEventHandler } from 'react'
 
 import { Paren } from '@/components/svgs'
 import {
+  bgColorClass,
   groupHoverTextColorClass,
-  hoverBgColorClass,
   textColorClass,
   type Color,
 } from '@/lib/constants/colors'
@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils/cn'
 
 type ButtonBaseProps = {
   label: string
-  /** Shapes, rest text, and hover background */
+  /** Paren + text color; also the hover fill */
   color?: Color
   /** Text color on hover */
   hoverColor?: Color
@@ -39,21 +39,35 @@ export default function Button(props: ButtonProps) {
   const { label, color = 'olive', hoverColor = 'sand', className } = props
 
   const classes = cn(
-    'group inline-flex w-fit items-center rounded-full transition-all duration-300',
-    hoverBgColorClass[color],
+    'group relative inline-flex w-fit items-center overflow-hidden rounded-full',
     className,
   )
 
   const content = (
     <>
-      <Paren
-        side="left"
-        color={color}
-        className="transition-transform duration-300 group-hover:opacity-0"
+      <span
+        className={cn(
+          'pointer-events-none absolute inset-y-0 left-0 w-[60%] origin-left scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
+          bgColorClass[color],
+        )}
+        aria-hidden
       />
       <span
         className={cn(
-          'px-6 text-base font-bold uppercase leading-[1.6] tracking-[0.02em] transition-all duration-300 group-hover:px-3',
+          'pointer-events-none absolute inset-y-0 right-0 w-[60%] origin-right scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
+          bgColorClass[color],
+        )}
+        aria-hidden
+      />
+
+      <Paren
+        side="left"
+        color={color}
+        className="relative z-10 transition-opacity duration-300 group-hover:opacity-0"
+      />
+      <span
+        className={cn(
+          'relative z-10 px-6 text-base font-bold uppercase leading-[1.6] tracking-[0.02em] transition-all duration-300 group-hover:px-6',
           textColorClass[color],
           groupHoverTextColorClass[hoverColor],
         )}
@@ -63,7 +77,7 @@ export default function Button(props: ButtonProps) {
       <Paren
         side="right"
         color={color}
-        className="transition-transform duration-300 group-hover:opacity-0"
+        className="relative z-10 transition-opacity duration-300 group-hover:opacity-0"
       />
     </>
   )

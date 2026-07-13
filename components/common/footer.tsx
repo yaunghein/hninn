@@ -17,6 +17,9 @@ export type FooterContent = {
 
 type FooterProps = FooterContent
 
+/** Matches GridGuide: 8 cols, gap-x-3, px-6 */
+const GRID = 'grid grid-cols-1 gap-x-3 px-6 md:grid-cols-8'
+
 export default function Footer({
   social,
   address,
@@ -24,56 +27,72 @@ export default function Footer({
   legal,
   copyright,
 }: FooterProps) {
+  const [instagram, facebook, tiktok] = social
+  const [terms, privacy] = legal
+
   return (
     <footer className="bg-peach-light text-brown-muted">
       <div className="overflow-hidden pt-23">
         <Pattern color="brown-muted" opacity={0.2} className="w-[175vw]" />
       </div>
 
-      <div className="flex flex-col gap-13 px-6 pb-24 pt-13">
-        <div className="flex flex-col gap-23 text-sm leading-[1.39] md:pl-88">
-          <nav
-            className="grid grid-cols-1 gap-4 md:grid-cols-3"
-            aria-label="Social"
-          >
-            {social.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="transition-opacity hover:opacity-70 md:last:text-right"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="flex flex-col gap-6">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              <p className="max-w-62 leading-[1.4]">{address}</p>
-              <p className="max-w-44.5 whitespace-pre-line leading-[1.4]">
-                {hours}
-              </p>
-            </div>
-            <nav
-              className="grid grid-cols-1 gap-4 md:grid-cols-3"
-              aria-label="Legal"
+      <div className={`${GRID} pb-24 pt-13 text-sm leading-[1.39]`}>
+        <nav className="contents" aria-label="Social">
+          {instagram && (
+            <Link
+              href={instagram.href}
+              className="transition-opacity hover:opacity-70 md:col-start-3"
             >
-              {legal.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="transition-opacity hover:opacity-70"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
+              {instagram.label}
+            </Link>
+          )}
+          {facebook && (
+            <Link
+              href={facebook.href}
+              className="mt-4 transition-opacity hover:opacity-70 md:col-start-6 md:mt-0"
+            >
+              {facebook.label}
+            </Link>
+          )}
+          {tiktok && (
+            <Link
+              href={tiktok.href}
+              className="mt-4 justify-self-start transition-opacity hover:opacity-70 md:col-start-8 md:mt-0 md:justify-self-end"
+            >
+              {tiktok.label}
+            </Link>
+          )}
+        </nav>
 
-        <div className="flex flex-col gap-3">
+        <p className="mt-23 max-w-62 leading-[1.4] md:col-span-2 md:col-start-3">
+          {address}
+        </p>
+        <p className="mt-6 max-w-44.5 whitespace-pre-line leading-[1.4] md:col-span-2 md:col-start-6 md:mt-23">
+          {hours}
+        </p>
+
+        <nav className="contents" aria-label="Legal">
+          {terms && (
+            <Link
+              href={terms.href}
+              className="mt-6 transition-opacity hover:opacity-70 md:col-start-3"
+            >
+              {terms.label}
+            </Link>
+          )}
+          {privacy && (
+            <Link
+              href={privacy.href}
+              className="mt-4 transition-opacity hover:opacity-70 md:col-start-6 md:mt-6"
+            >
+              {privacy.label}
+            </Link>
+          )}
+        </nav>
+
+        <div className="col-span-full mt-23 flex flex-col gap-3">
           <Logo color="brown-muted" className="w-full" />
-          <p className="text-center text-sm leading-[1.39]">{copyright}</p>
+          <p className="text-center">{copyright}</p>
         </div>
       </div>
     </footer>

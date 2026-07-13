@@ -22,6 +22,46 @@ type NavbarProps = NavbarContent
 
 const PATTERN_ROWS = 8
 
+function NavCta({
+  href,
+  label,
+  filled = false,
+  className,
+}: {
+  href: string
+  label: string
+  filled?: boolean
+  className?: string
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        'group relative inline-flex items-center justify-center overflow-hidden rounded-[1.25rem] border border-olive px-6 py-2 text-sm font-bold uppercase leading-[1.6] tracking-[0.02em]',
+        filled && 'bg-olive',
+        className,
+      )}
+    >
+      <span
+        className="pointer-events-none absolute inset-y-0 left-0 w-[65%] origin-left scale-x-0 rounded-full bg-olive-dark transition-transform duration-300 ease-out group-hover:scale-x-100"
+        aria-hidden
+      />
+      <span
+        className="pointer-events-none absolute inset-y-0 right-0 w-[65%] origin-right scale-x-0 rounded-full bg-olive-dark transition-transform duration-300 ease-out group-hover:scale-x-100"
+        aria-hidden
+      />
+      <span
+        className={cn(
+          'relative z-10 whitespace-nowrap transition-colors duration-300',
+          filled ? 'text-sand' : 'text-olive group-hover:text-sand',
+        )}
+      >
+        {label}
+      </span>
+    </Link>
+  )
+}
+
 export default function Navbar({
   hours,
   gallery,
@@ -97,18 +137,12 @@ export default function Navbar({
 
         {!menuOpen && (
           <div className="flex items-center gap-3">
-            <Link
-              href={gallery.href}
-              className="rounded-[1.25rem] border border-olive bg-olive px-6 py-2 text-sm font-bold uppercase leading-[1.6] tracking-[0.02em] text-sand transition-all duration-300 hover:bg-olive-dark"
-            >
-              {gallery.label}
-            </Link>
-            <Link
+            <NavCta href={gallery.href} label={gallery.label} filled />
+            <NavCta
               href={reservation.href}
-              className="hidden rounded-[1.25rem] border border-olive px-6 py-2 text-sm font-bold uppercase leading-[1.6] tracking-[0.02em] text-olive transition-all duration-300 hover:bg-olive-dark hover:text-sand md:inline-flex"
-            >
-              {reservation.label}
-            </Link>
+              label={reservation.label}
+              className="hidden md:inline-flex"
+            />
           </div>
         )}
 
