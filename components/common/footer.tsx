@@ -33,12 +33,12 @@ export default function Footer({
         <Pattern color="brown-muted" opacity={0.2} className="w-[175vw]" />
       </div>
 
-      <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 pt-13 text-sm leading-[1.39] md:grid-cols-8">
+      <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 pt-13 text-sm leading-[1.39] xs:grid-cols-8">
         <nav className="contents" aria-label="Social">
           {instagram && (
             <Link
               href={instagram.href}
-              className="transition-opacity hover:opacity-70 md:col-start-3"
+              className="transition-opacity hover:opacity-70 xs:col-start-3"
             >
               {instagram.label}
             </Link>
@@ -46,7 +46,7 @@ export default function Footer({
           {facebook && (
             <Link
               href={facebook.href}
-              className="mt-4 transition-opacity hover:opacity-70 md:col-start-6 md:mt-0"
+              className="mt-4 transition-opacity hover:opacity-70 xs:col-start-6 xs:mt-0"
             >
               {facebook.label}
             </Link>
@@ -54,17 +54,17 @@ export default function Footer({
           {tiktok && (
             <Link
               href={tiktok.href}
-              className="mt-4 justify-self-start transition-opacity hover:opacity-70 md:col-start-8 md:mt-0 md:justify-self-end"
+              className="mt-4 justify-self-start transition-opacity hover:opacity-70 xs:col-start-8 xs:mt-0 xs:justify-self-end"
             >
               {tiktok.label}
             </Link>
           )}
         </nav>
 
-        <p className="mt-23 max-w-62 leading-[1.4] md:col-span-2 md:col-start-3">
+        <p className="mt-23 max-w-62 leading-[1.4] xs:col-span-2 xs:col-start-3">
           {address}
         </p>
-        <p className="mt-6 max-w-44.5 whitespace-pre-line leading-[1.4] md:col-span-2 md:col-start-6 md:mt-23">
+        <p className="mt-6 max-w-44.5 whitespace-pre-line leading-[1.4] xs:col-span-2 xs:col-start-6 xs:mt-23">
           {hours}
         </p>
 
@@ -72,7 +72,7 @@ export default function Footer({
           {terms && (
             <Link
               href={terms.href}
-              className="mt-6 transition-opacity hover:opacity-70 md:col-start-3"
+              className="mt-6 transition-opacity hover:opacity-70 xs:col-start-3"
             >
               {terms.label}
             </Link>
@@ -80,7 +80,7 @@ export default function Footer({
           {privacy && (
             <Link
               href={privacy.href}
-              className="mt-4 transition-opacity hover:opacity-70 md:col-start-6 md:mt-6"
+              className="mt-4 transition-opacity hover:opacity-70 xs:col-start-6 xs:mt-6"
             >
               {privacy.label}
             </Link>

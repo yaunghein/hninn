@@ -7,13 +7,13 @@ type HomeFindUsProps = HomeFindUsContent
 
 export default function HomeFindUs({ title, map, cta }: HomeFindUsProps) {
   return (
-    <section className="grid bg-brown-muted md:grid-cols-2">
+    <section className="grid bg-brown-muted xs:grid-cols-2">
       <div className="relative aspect-[1/1.23] w-full">
         <Image
           src={map.src}
           alt={map.alt}
           fill
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 479px) 100vw, 50vw"
           className="object-cover object-bottom"
         />
       </div>

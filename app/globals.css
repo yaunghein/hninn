@@ -16,6 +16,7 @@
   --color-black: #000000;
   --color-transparent: transparent;
   --color-current: currentColor;
+  --breakpoint-xs: 30rem; /* 480px — mobile is 479px and down */
 }
 
 @theme inline {
@@ -26,5 +27,11 @@
   html {
     font-size: 1.12vw;
     overscroll-behavior: none;
+  }
+
+  @media screen and (max-width: 479px) {
+    html {
+      font-size: 4.2vw;
+    }
   }
 }

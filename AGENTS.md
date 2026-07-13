@@ -22,3 +22,4 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Use zustand to share client side states.
 - Treeshake everything under /components and make sure all import from treeshake index.ts file if existed.
 - Make sure html markups are semantic and accessible.
+- Use xs: for all tailwind responsive class initially unless I don't mention to use other. (`xs` = 480px and up; base styles cover 479px and down)

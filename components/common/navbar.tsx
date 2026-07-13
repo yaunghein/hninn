@@ -71,10 +71,16 @@ export default function Navbar({
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <>
+    <div
+      className={cn(
+        'fixed bottom-4 xs:bottom-6 left-1/2 z-50 -translate-x-1/2',
+        // Shell width always matches the closed bar so the menu icon can stay pinned.
+        'w-[min(23.25rem,calc(100%-1.75rem))] xs:w-[min(54.0625rem,calc(100%-2.5rem))]',
+      )}
+    >
       {menuOpen && (
         <div
-          className="fixed bottom-22 left-1/2 z-50 w-[min(23.25rem,calc(100%-2.5rem))] -translate-x-1/2 overflow-hidden rounded-lg border-2 border-olive-light bg-olive px-2.5 py-13"
+          className="absolute bottom-17.5 w-full overflow-hidden rounded-lg border-2 border-olive-light bg-olive px-2.5 py-13 xs:right-0 xs:w-93"
           role="dialog"
           aria-label="Site menu"
         >
@@ -106,16 +112,20 @@ export default function Navbar({
 
       <nav
         className={cn(
-          'fixed bottom-6 left-1/2 z-50 flex h-14 -translate-x-1/2 items-center justify-between border-2 px-5 py-2',
+          'relative flex h-14 w-full items-center justify-between border-2 px-2 xs:px-5',
           menuOpen
-            ? 'w-[min(23.25rem,calc(100%-2.5rem))] rounded-lg border-olive-light bg-olive'
-            : 'w-[min(54.0625rem,calc(100%-2.5rem))] rounded-full border-sand bg-cream',
+            ? 'rounded-lg border-olive-light bg-olive xs:ml-auto xs:w-93'
+            : 'rounded-[1.75rem] border-sand bg-cream',
         )}
         aria-label="Primary"
       >
+        {/* Logo: desktop always; mobile only when menu is open */}
         <Link
           href="/"
-          className="flex w-21 shrink-0 items-start pb-0.5 pl-2"
+          className={cn(
+            'w-21 shrink-0 items-start pb-0.5 pl-2',
+            menuOpen ? 'flex' : 'hidden xs:flex',
+          )}
           aria-label="Hninn home"
           onClick={() => setMenuOpen(false)}
         >
@@ -125,10 +135,11 @@ export default function Navbar({
           />
         </Link>
 
+        {/* Hours: desktop always; mobile only when menu is open */}
         <p
           className={cn(
-            'hidden flex-col text-xs font-medium uppercase leading-[1.2] tracking-[0.02em] sm:flex',
-            menuOpen ? 'text-cream' : 'text-olive',
+            'flex-col text-xs font-medium uppercase leading-[1.2] tracking-[0.02em]',
+            menuOpen ? 'flex text-cream' : 'hidden text-olive xs:flex',
           )}
         >
           <span className="whitespace-nowrap">{hours[0]}</span>
@@ -136,26 +147,33 @@ export default function Navbar({
         </p>
 
         {!menuOpen && (
-          <div className="flex items-center gap-3">
-            <NavCta href={gallery.href} label={gallery.label} filled />
+          <>
             <NavCta
               href={reservation.href}
               label={reservation.label}
-              className="hidden md:inline-flex"
+              className="xs:hidden"
             />
-          </div>
+
+            <div className="hidden items-center gap-3 xs:flex">
+              <NavCta href={gallery.href} label={gallery.label} filled />
+              <NavCta href={reservation.href} label={reservation.label} />
+            </div>
+          </>
         )}
+
+        {/* Same footprint as the absolute toggle so layout stays stable */}
+        <div className="size-9 shrink-0" aria-hidden />
 
         <button
           type="button"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
-          className="flex size-9 shrink-0 cursor-pointer items-center justify-center transition-opacity hover:opacity-70"
+          className="absolute top-1/2 right-2 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center transition-opacity hover:opacity-70 xs:right-5"
         >
           <Menu color={menuOpen ? 'cream' : 'olive'} open={menuOpen} />
         </button>
       </nav>
-    </>
+    </div>
   )
 }

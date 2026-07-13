@@ -12,7 +12,7 @@ export default function FactImage({ src, alt }: FactImageProps) {
         src={src}
         alt={alt}
         fill
-        sizes="(max-width: 768px) 100vw, 45vw"
+        sizes="(max-width: 479px) 100vw, 45vw"
         className="object-cover"
       />
     </div>

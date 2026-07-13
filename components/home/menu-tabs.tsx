@@ -14,13 +14,13 @@ type MenuTabsProps = {
 }
 
 function subscribeDesktop(onChange: () => void) {
-  const mq = window.matchMedia('(min-width: 768px)')
+  const mq = window.matchMedia('(min-width: 480px)')
   mq.addEventListener('change', onChange)
   return () => mq.removeEventListener('change', onChange)
 }
 
 function getDesktopSnapshot() {
-  return window.matchMedia('(min-width: 768px)').matches
+  return window.matchMedia('(min-width: 480px)').matches
 }
 
 export default function MenuTabs({

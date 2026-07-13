@@ -15,8 +15,8 @@ export default function ContactHero({
   location,
 }: ContactHeroProps) {
   return (
-    <section className="grid min-h-dvh md:grid-cols-2">
-      <div className="flex flex-col items-center bg-olive px-6 pb-32 pt-18 text-sand md:pt-26.5">
+    <section className="grid min-h-dvh xs:grid-cols-2">
+      <div className="flex flex-col items-center bg-olive px-6 pb-32 pt-18 text-sand xs:pt-26.5">
         <h1 className="text-center text-[3.25rem] font-semibold uppercase leading-none tracking-[-0.02em]">
           {title}
         </h1>
@@ -86,7 +86,7 @@ export default function ContactHero({
             src={location.map.src}
             alt={location.map.alt}
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 479px) 100vw, 50vw"
             className="object-cover object-[center_35%]"
             priority
           />
