@@ -20,7 +20,7 @@ export default function HomeMenu({
         duration={duration}
       />
 
-      <div className="mt-8 flex flex-col items-center gap-10 px-6 xs:mt-20 xs:flex-row xs:items-end xs:justify-between xs:px-[12.5%]">
+      <div className="mt-13 flex flex-col items-center justify-center gap-10 px-6 xs:mt-20 xs:flex-row xs:items-end xs:justify-between xs:px-[12.5%]">
         <Button
           label={cta.label}
           href={cta.href}

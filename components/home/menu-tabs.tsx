@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from 'react'
 
 import { cn } from '@/lib/utils/cn'
 import { useHomeMenuStore } from '@/stores/home-menu'
@@ -37,24 +37,17 @@ export default function MenuTabs({
     () => true,
   )
   const visibleCount = isDesktop ? 3 : 1
-  const [windowStart, setWindowStart] = useState(0)
-
-  useEffect(() => {
-    setWindowStart((prev) => {
-      const maxStart = Math.max(0, items.length - visibleCount)
-      if (activeIndex < prev) return Math.min(activeIndex, maxStart)
-      if (activeIndex >= prev + visibleCount) {
-        return Math.min(activeIndex - visibleCount + 1, maxStart)
-      }
-      return Math.min(prev, maxStart)
-    })
-  }, [activeIndex, visibleCount, items.length])
+  const maxStart = Math.max(0, items.length - visibleCount)
+  const windowStart = Math.min(
+    Math.max(0, activeIndex - visibleCount + 1),
+    maxStart,
+  )
 
   const visibleItems = items.slice(windowStart, windowStart + visibleCount)
 
   return (
     <div className="border-y border-olive/40">
-      <div className="flex h-11 items-stretch">
+      <div className="flex h-10 xs:h-11 items-stretch">
         <div
           className="flex min-w-0 flex-1"
           role="tablist"
@@ -66,7 +59,10 @@ export default function MenuTabs({
             const fill = isActive ? progress : 0
 
             return (
-              <div key={`${item.name}-${index}`} className="flex min-w-0 flex-1">
+              <div
+                key={`${item.name}-${index}`}
+                className="flex min-w-0 flex-1"
+              >
                 {visibleIndex > 0 && (
                   <div
                     className="w-px shrink-0 self-stretch bg-olive/40"
@@ -89,7 +85,7 @@ export default function MenuTabs({
                     }}
                     aria-hidden
                   />
-                  <span className="relative z-10 truncate text-sm font-medium leading-[1.39] text-taupe">
+                  <span className="relative z-10 truncate text-[0.8rem] xs:text-sm font-medium leading-[1.39] text-taupe">
                     {item.name}
                   </span>
                 </button>
@@ -104,7 +100,7 @@ export default function MenuTabs({
             type="button"
             aria-label="Previous menu item"
             onClick={onPrev}
-            className="flex w-16 cursor-pointer items-center justify-center text-olive transition-opacity hover:opacity-70"
+            className="flex w-14 xs:w-16 cursor-pointer items-center justify-center text-olive transition-opacity hover:opacity-70"
           >
             <Chevron direction="left" />
           </button>
@@ -113,7 +109,7 @@ export default function MenuTabs({
             type="button"
             aria-label="Next menu item"
             onClick={onNext}
-            className="flex w-16 cursor-pointer items-center justify-center text-olive transition-opacity hover:opacity-70"
+            className="flex w-14 xs:w-16 cursor-pointer items-center justify-center text-olive transition-opacity hover:opacity-70"
           >
             <Chevron direction="right" />
           </button>

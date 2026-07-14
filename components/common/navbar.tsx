@@ -20,7 +20,7 @@ export type NavbarContent = {
 
 type NavbarProps = NavbarContent
 
-const PATTERN_ROWS = 8
+const PATTERN_ROWS = 9
 
 function NavCta({
   href,
@@ -37,7 +37,7 @@ function NavCta({
     <Link
       href={href}
       className={cn(
-        'group relative inline-flex items-center justify-center overflow-hidden rounded-[1.25rem] border border-olive px-6 py-2 text-sm font-bold uppercase leading-[1.6] tracking-[0.02em]',
+        'group relative inline-flex h-9 items-center justify-center overflow-hidden border border-olive px-4 font-bold uppercase leading-[1.6] tracking-[0.02em] xs:h-10 rounded-[1.25rem] xs:px-6 text-[0.8rem] xs:text-sm',
         filled && 'bg-olive',
         className,
       )}
@@ -73,15 +73,16 @@ export default function Navbar({
   return (
     <div
       className={cn(
-        'fixed bottom-4 xs:bottom-6 left-1/2 z-50 -translate-x-1/2',
+        'fixed bottom-6 xs:bottom-6 left-1/2 z-50 -translate-x-1/2',
+        // Mobile inset matches grid guide (px-6 × 2 = 3rem)
         menuOpen
-          ? 'w-[min(23.25rem,calc(100%-1.75rem))]'
-          : 'w-[min(23.25rem,calc(100%-1.75rem))] xs:w-[min(54.0625rem,calc(100%-2.5rem))]',
+          ? 'w-[calc(100%-3rem)] xs:w-[min(23.25rem,calc(100%-3rem))]'
+          : 'w-[calc(100%-3rem)] xs:w-[min(54.0625rem,calc(100%-3rem))]',
       )}
     >
       {menuOpen && (
         <div
-          className="absolute bottom-17.5 w-full overflow-hidden rounded-lg border-2 border-olive-light bg-olive px-2.5 py-13"
+          className="absolute bottom-16 w-full overflow-hidden rounded-lg border-2 border-olive-light bg-olive px-2.5 py-13"
           role="dialog"
           aria-label="Site menu"
         >

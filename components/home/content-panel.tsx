@@ -27,7 +27,7 @@ export default function ContentPanel({
         bgColorClass[slide.background],
       )}
     >
-      <div className="relative z-10 flex flex-1 flex-col gap-50 px-6 pt-6 pb-8 xs:gap-0 xs:pb-28">
+      <div className="relative z-10 flex flex-1 flex-col justify-between xs:justify-start px-6 pt-7 xs:pt-6 pb-8 xs:pb-28 aspect-square xs:aspect-auto">
         <h1
           className={cn(
             'text-3xl font-semibold uppercase leading-none tracking-[-0.02em] transition-colors duration-1000 ease-in-out xs:text-5xl xs:leading-[1.15] xs:tracking-tight',
@@ -38,7 +38,7 @@ export default function ContentPanel({
         </h1>
         <p
           className={cn(
-            'max-w-70 pl-23.75 text-sm leading-[1.39] transition-colors duration-1000 ease-in-out xs:my-auto xs:ml-39 xs:max-w-lg xs:translate-y-10 xs:pl-0 xs:text-base xs:leading-snug',
+            'max-w-full pl-21 text-[0.81rem] leading-[1.39] transition-colors duration-1000 ease-in-out xs:my-auto xs:ml-39 xs:max-w-lg xs:translate-y-10 xs:pl-0 xs:text-base xs:leading-snug',
             textColorClass[slide.pattern],
           )}
         >

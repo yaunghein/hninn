@@ -70,7 +70,7 @@ export default function MenuSlider({
 
       <div className="order-3 mt-6 xs:mt-20">
         <Swiper
-          className="home-menu-swiper w-full [&_.swiper-wrapper]:px-2.5 xs:[&_.swiper-wrapper]:px-6 [&_.swiper-slide]:h-auto"
+          className="home-menu-swiper w-full [&_.swiper-wrapper]:px-6 [&_.swiper-slide]:h-auto"
           modules={[Autoplay]}
           loop={slides.length >= 2}
           loopAdditionalSlides={itemCount}
@@ -97,8 +97,8 @@ export default function MenuSlider({
           }}
         >
           {slides.map(({ item, key }) => (
-            <SwiperSlide key={key} className="w-[17.3rem]! xs:w-[43.13rem]!">
-              <div className="relative aspect-277/415 w-full overflow-hidden xs:aspect-1.36/1">
+            <SwiperSlide key={key} className="w-[87.35vw]! xs:w-[43.13rem]!">
+              <div className="relative w-full overflow-hidden aspect-[1.36/1]">
                 <Image
                   src={item.src}
                   alt={item.alt}

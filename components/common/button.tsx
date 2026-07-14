@@ -39,26 +39,29 @@ export default function Button(props: ButtonProps) {
   const { label, color = 'olive', hoverColor = 'sand', className } = props
 
   const classes = cn(
-    'group relative inline-flex w-fit items-center overflow-hidden rounded-full',
+    'group relative inline-flex w-fit items-center rounded-full',
     className,
   )
 
   const content = (
     <>
       <span
-        className={cn(
-          'pointer-events-none absolute inset-y-0 left-0 w-[60%] origin-left scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
-          bgColorClass[color],
-        )}
+        className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
         aria-hidden
-      />
-      <span
-        className={cn(
-          'pointer-events-none absolute inset-y-0 right-0 w-[60%] origin-right scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
-          bgColorClass[color],
-        )}
-        aria-hidden
-      />
+      >
+        <span
+          className={cn(
+            'absolute inset-y-0 left-0 w-[60%] origin-left scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
+            bgColorClass[color],
+          )}
+        />
+        <span
+          className={cn(
+            'absolute inset-y-0 right-0 w-[60%] origin-right scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
+            bgColorClass[color],
+          )}
+        />
+      </span>
 
       <Paren
         side="left"
@@ -67,7 +70,7 @@ export default function Button(props: ButtonProps) {
       />
       <span
         className={cn(
-          'relative z-10 px-6 text-base font-bold uppercase leading-[1.6] tracking-[0.02em] transition-all duration-300 group-hover:px-6',
+          'relative z-10 whitespace-nowrap px-4 text-sm font-bold uppercase leading-[1.6] tracking-[0.02em] transition-colors duration-300 xs:px-6 xs:text-base',
           textColorClass[color],
           groupHoverTextColorClass[hoverColor],
         )}

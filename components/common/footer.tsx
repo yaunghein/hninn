@@ -30,14 +30,15 @@ export default function Footer({
   return (
     <footer className="bg-peach-light text-brown-muted">
       <div className="overflow-hidden pt-13 xs:pt-23">
-        <Pattern color="brown-muted" opacity={0.2} className="w-[175vw]" />
+        <Pattern
+          color="brown-muted"
+          opacity={0.2}
+          className="w-[345vw] xs:w-[175vw] translate-x-[-1.4rem]"
+        />
       </div>
 
-      <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 pt-8 text-sm leading-[1.39] xs:grid-cols-8 xs:pt-13">
-        <nav
-          className="flex justify-between xs:contents"
-          aria-label="Social"
-        >
+      <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 text-sm leading-[1.39] xs:grid-cols-8 pt-13">
+        <nav className="flex justify-between xs:contents" aria-label="Social">
           {instagram && (
             <Link
               href={instagram.href}
@@ -64,7 +65,7 @@ export default function Footer({
           )}
         </nav>
 
-        <p className="mt-13 max-w-62 leading-[1.4] xs:col-span-2 xs:col-start-3 xs:mt-23">
+        <p className="mt-13 max-w-45 xs:max-w-62 leading-[1.4] xs:col-span-2 xs:col-start-3 xs:mt-23">
           {address}
         </p>
         <p className="mt-6 max-w-44.5 whitespace-pre-line leading-[1.4] xs:col-span-2 xs:col-start-6 xs:mt-23">
@@ -93,9 +94,9 @@ export default function Footer({
           )}
         </nav>
 
-        <div className="col-span-full mt-8 flex flex-col gap-3 xs:mt-23">
+        <div className="col-span-full mt-4 flex flex-col gap-3 xs:mt-23">
           <Logo color="brown-muted" className="w-full" />
-          <p className="text-left xs:text-center">{copyright}</p>
+          <p className="text-left xs:text-center mb-1 xs:mb-0">{copyright}</p>
         </div>
       </div>
     </footer>

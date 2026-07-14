@@ -184,7 +184,7 @@ const homeMenu: HomeMenuContent = {
     },
   ],
   cta: {
-    label: 'Explore the Full Menu',
+    label: 'Explore Gallery',
     href: '/menu',
     color: 'olive',
     hoverColor: 'cream',
