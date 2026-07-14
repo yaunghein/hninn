@@ -114,7 +114,7 @@ export default function Navbar({
 
       <nav
         className={cn(
-          'relative flex h-14 w-full items-center justify-between border-2 px-2 xs:px-5',
+          'relative flex h-12 xs:h-14 w-full items-center justify-between border-2 px-1.25 xs:px-5',
           menuOpen
             ? 'rounded-lg border-olive-light bg-olive'
             : 'rounded-[1.75rem] border-sand bg-cream',
@@ -171,7 +171,7 @@ export default function Navbar({
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
-          className="absolute top-1/2 right-2 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center transition-opacity hover:opacity-70 xs:right-5"
+          className="absolute top-1/2 right-2 flex size-8 xs:size-9 -translate-y-1/2 cursor-pointer items-center justify-center transition-opacity hover:opacity-70 xs:right-5"
         >
           <Menu color={menuOpen ? 'cream' : 'olive'} open={menuOpen} />
         </button>
