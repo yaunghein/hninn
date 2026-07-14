@@ -37,8 +37,8 @@ const homeHero: HomeHeroContent = {
     {
       src: '/images/home_good_food_2.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
-      background: 'peach-light',
-      pattern: 'brown-muted',
+      background: 'sand',
+      pattern: 'brown',
       logo: 'cream',
     },
     {
