@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-cream font-sans text-brown">
-        {/* <GridGuide /> */}
+        <GridGuide />
         <Navbar {...navbar} />
         <main className="flex-1">{children}</main>
       </body>

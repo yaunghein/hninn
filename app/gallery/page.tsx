@@ -125,11 +125,11 @@ const canvasConfig: Partial<InfiniteCanvasConfig> = {
   fogColor: '#fcf2dc',
   showControls: false,
   showFps: false,
-  chunkSize: 180,
+  chunkSize: 160,
   itemsPerChunk: 8,
-  planeSizeMin: 38,
-  planeSizeRange: 32,
-  initialCameraZ: 42,
+  planeSizeMin: 28,
+  planeSizeRange: 24,
+  initialCameraZ: 100,
 }
 
 export default function GalleryPage() {
