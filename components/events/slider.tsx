@@ -39,7 +39,12 @@ export default function EventsSlider({ images }: EventsSliderProps) {
       loop={slides.length >= 2}
       loopAdditionalSlides={images.length}
       slidesPerView="auto"
-      spaceBetween={24}
+      spaceBetween={12}
+      breakpoints={{
+        480: {
+          spaceBetween: 24,
+        },
+      }}
       grabCursor
       allowTouchMove
       watchOverflow={false}
@@ -51,8 +56,8 @@ export default function EventsSlider({ images }: EventsSliderProps) {
       }}
     >
       {slides.map(({ image, key }) => (
-        <SwiperSlide key={key} className="w-102.5!">
-          <div className="relative aspect-[1.34/1] w-full overflow-hidden">
+        <SwiperSlide key={key} className="w-[48vh]! xs:w-[56vh]!">
+          <div className="relative aspect-[1.34/1] h-full overflow-hidden">
             <Image
               src={image.src}
               alt={image.alt}
