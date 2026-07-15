@@ -6,7 +6,6 @@ import GalleryLoader from '@/components/gallery/loader'
 import { InfiniteCanvas } from '@/components/gallery/infinite-canvas'
 import { useGalleryStore } from '@/stores/gallery'
 import type {
-  GalleryCategory,
   GalleryMediaItem,
   InfiniteCanvasConfig,
 } from '@/types/gallery'
@@ -72,7 +71,7 @@ function GalleryCanvasInner({ media, config }: GalleryCanvasInnerProps) {
 }
 
 export default function GalleryCanvas({ images, config }: GalleryCanvasProps) {
-  const activeId = useGalleryStore((s) => s.activeId) as GalleryCategory
+  const activeId = useGalleryStore((s) => s.activeId)
 
   const media = useMemo(() => {
     if (activeId === 'all') return images

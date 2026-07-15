@@ -1,11 +1,15 @@
-export type GalleryCategory = 'all' | 'event' | 'interior' | 'dishes' | 'pets'
-
 export type GalleryMediaItem = {
   url: string
   width: number
   height: number
-  category: Exclude<GalleryCategory, 'all'>
+  /** Matches a gallery block `_key`, used for tab filtering. */
+  category: string
   alt?: string
+}
+
+export type GalleryContent = {
+  tabs: { id: string; label: string }[]
+  images: GalleryMediaItem[]
 }
 
 /** All tunable infinite-canvas settings. Override any field from the page. */

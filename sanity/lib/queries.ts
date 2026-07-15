@@ -73,3 +73,28 @@ export const EVENTS_PAGE_QUERY = defineQuery(/* groq */ `
     }
   }
 `)
+
+export const GALLERY_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "galleryPage" && _id == "galleryPage"][0]{
+    blocks[]{
+      _key,
+      name,
+      images[]{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{
+              width,
+              height
+            },
+            lqip
+          }
+        },
+        hotspot,
+        crop,
+        alt
+      }
+    }
+  }
+`)

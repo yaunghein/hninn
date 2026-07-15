@@ -1,7 +1,17 @@
-import { CommentIcon, ConfettiIcon, HeartIcon } from '@sanity/icons'
+import {
+  CommentIcon,
+  ConfettiIcon,
+  HeartIcon,
+  ImagesIcon,
+} from '@sanity/icons'
 import type { StructureResolver } from 'sanity/structure'
 
-const singletonTypes = new Set(['conceptPage', 'contactPage', 'eventsPage'])
+const singletonTypes = new Set([
+  'conceptPage',
+  'contactPage',
+  'eventsPage',
+  'galleryPage',
+])
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -17,6 +27,11 @@ export const structure: StructureResolver = (S) =>
         .id('eventsPage')
         .icon(ConfettiIcon)
         .child(S.document().schemaType('eventsPage').documentId('eventsPage')),
+      S.listItem()
+        .title('Gallery Page')
+        .id('galleryPage')
+        .icon(ImagesIcon)
+        .child(S.document().schemaType('galleryPage').documentId('galleryPage')),
       S.listItem()
         .title('Contact Page')
         .id('contactPage')

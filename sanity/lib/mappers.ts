@@ -1,6 +1,7 @@
 import type { ConceptContent } from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
 import type { EventsContent } from '@/types/events'
+import type { GalleryContent, GalleryMediaItem } from '@/types/gallery'
 import { urlFor } from '@/sanity/lib/image'
 
 type SanityLink = {
@@ -12,7 +13,13 @@ type SanityImage = {
   asset?: {
     _id: string
     url?: string
-    metadata?: { lqip?: string | null } | null
+    metadata?: {
+      lqip?: string | null
+      dimensions?: {
+        width?: number | null
+        height?: number | null
+      } | null
+    } | null
   } | null
   hotspot?: unknown
   crop?: unknown
@@ -52,6 +59,16 @@ export type EventsPageData = {
   images?: SanityImage[] | null
 }
 
+export type GalleryPageData = {
+  blocks?:
+    | {
+        _key?: string
+        name?: string | null
+        images?: SanityImage[] | null
+      }[]
+    | null
+}
+
 const FALLBACK_MAP = {
   src: '/images/contact_map.jpg',
   alt: 'Map showing Hninn on Phetchaburi Road near Saen Saep canal',
@@ -83,6 +100,174 @@ const FALLBACK_EVENT_IMAGES = [
     alt: 'Hninn interior with olive tree centerpiece',
   },
 ] as const
+
+const FALLBACK_GALLERY_BLOCKS: {
+  id: string
+  name: string
+  images: Omit<GalleryMediaItem, 'category'>[]
+}[] = [
+  {
+    id: 'event',
+    name: 'Event',
+    images: [
+      {
+        url: '/images/home_slider_1.jpg',
+        width: 1440,
+        height: 1712,
+        alt: 'Hninn dining room',
+      },
+    ],
+  },
+  {
+    id: 'dishes',
+    name: 'Dishes',
+    images: [
+      {
+        url: '/images/home_good_food_1.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn dish plated with fresh herbs',
+      },
+      {
+        url: '/images/home_good_food_2.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn brunch spread',
+      },
+      {
+        url: '/images/home_good_food_3.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Close-up of a Hninn specialty dish',
+      },
+      {
+        url: '/images/home_good_food_4.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn tea and food pairing',
+      },
+      {
+        url: '/images/home_menu_1.png',
+        width: 1380,
+        height: 1018,
+        alt: 'Hninn dish with tea service',
+      },
+      {
+        url: '/images/home_menu_2.png',
+        width: 1378,
+        height: 1018,
+        alt: 'Hninn plated dish',
+      },
+    ],
+  },
+  {
+    id: 'interior',
+    name: 'Interior',
+    images: [
+      {
+        url: '/images/home_amazing_space_1.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn dining room interior',
+      },
+      {
+        url: '/images/home_amazing_space_2.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn seating and ambiance',
+      },
+      {
+        url: '/images/home_amazing_space_3.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn cafe space detail',
+      },
+      {
+        url: '/images/home_amazing_space_4.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Hninn restaurant atmosphere',
+      },
+    ],
+  },
+  {
+    id: 'pets',
+    name: 'Pets',
+    images: [
+      {
+        url: '/images/home_paws_included_1.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Dog-friendly moment at Hninn',
+      },
+      {
+        url: '/images/home_paws_included_2.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Pet visiting Hninn with guests',
+      },
+      {
+        url: '/images/home_paws_included_3.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Pet-friendly seating at Hninn',
+      },
+      {
+        url: '/images/home_paws_included_4.jpg',
+        width: 1232,
+        height: 1648,
+        alt: 'Welcome for pets at Hninn',
+      },
+    ],
+  },
+]
+
+function fallbackGalleryContent(): GalleryContent {
+  const images = FALLBACK_GALLERY_BLOCKS.flatMap((block) =>
+    block.images.map((image) => ({
+      ...image,
+      category: block.id,
+    })),
+  )
+
+  return {
+    tabs: [
+      { id: 'all', label: 'All' },
+      ...FALLBACK_GALLERY_BLOCKS.map((block) => ({
+        id: block.id,
+        label: block.name,
+      })),
+    ],
+    images,
+  }
+}
+
+function mapGalleryImage(
+  image: SanityImage,
+  category: string,
+  fallback?: Omit<GalleryMediaItem, 'category'>,
+): GalleryMediaItem | null {
+  if (image?.asset) {
+    return {
+      url: urlFor(image).width(1600).url(),
+      width: image.asset.metadata?.dimensions?.width ?? fallback?.width ?? 1232,
+      height:
+        image.asset.metadata?.dimensions?.height ?? fallback?.height ?? 1648,
+      category,
+      alt: image.alt ?? fallback?.alt,
+    }
+  }
+
+  if (!fallback) return null
+
+  return {
+    url: fallback.url,
+    width: fallback.width,
+    height: fallback.height,
+    category,
+    alt: image?.alt ?? fallback.alt,
+  }
+}
 
 function isLink(link: SanityLink): link is { label: string; href: string } {
   return Boolean(link?.label && link?.href)
@@ -177,5 +362,45 @@ export function toEventsContent(data: EventsPageData): EventsContent {
       hoverColor: 'cream',
     },
     images: images.length > 0 ? images : [...FALLBACK_EVENT_IMAGES],
+  }
+}
+
+export function toGalleryContent(data: GalleryPageData): GalleryContent {
+  const blocks = (data.blocks ?? []).filter(
+    (
+      block,
+    ): block is {
+      _key: string
+      name: string
+      images?: SanityImage[] | null
+    } => Boolean(block?._key && block?.name),
+  )
+
+  if (blocks.length === 0) {
+    return fallbackGalleryContent()
+  }
+
+  const tabs = [
+    { id: 'all', label: 'All' },
+    ...blocks.map((block) => ({
+      id: block._key,
+      label: block.name,
+    })),
+  ]
+
+  const images = blocks.flatMap((block, blockIndex) => {
+    const fallbackBlock = FALLBACK_GALLERY_BLOCKS[blockIndex]
+    const blockImages = block.images ?? []
+
+    return blockImages
+      .map((image, imageIndex) =>
+        mapGalleryImage(image, block._key, fallbackBlock?.images[imageIndex]),
+      )
+      .filter((image): image is GalleryMediaItem => Boolean(image))
+  })
+
+  return {
+    tabs,
+    images: images.length > 0 ? images : fallbackGalleryContent().images,
   }
 }
