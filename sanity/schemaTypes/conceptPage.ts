@@ -1,12 +1,15 @@
 import { HeartIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+import { seoField } from './seoType'
+
 export const conceptPage = defineType({
   name: 'conceptPage',
   title: 'Concept Page',
   type: 'document',
   icon: HeartIcon,
   fields: [
+    seoField,
     defineField({
       name: 'title',
       title: 'Title',

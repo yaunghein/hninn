@@ -15,7 +15,7 @@ import {structure} from './sanity/structure'
 
 export default defineConfig({
   name: 'hninn',
-  title: 'Hninn',
+  title: 'Hninn Studio',
   basePath: '/studio',
   projectId,
   dataset,

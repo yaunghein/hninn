@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { GalleryCanvas, GalleryTabs } from '@/components/gallery'
 import { sanityFetch } from '@/sanity/lib/live'
 import {
@@ -5,6 +6,7 @@ import {
   type GalleryPageData,
 } from '@/sanity/lib/mappers'
 import { GALLERY_PAGE_QUERY } from '@/sanity/lib/queries'
+import { buildPageMetadata, type PageSeo } from '@/sanity/lib/seo'
 import type { InfiniteCanvasConfig } from '@/types/gallery'
 import { notFound } from 'next/navigation'
 
@@ -15,10 +17,24 @@ const canvasConfig: Partial<InfiniteCanvasConfig> = {
   showControls: false,
   showFps: false,
   chunkSize: 160,
-  itemsPerChunk: 8,
+  renderDistance: 1,
+  chunkFadeMargin: 1,
+  itemsPerChunk: 6,
   planeSizeMin: 28,
   planeSizeRange: 24,
   initialCameraZ: 100,
+  dprDesktopMax: 1.25,
+  textureAnisotropy: 2,
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await sanityFetch({
+    query: GALLERY_PAGE_QUERY,
+    stega: false,
+  })
+  return buildPageMetadata((data as { seo?: PageSeo } | null)?.seo, {
+    path: '/gallery',
+  })
 }
 
 export default async function GalleryPage() {

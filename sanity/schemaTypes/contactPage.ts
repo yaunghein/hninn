@@ -1,6 +1,8 @@
 import { CommentIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+import { seoField } from './seoType'
+
 function linkHrefField(description?: string) {
   return defineField({
     name: 'href',
@@ -19,6 +21,7 @@ export const contactPage = defineType({
   type: 'document',
   icon: CommentIcon,
   fields: [
+    seoField,
     defineField({
       name: 'title',
       title: 'Title',

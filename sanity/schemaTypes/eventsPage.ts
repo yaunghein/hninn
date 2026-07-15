@@ -1,6 +1,8 @@
 import { ConfettiIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+import { seoField } from './seoType'
+
 function linkHrefField(description?: string) {
   return defineField({
     name: 'href',
@@ -19,6 +21,7 @@ export const eventsPage = defineType({
   type: 'document',
   icon: ConfettiIcon,
   fields: [
+    seoField,
     defineField({
       name: 'title',
       title: 'Title',

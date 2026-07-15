@@ -11,9 +11,20 @@ const poppins = Poppins({
   display: 'swap',
 })
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000')
+
 export const metadata: Metadata = {
-  title: 'Hninn',
-  description: 'The Restaurant',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Hninn',
+    template: '%s | Hninn',
+  },
+  description:
+    'A cozy, pet-friendly space serving contemporary Burmese brunch in Phetchaburi, Bangkok.',
 }
 
 export default function RootLayout({

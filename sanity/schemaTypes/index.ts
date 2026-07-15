@@ -5,7 +5,8 @@ import { contactPage } from './contactPage'
 import { eventsPage } from './eventsPage'
 import { galleryPage } from './galleryPage'
 import { homePage } from './homePage'
+import { seoType } from './seoType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [homePage, conceptPage, contactPage, eventsPage, galleryPage],
+  types: [seoType, homePage, conceptPage, contactPage, eventsPage, galleryPage],
 }

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import HomeFindUs from '@/components/home/find-us'
 import GeneralFacts from '@/components/home/general-facts'
 import HomeHero from '@/components/home/hero'
@@ -10,6 +11,7 @@ import {
 } from '@/sanity/lib/home-mapper'
 import { HOME_PAGE_QUERY } from '@/sanity/lib/home-query'
 import { sanityFetch } from '@/sanity/lib/live'
+import { buildPageMetadata, type PageSeo } from '@/sanity/lib/seo'
 import { notFound } from 'next/navigation'
 
 const footer: FooterContent = {
@@ -25,6 +27,21 @@ const footer: FooterContent = {
     { label: 'Privacy Policy', href: '/privacy' },
   ],
   copyright: '© 2026 Hninn. All rights reserved.',
+}
+
+async function getHomePage() {
+  return sanityFetch({
+    query: HOME_PAGE_QUERY,
+    stega: false,
+  })
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { data } = await getHomePage()
+  return buildPageMetadata((data as { seo?: PageSeo } | null)?.seo, {
+    path: '/',
+    absoluteTitle: true,
+  })
 }
 
 export default async function Home() {

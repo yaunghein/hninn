@@ -30,8 +30,19 @@ export const homePage = defineType({
     { name: 'facts', title: 'General facts' },
     { name: 'menu', title: 'Menu' },
     { name: 'findUs', title: 'Find us' },
+    { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
+      options: {
+        collapsible: true,
+        collapsed: false,
+      },
+    }),
     defineField({
       name: 'hero',
       title: 'Hero',

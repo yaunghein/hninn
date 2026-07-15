@@ -6,6 +6,11 @@ export const CONCEPT_PAGE_QUERY = defineQuery(/* groq */ `
     blocks[]{
       title,
       body
+    },
+    "seo": {
+      "title": coalesce(seo.title, title, "Concept"),
+      "description": coalesce(seo.description, blocks[0].body, ""),
+      "ogImage": seo.ogImage
     }
   }
 `)
@@ -47,6 +52,11 @@ export const CONTACT_PAGE_QUERY = defineQuery(/* groq */ `
         crop,
         alt
       }
+    },
+    "seo": {
+      "title": coalesce(seo.title, title, "Contact"),
+      "description": coalesce(seo.description, location.title, ""),
+      "ogImage": coalesce(seo.ogImage, location.map)
     }
   }
 `)
@@ -70,6 +80,11 @@ export const EVENTS_PAGE_QUERY = defineQuery(/* groq */ `
       hotspot,
       crop,
       alt
+    },
+    "seo": {
+      "title": coalesce(seo.title, title, "Events"),
+      "description": coalesce(seo.description, description, ""),
+      "ogImage": coalesce(seo.ogImage, images[0])
     }
   }
 `)
@@ -95,6 +110,15 @@ export const GALLERY_PAGE_QUERY = defineQuery(/* groq */ `
         crop,
         alt
       }
+    },
+    "seo": {
+      "title": coalesce(seo.title, "Gallery"),
+      "description": coalesce(
+        seo.description,
+        "Explore photos from Hninn — food, interiors, events, and pets.",
+        ""
+      ),
+      "ogImage": coalesce(seo.ogImage, blocks[0].images[0])
     }
   }
 `)

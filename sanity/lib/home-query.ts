@@ -83,6 +83,11 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
         alt
       },
       cta{ label, href }
+    },
+    "seo": {
+      "title": coalesce(seo.title, hero.title, "Hninn"),
+      "description": coalesce(seo.description, hero.description, ""),
+      "ogImage": coalesce(seo.ogImage, hero.slides[0].image)
     }
   }
 `)
