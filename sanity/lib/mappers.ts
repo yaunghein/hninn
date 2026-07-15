@@ -1,10 +1,22 @@
 import type { ConceptContent } from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
+import type { EventsContent } from '@/types/events'
 import { urlFor } from '@/sanity/lib/image'
 
 type SanityLink = {
   label: string
   href: string
+} | null
+
+type SanityImage = {
+  asset?: {
+    _id: string
+    url?: string
+    metadata?: { lqip?: string | null } | null
+  } | null
+  hotspot?: unknown
+  crop?: unknown
+  alt?: string | null
 } | null
 
 export type ConceptPageData = {
@@ -29,19 +41,48 @@ export type ContactPageData = {
   location?: {
     title?: string | null
     directionsCta?: SanityLink
-    map?: {
-      asset?: { _id: string; url?: string } | null
-      hotspot?: unknown
-      crop?: unknown
-      alt?: string | null
-    } | null
+    map?: SanityImage
   } | null
+}
+
+export type EventsPageData = {
+  title?: string | null
+  description?: string | null
+  cta?: SanityLink
+  images?: SanityImage[] | null
 }
 
 const FALLBACK_MAP = {
   src: '/images/contact_map.jpg',
   alt: 'Map showing Hninn on Phetchaburi Road near Saen Saep canal',
 } as const
+
+const FALLBACK_EVENT_IMAGES = [
+  {
+    src: '/images/home_amazing_space_1.jpg',
+    alt: 'Hninn dining room set for a private gathering',
+  },
+  {
+    src: '/images/home_amazing_space_2.jpg',
+    alt: 'Long table with candles ready for an event',
+  },
+  {
+    src: '/images/home_amazing_space_3.jpg',
+    alt: 'Decorated corner of the Hninn dining space',
+  },
+  {
+    src: '/images/home_amazing_space_4.jpg',
+    alt: 'Table setting details at Hninn',
+  },
+  {
+    src: '/images/home_paws_included_1.jpg',
+    alt: 'Pet-friendly seating for a casual gathering',
+  },
+  {
+    src: '/images/home_slider_1.jpg',
+    alt: 'Hninn interior with olive tree centerpiece',
+  },
+] as const
 
 function isLink(link: SanityLink): link is { label: string; href: string } {
   return Boolean(link?.label && link?.href)
@@ -94,7 +135,47 @@ export function toContactContent(data: ContactPageData): ContactContent {
       map: {
         src: mapSrc,
         alt: data.location?.map?.alt ?? FALLBACK_MAP.alt,
+        blurDataURL: data.location?.map?.asset?.metadata?.lqip ?? undefined,
       },
     },
+  }
+}
+
+export function toEventsContent(data: EventsPageData): EventsContent {
+  const images = (data.images ?? [])
+    .map((image, index) => {
+      if (image?.asset) {
+        return {
+          src: urlFor(image).width(1200).url(),
+          alt: image.alt ?? FALLBACK_EVENT_IMAGES[index]?.alt ?? 'Event image',
+          blurDataURL: image.asset.metadata?.lqip ?? undefined,
+        }
+      }
+
+      const fallback = FALLBACK_EVENT_IMAGES[index]
+      if (!fallback) return null
+
+      return {
+        src: fallback.src,
+        alt: image?.alt ?? fallback.alt,
+      }
+    })
+    .filter(
+      (image): image is { src: string; alt: string; blurDataURL?: string } =>
+        Boolean(image),
+    )
+
+  return {
+    title: data.title ?? 'Host Your Event at Hninn',
+    description:
+      data.description ??
+      'Whether it’s an intimate birthday brunch, a casual team get-together, or even a puppy playdate, our space is perfect for private and semi-private gatherings. We offer a relaxed atmosphere and customizable menus featuring our signature modern Burmese dishes and specialty drinks.',
+    cta: {
+      label: data.cta?.label ?? 'Inquire Now',
+      href: data.cta?.href ?? '/contact',
+      color: 'brown-muted',
+      hoverColor: 'cream',
+    },
+    images: images.length > 0 ? images : [...FALLBACK_EVENT_IMAGES],
   }
 }

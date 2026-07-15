@@ -38,12 +38,38 @@ export const CONTACT_PAGE_QUERY = defineQuery(/* groq */ `
       map{
         asset->{
           _id,
-          url
+          url,
+          metadata{
+            lqip
+          }
         },
         hotspot,
         crop,
         alt
       }
+    }
+  }
+`)
+
+export const EVENTS_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "eventsPage" && _id == "eventsPage"][0]{
+    title,
+    description,
+    cta{
+      label,
+      href
+    },
+    images[]{
+      asset->{
+        _id,
+        url,
+        metadata{
+          lqip
+        }
+      },
+      hotspot,
+      crop,
+      alt
     }
   }
 `)

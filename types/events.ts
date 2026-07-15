@@ -3,6 +3,7 @@ import type { Color } from '@/lib/constants/colors'
 export type EventsImage = {
   src: string
   alt: string
+  blurDataURL?: string
 }
 
 export type EventsContent = {

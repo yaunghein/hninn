@@ -30,6 +30,7 @@ export type ContactContent = {
     map: {
       src: string
       alt: string
+      blurDataURL?: string
     }
   }
 }

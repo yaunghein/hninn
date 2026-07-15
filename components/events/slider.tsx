@@ -64,6 +64,8 @@ export default function EventsSlider({ images }: EventsSliderProps) {
               fill
               sizes="25.625rem"
               className="object-cover"
+              placeholder={image.blurDataURL ? 'blur' : 'empty'}
+              blurDataURL={image.blurDataURL}
             />
           </div>
         </SwiperSlide>

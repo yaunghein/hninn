@@ -88,6 +88,8 @@ export default function ContactHero({
             sizes="(max-width: 479px) 100vw, 50vw"
             className="object-cover object-[center_35%]"
             priority
+            placeholder={location.map.blurDataURL ? 'blur' : 'empty'}
+            blurDataURL={location.map.blurDataURL}
           />
         </div>
       </div>
