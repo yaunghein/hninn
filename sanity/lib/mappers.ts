@@ -1,3 +1,4 @@
+import type { ConceptContent } from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
 import { urlFor } from '@/sanity/lib/image'
 
@@ -5,6 +6,16 @@ type SanityLink = {
   label: string
   href: string
 } | null
+
+export type ConceptPageData = {
+  title?: string | null
+  blocks?:
+    | {
+        title?: string | null
+        body?: string | null
+      }[]
+    | null
+}
 
 export type ContactPageData = {
   title?: string | null
@@ -34,6 +45,20 @@ const FALLBACK_MAP = {
 
 function isLink(link: SanityLink): link is { label: string; href: string } {
   return Boolean(link?.label && link?.href)
+}
+
+export function toConceptContent(data: ConceptPageData): ConceptContent {
+  return {
+    title: data.title ?? 'The Heart of Hninn',
+    blocks: (data.blocks ?? [])
+      .filter((block): block is { title: string; body: string } =>
+        Boolean(block?.title && block?.body),
+      )
+      .map((block) => ({
+        title: block.title,
+        body: block.body,
+      })),
+  }
 }
 
 export function toContactContent(data: ContactPageData): ContactContent {

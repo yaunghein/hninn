@@ -1,5 +1,15 @@
 import { defineQuery } from 'next-sanity'
 
+export const CONCEPT_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "conceptPage" && _id == "conceptPage"][0]{
+    title,
+    blocks[]{
+      title,
+      body
+    }
+  }
+`)
+
 export const CONTACT_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "contactPage" && _id == "contactPage"][0]{
     title,
