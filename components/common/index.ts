@@ -1,3 +1,4 @@
+export { default as AppLink } from './app-link'
 export { default as Button } from './button'
 export { default as Footer } from './footer'
 export { default as GridGuide } from './grid-guide'

@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import type { MouseEventHandler } from 'react'
 
+import AppLink from '@/components/common/app-link'
 import { Paren } from '@/components/svgs'
 import {
   bgColorClass,
@@ -87,9 +87,9 @@ export default function Button(props: ButtonProps) {
 
   if (isLinkButton(props)) {
     return (
-      <Link href={props.href} onClick={props.onClick} className={classes}>
+      <AppLink href={props.href} onClick={props.onClick} className={classes}>
         {content}
-      </Link>
+      </AppLink>
     )
   }
 

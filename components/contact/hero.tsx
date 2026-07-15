@@ -1,7 +1,6 @@
 import Image from 'next/image'
-import Link from 'next/link'
 
-import { Button } from '@/components/common'
+import { AppLink, Button } from '@/components/common'
 import type { ContactContent } from '@/types/contact'
 
 type ContactHeroProps = ContactContent
@@ -33,12 +32,12 @@ export default function ContactHero({
           <ul className="grid grid-cols-2 gap-4 text-center text-sm leading-normal">
             {contacts.map((item) => (
               <li key={item.label}>
-                <Link
+                <AppLink
                   href={item.href}
                   className="transition-opacity hover:opacity-70"
                 >
                   {item.label}
-                </Link>
+                </AppLink>
               </li>
             ))}
           </ul>
@@ -49,12 +48,12 @@ export default function ContactHero({
                 key={item.label}
                 className="first-of-type:text-left text-center last-of-type:text-right"
               >
-                <Link
+                <AppLink
                   href={item.href}
                   className="transition-opacity hover:opacity-70"
                 >
                   {item.label}
-                </Link>
+                </AppLink>
               </li>
             ))}
           </ul>
