@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity'
+
 import type { ConceptContent } from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
 import type { EventsContent } from '@/types/events'
@@ -383,7 +385,7 @@ export function toGalleryContent(data: GalleryPageData): GalleryContent {
   const tabs = [
     { id: 'all', label: 'All' },
     ...blocks.map((block) => ({
-      id: block._key,
+      id: stegaClean(block._key),
       label: block.name,
     })),
   ]
@@ -391,10 +393,11 @@ export function toGalleryContent(data: GalleryPageData): GalleryContent {
   const images = blocks.flatMap((block, blockIndex) => {
     const fallbackBlock = FALLBACK_GALLERY_BLOCKS[blockIndex]
     const blockImages = block.images ?? []
+    const category = stegaClean(block._key)
 
     return blockImages
       .map((image, imageIndex) =>
-        mapGalleryImage(image, block._key, fallbackBlock?.images[imageIndex]),
+        mapGalleryImage(image, category, fallbackBlock?.images[imageIndex]),
       )
       .filter((image): image is GalleryMediaItem => Boolean(image))
   })

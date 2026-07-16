@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
+import { draftMode } from 'next/headers'
+import { VisualEditing } from 'next-sanity/visual-editing'
 
+import { DisableDraftMode } from '@/components/common'
 import { SanityLive } from '@/sanity/lib/live'
 import './globals.css'
 
@@ -27,17 +30,25 @@ export const metadata: Metadata = {
     'A cozy, pet-friendly space serving contemporary Burmese brunch in Phetchaburi, Bangkok.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const isDraftMode = (await draftMode()).isEnabled
+
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-cream font-sans text-brown">
         {/* <GridGuide /> */}
         {children}
         <SanityLive />
+        {isDraftMode ? (
+          <>
+            <DisableDraftMode />
+            <VisualEditing />
+          </>
+        ) : null}
       </body>
     </html>
   )

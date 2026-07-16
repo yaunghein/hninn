@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity'
+
 import { colors, type Color } from '@/lib/constants/colors'
 import { urlFor } from '@/sanity/lib/image'
 import type {
@@ -84,11 +86,12 @@ export type HomePageContent = {
 const colorSet = new Set<string>(colors)
 
 function asColor(value: string | null | undefined, fallback: Color): Color {
-  return value && colorSet.has(value) ? (value as Color) : fallback
+  const cleaned = value ? stegaClean(value) : value
+  return cleaned && colorSet.has(cleaned) ? (cleaned as Color) : fallback
 }
 
 function asAlign(value: string | null | undefined): 'left' | 'right' {
-  return value === 'right' ? 'right' : 'left'
+  return stegaClean(value ?? '') === 'right' ? 'right' : 'left'
 }
 
 function imageSrc(image: SanityImage, width: number, fallback: string) {
