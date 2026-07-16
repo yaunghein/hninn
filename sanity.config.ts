@@ -13,6 +13,7 @@ import { apiVersion, dataset, projectId } from './sanity/env'
 import { resolve } from './sanity/presentation/resolve'
 import { schema } from './sanity/schemaTypes'
 import { structure } from './sanity/structure'
+import { theme } from './sanity/theme'
 
 const previewOrigin =
   process.env.SANITY_STUDIO_PREVIEW_ORIGIN ||
@@ -26,6 +27,7 @@ export default defineConfig({
   projectId,
   dataset,
   schema,
+  theme,
   plugins: [
     structureTool({ structure }),
     presentationTool({

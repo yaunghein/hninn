@@ -17,6 +17,25 @@ export const colors = [
 
 export type Color = (typeof colors)[number]
 
+/** Hex values shared by the site and Studio theme (keep in sync with `app/globals.css`). */
+export const colorTokens = {
+  cream: '#fcf2dc',
+  sand: '#f5e6c2',
+  olive: '#7f753a',
+  'olive-light': '#a59846',
+  'olive-dark': '#484228',
+  peach: '#dfaa80',
+  'peach-light': '#e7c09d',
+  brown: '#2e2520',
+  'brown-muted': '#43352e',
+  taupe: '#6d5b51',
+  white: '#ffffff',
+  black: '#000000',
+} as const satisfies Record<
+  Exclude<Color, 'transparent' | 'current'>,
+  string
+>
+
 /** Statically analyzable so Tailwind emits the utilities */
 export const textColorClass = {
   cream: 'text-cream',
