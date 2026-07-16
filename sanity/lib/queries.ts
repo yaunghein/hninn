@@ -1,5 +1,42 @@
 import { defineQuery } from 'next-sanity'
 
+export const NAVBAR_QUERY = defineQuery(/* groq */ `
+  *[_type == "navbar" && _id == "navbar"][0]{
+    hours{
+      line1,
+      line2
+    },
+    gallery{
+      label,
+      href
+    },
+    reservation{
+      label,
+      href
+    },
+    menuLinks[]{
+      label,
+      href
+    }
+  }
+`)
+
+export const FOOTER_QUERY = defineQuery(/* groq */ `
+  *[_type == "footer" && _id == "footer"][0]{
+    social[]{
+      label,
+      href
+    },
+    address,
+    hours,
+    legal[]{
+      label,
+      href
+    },
+    copyright
+  }
+`)
+
 export const CONCEPT_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "conceptPage" && _id == "conceptPage"][0]{
     title,

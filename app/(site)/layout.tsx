@@ -1,25 +1,16 @@
 import { Navbar } from '@/components/common'
-import type { NavbarContent } from '@/components/common/navbar'
+import { sanityFetch } from '@/sanity/lib/live'
+import { NAVBAR_QUERY } from '@/sanity/lib/queries'
+import { toNavbarContent } from '@/sanity/lib/site-mapper'
 
-const navbar: NavbarContent = {
-  hours: ['Open 7:00 - 23:00', 'closed on wed'],
-  gallery: { label: 'gallery', href: '/gallery' },
-  reservation: { label: 'Make a reservation', href: '/reservation' },
-  menuLinks: [
-    { label: 'Menu', href: '/menu' },
-    { label: 'Gallery', href: '/gallery' },
-    { label: 'Concept', href: '/concept' },
-    { label: 'host an event', href: '/events' },
-    { label: 'getting here', href: '/getting-here' },
-    { label: 'contact', href: '/contact' },
-  ],
-}
-
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { data } = await sanityFetch({ query: NAVBAR_QUERY })
+  const navbar = toNavbarContent(data)
+
   return (
     <>
       <Navbar {...navbar} />
