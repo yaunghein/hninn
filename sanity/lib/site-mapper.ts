@@ -7,7 +7,7 @@ type SanityLink = {
   href?: string | null
 } | null
 
-type NavbarData = {
+export type NavbarData = {
   hours?: {
     line1?: string | null
     line2?: string | null
@@ -17,7 +17,7 @@ type NavbarData = {
   menuLinks?: SanityLink[] | null
 } | null
 
-type FooterData = {
+export type FooterData = {
   social?: SanityLink[] | null
   address?: string | null
   hours?: string | null
@@ -55,7 +55,7 @@ const FALLBACK_FOOTER: FooterContent = {
 }
 
 function mapLink(
-  link: SanityLink,
+  link: SanityLink | undefined,
   fallback: NavbarLink | FooterLink,
 ): NavbarLink | FooterLink {
   return {

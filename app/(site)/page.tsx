@@ -12,7 +12,7 @@ import { HOME_PAGE_QUERY } from '@/sanity/lib/home-query'
 import { sanityFetch } from '@/sanity/lib/live'
 import { FOOTER_QUERY } from '@/sanity/lib/queries'
 import { buildPageMetadata, type PageSeo } from '@/sanity/lib/seo'
-import { toFooterContent } from '@/sanity/lib/site-mapper'
+import { toFooterContent, type FooterData } from '@/sanity/lib/site-mapper'
 import { notFound } from 'next/navigation'
 
 async function getHomePage() {
@@ -43,7 +43,7 @@ export default async function Home() {
   const { hero, generalFacts, menu, findUs } = toHomeContent(
     data as HomePageData,
   )
-  const footer = toFooterContent(footerData)
+  const footer = toFooterContent(footerData as FooterData)
 
   return (
     <>

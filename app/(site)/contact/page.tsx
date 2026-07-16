@@ -8,7 +8,7 @@ import {
 } from '@/sanity/lib/mappers'
 import { CONTACT_PAGE_QUERY, FOOTER_QUERY } from '@/sanity/lib/queries'
 import { buildPageMetadata, type PageSeo } from '@/sanity/lib/seo'
-import { toFooterContent } from '@/sanity/lib/site-mapper'
+import { toFooterContent, type FooterData } from '@/sanity/lib/site-mapper'
 import { notFound } from 'next/navigation'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -32,7 +32,7 @@ export default async function ContactPage() {
   }
 
   const contact = toContactContent(data as ContactPageData)
-  const footer = toFooterContent(footerData)
+  const footer = toFooterContent(footerData as FooterData)
 
   return (
     <>

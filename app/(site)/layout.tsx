@@ -1,7 +1,7 @@
 import { Navbar } from '@/components/common'
 import { sanityFetch } from '@/sanity/lib/live'
 import { NAVBAR_QUERY } from '@/sanity/lib/queries'
-import { toNavbarContent } from '@/sanity/lib/site-mapper'
+import { toNavbarContent, type NavbarData } from '@/sanity/lib/site-mapper'
 
 export default async function SiteLayout({
   children,
@@ -9,7 +9,7 @@ export default async function SiteLayout({
   children: React.ReactNode
 }>) {
   const { data } = await sanityFetch({ query: NAVBAR_QUERY })
-  const navbar = toNavbarContent(data)
+  const navbar = toNavbarContent(data as NavbarData)
 
   return (
     <>
