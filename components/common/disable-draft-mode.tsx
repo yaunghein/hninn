@@ -9,8 +9,9 @@ export default function DisableDraftMode() {
   const isPresentationTool = useIsPresentationTool()
   const pathname = usePathname()
 
-  // Hide when inside Presentation Tool — Studio controls draft mode there
-  if (isPresentationTool) return null
+  // null = still detecting, true = inside Presentation — only show when definitively outside
+  // (Studio controls draft mode in Presentation; a fixed button overlaps the Publish bar)
+  if (isPresentationTool !== false) return null
 
   return (
     <Button
