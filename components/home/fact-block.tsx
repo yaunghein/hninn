@@ -11,8 +11,8 @@ import type { GeneralFact, GeneralFactImage } from '@/types/home'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-const PARALLAX_Y_DESKTOP = '8rem'
-const PARALLAX_Y_MOBILE = '4rem'
+const PARALLAX_DESKTOP = { min: 6, max: 18 }
+const PARALLAX_MOBILE = { min: 3, max: 9 }
 
 type FactBlockProps = GeneralFact
 
@@ -81,6 +81,35 @@ function parallaxRange(
     : { from: `-${travel}`, to: travel }
 }
 
+function parallaxItems(
+  items: HTMLElement[],
+  offset: 'left' | 'right',
+  side: 'left' | 'right',
+  range: { min: number; max: number },
+  scrollTrigger: {
+    trigger: HTMLElement
+    start: string
+    end: string
+    scrub: number
+  },
+) {
+  items.forEach((item) => {
+    const travel = `${gsap.utils.random(range.min, range.max, 0.25)}rem`
+    const { from, to } = parallaxRange(offset, side, travel)
+
+    gsap.fromTo(
+      item,
+      { y: from },
+      {
+        y: to,
+        ease: 'none',
+        force3D: true,
+        scrollTrigger: { ...scrollTrigger },
+      },
+    )
+  })
+}
+
 export default function FactBlock({
   title,
   titleLines,
@@ -92,8 +121,6 @@ export default function FactBlock({
   const lines = titleLines ?? [title]
   const mobileStack = getMobileStack(offset, leftImages, rightImages)
   const rootRef = useRef<HTMLDivElement>(null)
-  const leftRef = useRef<HTMLDivElement>(null)
-  const rightRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
     () => {
@@ -116,82 +143,26 @@ export default function FactBlock({
             start: 'top bottom',
             end: 'bottom top',
             scrub: 1.2,
-          } as const
-
-          if (isDesktop) {
-            const left = leftRef.current
-            const right = rightRef.current
-            if (!left || !right) return
-
-            const leftRange = parallaxRange(offset, 'left', PARALLAX_Y_DESKTOP)
-            const rightRange = parallaxRange(
-              offset,
-              'right',
-              PARALLAX_Y_DESKTOP,
-            )
-
-            gsap.fromTo(
-              left,
-              { y: leftRange.from },
-              {
-                y: leftRange.to,
-                ease: 'none',
-                force3D: true,
-                scrollTrigger: { ...scrollTrigger },
-              },
-            )
-
-            gsap.fromTo(
-              right,
-              { y: rightRange.from },
-              {
-                y: rightRange.to,
-                ease: 'none',
-                force3D: true,
-                scrollTrigger: { ...scrollTrigger },
-              },
-            )
           }
 
-          if (isMobile) {
-            const leftItems = gsap.utils.toArray<HTMLElement>(
-              '[data-parallax="left"]',
-              root,
-            )
-            const rightItems = gsap.utils.toArray<HTMLElement>(
-              '[data-parallax="right"]',
-              root,
-            )
+          const scope = isDesktop
+            ? root.querySelector<HTMLElement>('[data-parallax-scope="desktop"]')
+            : root.querySelector<HTMLElement>('[data-parallax-scope="mobile"]')
 
-            const leftRange = parallaxRange(offset, 'left', PARALLAX_Y_MOBILE)
-            const rightRange = parallaxRange(offset, 'right', PARALLAX_Y_MOBILE)
+          if (!scope) return
 
-            if (leftItems.length) {
-              gsap.fromTo(
-                leftItems,
-                { y: leftRange.from },
-                {
-                  y: leftRange.to,
-                  ease: 'none',
-                  force3D: true,
-                  scrollTrigger: { ...scrollTrigger },
-                },
-              )
-            }
+          const leftItems = gsap.utils.toArray<HTMLElement>(
+            '[data-parallax="left"]',
+            scope,
+          )
+          const rightItems = gsap.utils.toArray<HTMLElement>(
+            '[data-parallax="right"]',
+            scope,
+          )
+          const range = isMobile ? PARALLAX_MOBILE : PARALLAX_DESKTOP
 
-            if (rightItems.length) {
-              gsap.fromTo(
-                rightItems,
-                { y: rightRange.from },
-                {
-                  y: rightRange.to,
-                  ease: 'none',
-                  force3D: true,
-                  scrollTrigger: { ...scrollTrigger },
-                },
-              )
-            }
-          }
+          parallaxItems(leftItems, offset, 'left', range, scrollTrigger)
+          parallaxItems(rightItems, offset, 'right', range, scrollTrigger)
         },
       )
     },
@@ -214,7 +185,10 @@ export default function FactBlock({
       </h2>
 
       {/* Mobile: single-column zigzag (Figma 700:1325) */}
-      <div className="flex flex-col gap-6 px-6 pt-32 xs:hidden">
+      <div
+        data-parallax-scope="mobile"
+        className="flex flex-col gap-6 px-6 pt-32 xs:hidden"
+      >
         {mobileStack.map((image) => (
           <div
             key={image.key}
@@ -230,36 +204,41 @@ export default function FactBlock({
       </div>
 
       {/* Desktop: two-column staggered grid */}
-      <div className="hidden grid-cols-2 gap-x-5 px-8 xs:grid">
+      <div
+        data-parallax-scope="desktop"
+        className="hidden grid-cols-2 gap-x-5 px-8 xs:grid pt-53"
+      >
         <div
-          ref={leftRef}
           className={cn(
-            'flex flex-col gap-10 will-change-transform pr-2.5 pl-8',
-            offset === 'left' && 'pt-53',
+            'flex flex-col gap-10 pr-2.5 pl-40',
+            offset === 'left' && 'pt-25',
           )}
         >
           {leftImages.map((image, index) => (
-            <FactImage
+            <div
               key={`${image.src}-left-${index}`}
-              src={image.src}
-              alt={image.alt}
-            />
+              data-parallax="left"
+              className="will-change-transform"
+            >
+              <FactImage src={image.src} alt={image.alt} />
+            </div>
           ))}
         </div>
 
         <div
-          ref={rightRef}
           className={cn(
-            'flex flex-col gap-10 will-change-transform pl-2.5 pr-8',
-            offset === 'right' && 'pt-53',
+            'flex flex-col gap-10 pl-2.5 pr-40',
+            offset === 'right' && 'pt-25',
           )}
         >
           {rightImages.map((image, index) => (
-            <FactImage
+            <div
               key={`${image.src}-right-${index}`}
-              src={image.src}
-              alt={image.alt}
-            />
+              data-parallax="right"
+              className="will-change-transform"
+            >
+              <FactImage src={image.src} alt={image.alt} />
+            </div>
           ))}
         </div>
       </div>
