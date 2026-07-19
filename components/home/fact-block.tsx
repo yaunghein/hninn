@@ -211,7 +211,7 @@ export default function FactBlock({
         <div
           className={cn(
             'flex flex-col gap-10 pr-2.5 pl-40',
-            offset === 'left' && 'pt-25',
+            offset === 'left' && 'pt-16',
           )}
         >
           {leftImages.map((image, index) => (
@@ -228,7 +228,7 @@ export default function FactBlock({
         <div
           className={cn(
             'flex flex-col gap-10 pl-2.5 pr-40',
-            offset === 'right' && 'pt-25',
+            offset === 'right' && 'pt-16',
           )}
         >
           {rightImages.map((image, index) => (

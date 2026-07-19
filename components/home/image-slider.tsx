@@ -28,10 +28,10 @@ export default function ImageSlider({ slides, duration }: ImageSliderProps) {
   const slide = slides[activeIndex] ?? slides[0]
 
   return (
-    <div className="relative flex h-dvh bg-black w-full flex-col overflow-hidden xs:h-full">
+    <div className="relative flex min-h-dvh bg-black w-full flex-col overflow-hidden xs:h-full">
       <div
         className={cn(
-          'px-6 pt-6 flex-1 transition-colors duration-1000 ease-in-out xs:hidden',
+          'px-6 pt-6 pb-20 flex-1 transition-colors duration-1000 ease-in-out xs:hidden',
           bgColorClass[slide.background],
         )}
       >
