@@ -39,8 +39,10 @@ export type HomePageData = {
       | {
           image?: SanityImage
           background?: string | null
-          pattern?: string | null
+          text?: string | null
           logo?: string | null
+          /** @deprecated use `text` */
+          pattern?: string | null
         }[]
       | null
   } | null
@@ -132,28 +134,28 @@ const FALLBACK_HERO: HomeHeroContent = {
       src: '/images/home_slider_1.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
       background: 'peach-light',
-      pattern: 'brown-muted',
+      text: 'brown-muted',
       logo: 'cream',
     },
     {
       src: '/images/home_good_food_2.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
       background: 'sand',
-      pattern: 'brown',
+      text: 'brown',
       logo: 'cream',
     },
     {
       src: '/images/home_amazing_space_2.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
       background: 'cream',
-      pattern: 'olive',
+      text: 'olive',
       logo: 'cream',
     },
     {
       src: '/images/home_paws_included_1.jpg',
       caption: 'Hninn dining room with an olive tree at the center table',
       background: 'sand',
-      pattern: 'brown',
+      text: 'brown',
       logo: 'brown',
     },
   ],
@@ -320,7 +322,10 @@ function toHero(data: HomePageData['hero']): HomeHeroContent {
             fallbackSlide?.caption ??
             'Hninn dining room with an olive tree at the center table',
           background: asColor(slide.background, fallbackSlide?.background ?? 'sand'),
-          pattern: asColor(slide.pattern, fallbackSlide?.pattern ?? 'brown'),
+          text: asColor(
+            slide.text ?? slide.pattern,
+            fallbackSlide?.text ?? 'brown',
+          ),
           logo: asColor(slide.logo, fallbackSlide?.logo ?? 'cream'),
         }
       }
@@ -329,7 +334,7 @@ function toHero(data: HomePageData['hero']): HomeHeroContent {
         ...fallbackSlide,
         caption: image?.caption ?? fallbackSlide.caption,
         background: asColor(slide.background, fallbackSlide.background),
-        pattern: asColor(slide.pattern, fallbackSlide.pattern),
+        text: asColor(slide.text ?? slide.pattern, fallbackSlide.text),
         logo: asColor(slide.logo, fallbackSlide.logo),
       }
     })

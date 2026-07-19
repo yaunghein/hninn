@@ -37,7 +37,7 @@ export default function ImageSlider({ slides, duration }: ImageSliderProps) {
       >
         <div className="aspect-[3.95/1] w-full">
           <Logo
-            color="brown"
+            color={slide.text}
             className="w-full transition-colors duration-1000 ease-in-out"
           />
         </div>

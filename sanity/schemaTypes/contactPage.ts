@@ -1,6 +1,7 @@
 import { CommentIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+import { imageFieldDescription } from './fields'
 import { seoField } from './seoType'
 
 function linkHrefField(description?: string) {
@@ -141,6 +142,7 @@ export const contactPage = defineType({
           name: 'map',
           title: 'Map image',
           type: 'image',
+          description: imageFieldDescription,
           options: { hotspot: true },
           fields: [
             defineField({

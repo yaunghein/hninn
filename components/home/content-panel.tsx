@@ -31,7 +31,7 @@ export default function ContentPanel({
         <h1
           className={cn(
             'text-3xl font-semibold uppercase leading-none tracking-[-0.02em] transition-colors duration-1000 ease-in-out xs:text-5xl xs:leading-[1.15] xs:tracking-tight',
-            textColorClass[slide.pattern],
+            textColorClass[slide.text],
           )}
         >
           {title}
@@ -39,7 +39,7 @@ export default function ContentPanel({
         <p
           className={cn(
             'max-w-full pl-21 text-[0.81rem] leading-[1.39] transition-colors duration-1000 ease-in-out xs:my-auto xs:ml-39 xs:max-w-lg xs:translate-y-10 xs:pl-0 xs:text-base xs:leading-snug',
-            textColorClass[slide.pattern],
+            textColorClass[slide.text],
           )}
         >
           {description}
@@ -49,7 +49,8 @@ export default function ContentPanel({
       <div className="pointer-events-none mb-13 hidden overflow-hidden xs:block">
         <div className="w-[173vw] -translate-x-12">
           <Pattern
-            color={slide.pattern}
+            color={slide.text}
+            opacity={0.2}
             className="transition-colors duration-1000 ease-in-out"
           />
         </div>

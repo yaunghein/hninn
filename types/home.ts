@@ -4,7 +4,7 @@ export type HomeSlide = {
   src: string
   caption: string
   background: Color
-  pattern: Color
+  text: Color
   logo: Color
 }
 

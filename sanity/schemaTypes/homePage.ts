@@ -5,6 +5,7 @@ import {
   altImageFields,
   brandColorOptions,
   ctaFields,
+  imageFieldDescription,
 } from './fields'
 
 function colorField(name: string, title: string) {
@@ -81,6 +82,7 @@ export const homePage = defineType({
                   name: 'image',
                   title: 'Image',
                   type: 'image',
+                  description: imageFieldDescription,
                   options: { hotspot: true },
                   fields: [
                     defineField({
@@ -93,7 +95,7 @@ export const homePage = defineType({
                   validation: (rule) => rule.required(),
                 }),
                 colorField('background', 'Background color'),
-                colorField('pattern', 'Pattern color'),
+                colorField('text', 'Text color'),
                 colorField('logo', 'Logo color'),
               ],
               preview: {
@@ -167,6 +169,7 @@ export const homePage = defineType({
                 defineField({
                   name: 'leftImages',
                   title: 'Left images',
+                  description: imageFieldDescription,
                   type: 'array',
                   of: [
                     defineArrayMember({
@@ -180,6 +183,7 @@ export const homePage = defineType({
                 defineField({
                   name: 'rightImages',
                   title: 'Right images',
+                  description: imageFieldDescription,
                   type: 'array',
                   of: [
                     defineArrayMember({
@@ -252,6 +256,7 @@ export const homePage = defineType({
                   name: 'image',
                   title: 'Image',
                   type: 'image',
+                  description: imageFieldDescription,
                   options: { hotspot: true },
                   fields: altImageFields(),
                   validation: (rule) => rule.required(),
@@ -293,6 +298,7 @@ export const homePage = defineType({
           name: 'map',
           title: 'Map image',
           type: 'image',
+          description: imageFieldDescription,
           options: { hotspot: true },
           fields: altImageFields(),
           validation: (rule) => rule.required(),

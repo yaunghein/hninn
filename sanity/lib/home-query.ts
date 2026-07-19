@@ -18,6 +18,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
           caption
         },
         background,
+        text,
         pattern,
         logo
       }

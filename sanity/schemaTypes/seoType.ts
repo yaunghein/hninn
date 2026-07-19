@@ -1,5 +1,7 @@
 import { defineField, defineType } from 'sanity'
 
+import { imageFieldDescription } from './fields'
+
 export const seoType = defineType({
   name: 'seo',
   title: 'SEO',
@@ -24,7 +26,7 @@ export const seoType = defineType({
     defineField({
       name: 'ogImage',
       title: 'Open Graph image',
-      description: 'Social sharing image (1200×630 recommended)',
+      description: `Social sharing image (1200×630 recommended). ${imageFieldDescription}`,
       type: 'image',
       options: { hotspot: true },
     }),

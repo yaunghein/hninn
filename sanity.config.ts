@@ -10,7 +10,6 @@ import { presentationTool } from 'sanity/presentation'
 import { structureTool } from 'sanity/structure'
 
 import { apiVersion, dataset, projectId } from './sanity/env'
-import { resolve } from './sanity/presentation/resolve'
 import { schema } from './sanity/schemaTypes'
 import { structure } from './sanity/structure'
 import { theme } from './sanity/theme'
@@ -31,7 +30,6 @@ export default defineConfig({
   plugins: [
     structureTool({ structure }),
     presentationTool({
-      resolve,
       previewUrl: {
         origin: previewOrigin,
         preview: '/',

@@ -1,7 +1,9 @@
 import { defineField } from 'sanity'
 
+import { colorTokens } from '@/lib/constants/colors'
+
 /** Brand colors editors can pick for slide chrome (not utility tokens). */
-export const brandColorOptions = [
+const brandColorLabels = [
   { title: 'Cream', value: 'cream' },
   { title: 'Sand', value: 'sand' },
   { title: 'Olive', value: 'olive' },
@@ -14,7 +16,15 @@ export const brandColorOptions = [
   { title: 'Taupe', value: 'taupe' },
   { title: 'White', value: 'white' },
   { title: 'Black', value: 'black' },
-] as const
+] as const satisfies ReadonlyArray<{
+  title: string
+  value: keyof typeof colorTokens
+}>
+
+export const brandColorOptions = brandColorLabels.map(({ title, value }) => ({
+  title: `${title} (${colorTokens[value]})`,
+  value,
+}))
 
 export function linkHrefField(description?: string) {
   return defineField({
@@ -39,6 +49,10 @@ export function ctaFields() {
     linkHrefField(),
   ]
 }
+
+/** Shown on image fields to nudge editors toward smaller uploads. */
+export const imageFieldDescription =
+  'Prefer .webp for smaller files. You can convert images at https://towebp.io/'
 
 export function altImageFields() {
   return [

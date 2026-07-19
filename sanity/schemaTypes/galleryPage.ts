@@ -1,6 +1,7 @@
 import { ImagesIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+import { imageFieldDescription } from './fields'
 import { seoField } from './seoType'
 
 export const galleryPage = defineType({
@@ -30,6 +31,7 @@ export const galleryPage = defineType({
             defineField({
               name: 'images',
               title: 'Images',
+              description: imageFieldDescription,
               type: 'array',
               of: [
                 defineArrayMember({
