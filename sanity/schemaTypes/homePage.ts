@@ -27,7 +27,7 @@ export const homePage = defineType({
   type: 'document',
   icon: HomeIcon,
   groups: [
-    { name: 'hero', title: 'Hero', default: true },
+    { name: 'hero', title: 'Hero' },
     { name: 'facts', title: 'General facts' },
     { name: 'menu', title: 'Menu' },
     { name: 'findUs', title: 'Find us' },
@@ -296,12 +296,18 @@ export const homePage = defineType({
         }),
         defineField({
           name: 'map',
-          title: 'Map image',
+          title: 'Map image (Deprecated)',
           type: 'image',
-          description: imageFieldDescription,
+          description:
+            'No longer used — the site embeds Google Maps instead. Safe to clear.',
+          deprecated: {
+            reason: 'Replaced by an embedded Google Map on the site.',
+          },
+          readOnly: true,
+          hidden: ({ value }) => value === undefined,
+          initialValue: undefined,
           options: { hotspot: true },
           fields: altImageFields(),
-          validation: (rule) => rule.required(),
         }),
         defineField({
           name: 'cta',

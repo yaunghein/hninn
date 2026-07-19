@@ -27,10 +27,5 @@ export type ContactContent = {
       color: Color
       hoverColor: Color
     }
-    map: {
-      src: string
-      alt: string
-      blurDataURL?: string
-    }
   }
 }

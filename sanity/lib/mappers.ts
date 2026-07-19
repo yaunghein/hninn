@@ -50,7 +50,6 @@ export type ContactPageData = {
   location?: {
     title?: string | null
     directionsCta?: SanityLink
-    map?: SanityImage
   } | null
 }
 
@@ -70,11 +69,6 @@ export type GalleryPageData = {
       }[]
     | null
 }
-
-const FALLBACK_MAP = {
-  src: '/images/contact_map.jpg',
-  alt: 'Map showing Hninn on Phetchaburi Road near Saen Saep canal',
-} as const
 
 const FALLBACK_EVENT_IMAGES = [
   {
@@ -290,11 +284,6 @@ export function toConceptContent(data: ConceptPageData): ConceptContent {
 }
 
 export function toContactContent(data: ContactPageData): ContactContent {
-  const mapAsset = data.location?.map?.asset
-  const mapSrc = mapAsset
-    ? urlFor(data.location!.map!).width(1600).url()
-    : FALLBACK_MAP.src
-
   return {
     title: data.title ?? 'Get in Touch',
     bookCta: {
@@ -318,11 +307,6 @@ export function toContactContent(data: ContactPageData): ContactContent {
           'https://maps.google.com/?q=Hninn+Phetchaburi+Bangkok',
         color: 'olive',
         hoverColor: 'sand',
-      },
-      map: {
-        src: mapSrc,
-        alt: data.location?.map?.alt ?? FALLBACK_MAP.alt,
-        blurDataURL: data.location?.map?.asset?.metadata?.lqip ?? undefined,
       },
     },
   }

@@ -1,7 +1,6 @@
 import { CommentIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
-import { imageFieldDescription } from './fields'
 import { seoField } from './seoType'
 
 function linkHrefField(description?: string) {
@@ -140,20 +139,24 @@ export const contactPage = defineType({
         }),
         defineField({
           name: 'map',
-          title: 'Map image',
+          title: 'Map image (Deprecated)',
           type: 'image',
-          description: imageFieldDescription,
+          description:
+            'No longer used — the site embeds Google Maps instead. Safe to clear.',
+          deprecated: {
+            reason: 'Replaced by an embedded Google Map on the site.',
+          },
+          readOnly: true,
+          hidden: ({ value }) => value === undefined,
+          initialValue: undefined,
           options: { hotspot: true },
           fields: [
             defineField({
               name: 'alt',
               title: 'Alternative text',
               type: 'string',
-              validation: (rule) =>
-                rule.required().warning('Alt text is important for accessibility'),
             }),
           ],
-          validation: (rule) => rule.required(),
         }),
       ],
       validation: (rule) => rule.required(),

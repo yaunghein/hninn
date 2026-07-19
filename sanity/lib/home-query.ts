@@ -73,16 +73,6 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
     },
     findUs{
       title,
-      map{
-        asset->{
-          _id,
-          url,
-          metadata{ lqip }
-        },
-        hotspot,
-        crop,
-        alt
-      },
       cta{ label, href }
     },
     "seo": {

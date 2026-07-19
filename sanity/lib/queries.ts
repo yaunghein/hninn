@@ -76,24 +76,12 @@ export const CONTACT_PAGE_QUERY = defineQuery(/* groq */ `
       directionsCta{
         label,
         href
-      },
-      map{
-        asset->{
-          _id,
-          url,
-          metadata{
-            lqip
-          }
-        },
-        hotspot,
-        crop,
-        alt
       }
     },
     "seo": {
       "title": coalesce(seo.title, title, "Contact"),
       "description": coalesce(seo.description, location.title, ""),
-      "ogImage": coalesce(seo.ogImage, location.map)
+      "ogImage": seo.ogImage
     }
   }
 `)

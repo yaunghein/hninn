@@ -73,7 +73,6 @@ export type HomePageData = {
   } | null
   findUs?: {
     title?: string | null
-    map?: SanityImage
     cta?: SanityLink
   } | null
 }
@@ -296,10 +295,6 @@ const FALLBACK_MENU: HomeMenuContent = {
 
 const FALLBACK_FIND_US: HomeFindUsContent = {
   title: 'Find Us in Phetchaburi',
-  map: {
-    src: '/images/home_map.jpg',
-    alt: 'Map showing Hninn location in Phetchaburi',
-  },
   cta: {
     label: 'Get Direction',
     href: 'https://maps.google.com/?q=Hninn+Contemporary+Burmese+Bangkok',
@@ -433,10 +428,6 @@ function toFindUs(data: HomePageData['findUs']): HomeFindUsContent {
   const fallback = FALLBACK_FIND_US
   return {
     title: data?.title ?? fallback.title,
-    map: {
-      src: imageSrc(data?.map ?? null, 1600, fallback.map.src),
-      alt: data?.map?.alt ?? fallback.map.alt,
-    },
     cta: {
       label: data?.cta?.label ?? fallback.cta.label,
       href: data?.cta?.href ?? fallback.cta.href,

@@ -1,6 +1,4 @@
-import Image from 'next/image'
-
-import { AppLink, Button } from '@/components/common'
+import { AppLink, Button, GoogleMap } from '@/components/common'
 import type { ContactContent } from '@/types/contact'
 
 type ContactHeroProps = ContactContent
@@ -81,16 +79,7 @@ export default function ContactHero({
         </div>
 
         <div className="relative h-100 w-full xs:h-auto xs:min-h-125 xs:flex-1">
-          <Image
-            src={location.map.src}
-            alt={location.map.alt}
-            fill
-            sizes="(max-width: 479px) 100vw, 50vw"
-            className="object-cover object-[center_35%]"
-            priority
-            placeholder={location.map.blurDataURL ? 'blur' : 'empty'}
-            blurDataURL={location.map.blurDataURL}
-          />
+          <GoogleMap className="absolute inset-0" />
         </div>
       </div>
     </section>

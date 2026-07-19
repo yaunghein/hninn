@@ -63,10 +63,6 @@ export type HomeMenuContent = {
 
 export type HomeFindUsContent = {
   title: string
-  map: {
-    src: string
-    alt: string
-  }
   cta: {
     label: string
     href: string
