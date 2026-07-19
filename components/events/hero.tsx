@@ -29,7 +29,7 @@ export default function EventsHero({
         />
       </div>
 
-      <div className="mt-13 xs:mt-0 xs:flex-1 xs:grid xs:place-items-center">
+      <div className="mt-13 xs:flex-1 xs:grid xs:place-items-center">
         <EventsSlider images={images} />
       </div>
     </section>

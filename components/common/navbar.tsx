@@ -27,7 +27,7 @@ export type NavbarContent = {
 type NavbarProps = NavbarContent
 
 const PATTERN_ROWS = 9
-const SPRING = 'elastic.out(1, 0.9)'
+const SPRING = 'elastic.out(1, 0.75)'
 const EASE_OUT = 'power2.out'
 const EASE_IO = 'power3.inOut'
 
