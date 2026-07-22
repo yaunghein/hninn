@@ -109,7 +109,7 @@ export const EVENTS_PAGE_QUERY = defineQuery(/* groq */ `
     "seo": {
       "title": coalesce(seo.title, title, "Events"),
       "description": coalesce(seo.description, description, ""),
-      "ogImage": coalesce(seo.ogImage, images[0])
+      "ogImage": seo.ogImage
     }
   }
 `)
@@ -143,7 +143,7 @@ export const GALLERY_PAGE_QUERY = defineQuery(/* groq */ `
         "Explore photos from Hninn — food, interiors, events, and pets.",
         ""
       ),
-      "ogImage": coalesce(seo.ogImage, blocks[0].images[0])
+      "ogImage": seo.ogImage
     }
   }
 `)
