@@ -60,7 +60,7 @@ function revealSlide(slideEl: HTMLElement | undefined, instant = false) {
 
   gsap.fromTo(
     mask,
-    { clipPath: 'inset(100% 0% 0% 0%)' },
+    { clipPath: 'inset(0% 0% 0% 100%)' },
     {
       clipPath: 'inset(0% 0% 0% 0%)',
       duration: HOME_SLIDE_REVEAL_DURATION,

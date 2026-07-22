@@ -1,5 +1,6 @@
 'use client'
 
+import { homeSlideRevealTransitionStyle } from '@/lib/constants/home-slider'
 import { cn } from '@/lib/utils/cn'
 import { useHomeSliderStore } from '@/stores/home-slider'
 
@@ -35,10 +36,11 @@ export default function SlideProgress({
             aria-selected={isActive}
             aria-label={`Go to slide ${index + 1}`}
             onClick={() => onSelect?.(index)}
-            className={cn(
-              'h-0.5 cursor-pointer overflow-hidden bg-white/35 transition-[flex-grow,width] duration-700 ease-in-out',
-              isActive ? 'min-w-0 flex-1' : 'w-5 shrink-0',
-            )}
+            className="h-0.5 shrink-0 basis-5 cursor-pointer overflow-hidden bg-white/35 transition-[flex-grow]"
+            style={{
+              ...homeSlideRevealTransitionStyle,
+              flexGrow: isActive ? 1 : 0,
+            }}
           >
             <span
               className="block h-full origin-left bg-white will-change-transform"
