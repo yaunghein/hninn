@@ -382,10 +382,7 @@ export default function Navbar({
               <span className="whitespace-nowrap">{hours[1]}</span>
             </p>
 
-            <div
-              id="navbar-ctas"
-              className="flex shrink-0 items-center overflow-hidden"
-            >
+            <div id="navbar-ctas" className="flex shrink-0 items-center">
               <NavCta
                 href={reservation.href}
                 label={reservation.label}

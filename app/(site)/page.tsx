@@ -3,6 +3,7 @@ import HomeFindUs from '@/components/home/find-us'
 import GeneralFacts from '@/components/home/general-facts'
 import HomeHero from '@/components/home/hero'
 import HomeMenu from '@/components/home/menu'
+import StickyAtEnd from '@/components/home/sticky-at-end'
 import { Footer } from '@/components/common'
 import {
   toHomeContent,
@@ -46,12 +47,18 @@ export default async function Home() {
   const footer = toFooterContent(footerData as FooterData)
 
   return (
-    <>
-      <HomeHero {...hero} />
-      <GeneralFacts {...generalFacts} />
-      <HomeMenu {...menu} />
-      <HomeFindUs {...findUs} />
-      <Footer {...footer} />
-    </>
+    <div className="relative">
+      <StickyAtEnd className="z-0">
+        <HomeHero {...hero} />
+      </StickyAtEnd>
+      <StickyAtEnd className="z-10">
+        <GeneralFacts {...generalFacts} />
+      </StickyAtEnd>
+      <div className="relative z-20">
+        <HomeMenu {...menu} />
+        <HomeFindUs {...findUs} />
+        <Footer {...footer} />
+      </div>
+    </div>
   )
 }

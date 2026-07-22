@@ -93,7 +93,7 @@ export default function ImageSlider({ slides, duration }: ImageSliderProps) {
     <div className="relative flex min-h-dvh bg-black w-full flex-col overflow-hidden xs:h-full">
       <div
         className={cn(
-          'px-6 pt-6 pb-20 flex-1 transition-colors xs:hidden',
+          'px-6 pt-6 pb-20 transition-colors xs:hidden',
           bgColorClass[slide.background],
         )}
         style={homeSlideRevealTransitionStyle}

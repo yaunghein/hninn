@@ -7,7 +7,7 @@ type GeneralFactsProps = GeneralFactsContent
 
 export default function GeneralFacts({ facts, cta }: GeneralFactsProps) {
   return (
-    <section className="relative overflow-hidden bg-olive pt-13 pb-16 xs:pt-24 xs:pb-20">
+    <section className="relative overflow-hidden bg-olive pt-13 pb-36 xs:pt-24 xs:pb-32">
       <PatternBackdrop color="olive-dark" />
 
       <div className="relative z-10 flex flex-col gap-13 xs:gap-30">
