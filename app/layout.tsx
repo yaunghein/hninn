@@ -28,6 +28,22 @@ export const metadata: Metadata = {
   },
   description:
     'A cozy, pet-friendly space serving contemporary Burmese brunch in Phetchaburi, Bangkok.',
+  openGraph: {
+    siteName: 'Hninn',
+    type: 'website',
+    images: [
+      {
+        url: '/open-graph.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hninn',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/open-graph.jpg'],
+  },
 }
 
 export default async function RootLayout({
@@ -39,6 +55,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
+      <meta name="apple-mobile-web-app-title" content="Hninn" />
       <body className="flex min-h-full flex-col bg-cream font-sans text-brown">
         {/* <GridGuide /> */}
         {children}

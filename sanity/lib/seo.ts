@@ -34,7 +34,21 @@ export function buildPageMetadata(
   const title = seo?.title?.trim() || SITE_NAME
   const description = seo?.description?.trim() || DEFAULT_DESCRIPTION
 
-  const metadata: Metadata = {
+  const ogImage = hasImageAsset(seo?.ogImage)
+    ? {
+        url: urlFor(seo.ogImage).width(1200).height(630).fit('crop').url(),
+        width: 1200,
+        height: 630,
+        alt: title,
+      }
+    : {
+        url: '/open-graph.jpg',
+        width: 1200,
+        height: 630,
+        alt: title,
+      }
+
+  return {
     title: options?.absoluteTitle ? { absolute: title } : title,
     description,
     openGraph: {
@@ -42,26 +56,14 @@ export function buildPageMetadata(
       description,
       siteName: SITE_NAME,
       type: 'website',
+      images: [ogImage],
       ...(options?.path ? { url: options.path } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [ogImage.url],
     },
   }
-
-  if (hasImageAsset(seo?.ogImage)) {
-    const url = urlFor(seo.ogImage).width(1200).height(630).fit('crop').url()
-    metadata.openGraph = {
-      ...metadata.openGraph,
-      images: [{ url, width: 1200, height: 630, alt: title }],
-    }
-    metadata.twitter = {
-      ...metadata.twitter,
-      images: [url],
-    }
-  }
-
-  return metadata
 }
