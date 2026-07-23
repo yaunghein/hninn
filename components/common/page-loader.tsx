@@ -2,7 +2,8 @@
 
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLenis } from 'lenis/react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { Logo } from '@/components/svgs'
 import {
@@ -15,6 +16,7 @@ gsap.registerPlugin(useGSAP)
 export default function PageLoader() {
   const rootRef = useRef<HTMLDivElement>(null)
   const wipeRef = useRef<HTMLDivElement>(null)
+  const lenis = useLenis()
   const [show, setShow] = useState(false)
 
   useLayoutEffect(() => {
@@ -25,6 +27,12 @@ export default function PageLoader() {
     setShow(true)
   }, [])
 
+  useEffect(() => {
+    if (!lenis) return
+    if (show) lenis.stop()
+    else lenis.start()
+  }, [lenis, show])
+
   useGSAP(
     () => {
       if (!show) return
@@ -33,13 +41,10 @@ export default function PageLoader() {
       const wipe = wipeRef.current
       if (!root || !wipe) return
 
-      document.documentElement.style.overflow = 'hidden'
-
       gsap
         .timeline({
           defaults: { ease: 'power2.inOut' },
           onComplete: () => {
-            document.documentElement.style.overflow = ''
             setShow(false)
           },
         })
@@ -49,10 +54,6 @@ export default function PageLoader() {
           { height: '0%', duration: 2.5, delay: 0.35 },
         )
         .to(root, { opacity: 0, duration: 1, delay: 0.2 })
-
-      return () => {
-        document.documentElement.style.overflow = ''
-      }
     },
     { scope: rootRef, dependencies: [show] },
   )
