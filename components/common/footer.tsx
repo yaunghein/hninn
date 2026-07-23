@@ -12,7 +12,6 @@ export type FooterContent = {
   address: string
   hours: string
   legal: FooterLink[]
-  copyright: string
 }
 
 type FooterProps = FooterContent
@@ -22,10 +21,10 @@ export default function Footer({
   address,
   hours,
   legal,
-  copyright,
 }: FooterProps) {
   const [instagram, facebook, tiktok] = social
   const [terms, privacy] = legal
+  const copyright = `© ${new Date().getFullYear()} Hninn. All rights reserved.`
 
   return (
     <footer className="bg-peach-light text-brown-muted">

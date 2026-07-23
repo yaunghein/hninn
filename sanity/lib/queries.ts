@@ -32,8 +32,7 @@ export const FOOTER_QUERY = defineQuery(/* groq */ `
     legal[]{
       label,
       href
-    },
-    copyright
+    }
   }
 `)
 

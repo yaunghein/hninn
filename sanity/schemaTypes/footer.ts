@@ -70,12 +70,6 @@ export const footer = defineType({
       ],
       validation: (rule) => rule.required().min(1),
     }),
-    defineField({
-      name: 'copyright',
-      title: 'Copyright',
-      type: 'string',
-      validation: (rule) => rule.required(),
-    }),
   ],
   preview: {
     prepare() {

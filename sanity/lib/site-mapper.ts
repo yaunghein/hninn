@@ -22,7 +22,6 @@ export type FooterData = {
   address?: string | null
   hours?: string | null
   legal?: SanityLink[] | null
-  copyright?: string | null
 } | null
 
 const FALLBACK_NAVBAR: NavbarContent = {
@@ -51,7 +50,6 @@ const FALLBACK_FOOTER: FooterContent = {
     { label: 'Terms & Conditions', href: '/terms' },
     { label: 'Privacy Policy', href: '/privacy' },
   ],
-  copyright: '© 2026 Hninn. All rights reserved.',
 }
 
 function mapLink(
@@ -101,6 +99,5 @@ export function toFooterContent(data: FooterData): FooterContent {
     address: data.address ?? FALLBACK_FOOTER.address,
     hours: data.hours ?? FALLBACK_FOOTER.hours,
     legal: mapLinks(data.legal, FALLBACK_FOOTER.legal) as FooterLink[],
-    copyright: data.copyright ?? FALLBACK_FOOTER.copyright,
   }
 }
