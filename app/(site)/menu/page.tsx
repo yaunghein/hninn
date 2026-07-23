@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { MenuGrid, MenuHeader, MenuTabs } from '@/components/menu'
+import { MenuContent, MenuHeader } from '@/components/menu'
 import {
   toMenuContent,
   type MenuPageData,
@@ -29,7 +29,7 @@ export default async function MenuPage({
     searchParams,
   ])
   const { tabs, items } = toMenuContent(data as MenuPageData | null)
-  const activeId = resolveTabId(
+  const initialActiveId = resolveTabId(
     params[TAB_QUERY_KEY],
     tabs.map((tab) => tab.id),
   )
@@ -37,8 +37,11 @@ export default async function MenuPage({
   return (
     <div className="bg-cream">
       <MenuHeader />
-      <MenuTabs tabs={tabs} activeId={activeId} />
-      <MenuGrid tabs={tabs} items={items} activeId={activeId} />
+      <MenuContent
+        tabs={tabs}
+        items={items}
+        initialActiveId={initialActiveId}
+      />
     </div>
   )
 }

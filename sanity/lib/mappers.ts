@@ -4,6 +4,8 @@ import type { ConceptContent } from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
 import type { EventsContent } from '@/types/events'
 import type { GalleryContent, GalleryMediaItem } from '@/types/gallery'
+import { DEFAULT_TAB_ID } from '@/lib/utils/tab-query'
+import { uniqueSlug } from '@/lib/utils/slugify'
 import { urlFor } from '@/sanity/lib/image'
 
 type SanityLink = {
@@ -228,7 +230,7 @@ function fallbackGalleryContent(): GalleryContent {
 
   return {
     tabs: [
-      { id: 'all', label: 'All' },
+      { id: DEFAULT_TAB_ID, label: 'All' },
       ...FALLBACK_GALLERY_BLOCKS.map((block) => ({
         id: block.id,
         label: block.name,
@@ -366,10 +368,20 @@ export function toGalleryContent(data: GalleryPageData): GalleryContent {
     return fallbackGalleryContent()
   }
 
+  const usedIds = new Set<string>([DEFAULT_TAB_ID])
+  const categoryIds = new Map<string, string>()
+
+  for (const block of blocks) {
+    categoryIds.set(
+      stegaClean(block._key),
+      uniqueSlug(stegaClean(block.name), usedIds),
+    )
+  }
+
   const tabs = [
-    { id: 'all', label: 'All' },
+    { id: DEFAULT_TAB_ID, label: 'All' },
     ...blocks.map((block) => ({
-      id: stegaClean(block._key),
+      id: categoryIds.get(stegaClean(block._key))!,
       label: block.name,
     })),
   ]
@@ -377,7 +389,7 @@ export function toGalleryContent(data: GalleryPageData): GalleryContent {
   const images = blocks.flatMap((block, blockIndex) => {
     const fallbackBlock = FALLBACK_GALLERY_BLOCKS[blockIndex]
     const blockImages = block.images ?? []
-    const category = stegaClean(block._key)
+    const category = categoryIds.get(stegaClean(block._key))!
 
     return blockImages
       .map((image, imageIndex) =>

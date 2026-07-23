@@ -1,5 +1,5 @@
-const PAGE_LOADER_COOKIE = 'hninn_page_loader'
-const PAGE_LOADER_TTL_SECONDS = 10 * 60
+export const PAGE_LOADER_COOKIE = 'hninn_page_loader'
+export const PAGE_LOADER_TTL_SECONDS = 10 * 60
 
 function readCookie(name: string) {
   if (typeof document === 'undefined') return null
@@ -11,8 +11,8 @@ function readCookie(name: string) {
 }
 
 /** True when the intro loader ran within the last TTL window. */
-export function hasRecentPageLoader() {
-  return Boolean(readCookie(PAGE_LOADER_COOKIE))
+export function hasRecentPageLoader(cookieValue?: string | null) {
+  return Boolean(cookieValue ?? readCookie(PAGE_LOADER_COOKIE))
 }
 
 /** Mark the intro loader as shown for the next TTL window. */

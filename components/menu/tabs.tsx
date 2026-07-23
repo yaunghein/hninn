@@ -1,21 +1,15 @@
 'use client'
 
-import { Suspense } from 'react'
-
-import { useSelectTabQuery } from '@/lib/hooks/use-select-tab-query'
 import { cn } from '@/lib/utils/cn'
 import type { MenuTab } from '@/types/menu'
 
 type MenuTabsProps = {
   tabs: MenuTab[]
   activeId: string
+  onSelect: (id: string) => void
 }
 
-function MenuTabsBar({
-  tabs,
-  activeId,
-  onSelect,
-}: MenuTabsProps & { onSelect: (id: string) => void }) {
+export default function MenuTabs({ tabs, activeId, onSelect }: MenuTabsProps) {
   return (
     <div className="sticky top-0 z-10 border-y border-sand bg-cream">
       <div
@@ -53,22 +47,5 @@ function MenuTabsBar({
         })}
       </div>
     </div>
-  )
-}
-
-function MenuTabsWithQuery({ tabs, activeId }: MenuTabsProps) {
-  const selectTab = useSelectTabQuery()
-  return <MenuTabsBar tabs={tabs} activeId={activeId} onSelect={selectTab} />
-}
-
-export default function MenuTabs({ tabs, activeId }: MenuTabsProps) {
-  return (
-    <Suspense
-      fallback={
-        <MenuTabsBar tabs={tabs} activeId={activeId} onSelect={() => {}} />
-      }
-    >
-      <MenuTabsWithQuery tabs={tabs} activeId={activeId} />
-    </Suspense>
   )
 }

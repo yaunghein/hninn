@@ -10,26 +10,25 @@ import {
   HOME_SLIDE_REVEAL_DURATION,
   HOME_SLIDE_REVEAL_EASE,
 } from '@/lib/constants/home-slider'
-import {
-  hasRecentPageLoader,
-  markPageLoaderShown,
-} from '@/lib/utils/page-loader-cookie'
+import { markPageLoaderShown } from '@/lib/utils/page-loader-cookie'
 
 gsap.registerPlugin(useGSAP)
 
-export default function PageLoader() {
+type PageLoaderProps = {
+  /** From server cookie check — true means cover content on first paint. */
+  showInitially: boolean
+}
+
+export default function PageLoader({ showInitially }: PageLoaderProps) {
   const rootRef = useRef<HTMLDivElement>(null)
   const wipeRef = useRef<HTMLDivElement>(null)
   const lenis = useLenis()
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(showInitially)
 
   useLayoutEffect(() => {
-    if (hasRecentPageLoader()) return
+    if (!showInitially) return
     markPageLoaderShown()
-    // Show before paint when the cookie is missing (no cream flash when it exists).
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- mount-only cookie gate
-    setShow(true)
-  }, [])
+  }, [showInitially])
 
   useEffect(() => {
     if (!lenis) return

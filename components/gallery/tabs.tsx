@@ -1,8 +1,5 @@
 'use client'
 
-import { Suspense } from 'react'
-
-import { useSelectTabQuery } from '@/lib/hooks/use-select-tab-query'
 import { cn } from '@/lib/utils/cn'
 
 export type GalleryTab = {
@@ -13,13 +10,14 @@ export type GalleryTab = {
 type GalleryTabsProps = {
   tabs: GalleryTab[]
   activeId: string
+  onSelect: (id: string) => void
 }
 
-function GalleryTabsBar({
+export default function GalleryTabs({
   tabs,
   activeId,
   onSelect,
-}: GalleryTabsProps & { onSelect: (id: string) => void }) {
+}: GalleryTabsProps) {
   return (
     <div className="border-b border-sand bg-cream">
       <div
@@ -57,24 +55,5 @@ function GalleryTabsBar({
         })}
       </div>
     </div>
-  )
-}
-
-function GalleryTabsWithQuery({ tabs, activeId }: GalleryTabsProps) {
-  const selectTab = useSelectTabQuery()
-  return (
-    <GalleryTabsBar tabs={tabs} activeId={activeId} onSelect={selectTab} />
-  )
-}
-
-export default function GalleryTabs({ tabs, activeId }: GalleryTabsProps) {
-  return (
-    <Suspense
-      fallback={
-        <GalleryTabsBar tabs={tabs} activeId={activeId} onSelect={() => {}} />
-      }
-    >
-      <GalleryTabsWithQuery tabs={tabs} activeId={activeId} />
-    </Suspense>
   )
 }

@@ -1,5 +1,7 @@
 import { stegaClean } from 'next-sanity'
 
+import { DEFAULT_TAB_ID } from '@/lib/utils/tab-query'
+import { uniqueSlug } from '@/lib/utils/slugify'
 import { urlFor } from '@/sanity/lib/image'
 import type { MenuItem, MenuPageContent } from '@/types/menu'
 
@@ -95,7 +97,7 @@ const FALLBACK_CATEGORIES: {
 
 function fallbackMenuContent(): MenuPageContent {
   const tabs = [
-    { id: 'all', label: 'All' },
+    { id: DEFAULT_TAB_ID, label: 'All' },
     ...FALLBACK_CATEGORIES.map((category) => ({
       id: category.id,
       label: category.name,
@@ -141,16 +143,26 @@ export function toMenuContent(data: MenuPageData | null): MenuPageContent {
     return fallbackMenuContent()
   }
 
+  const usedIds = new Set<string>([DEFAULT_TAB_ID])
+  const categoryIds = new Map<string, string>()
+
+  for (const category of categories) {
+    categoryIds.set(
+      stegaClean(category._key),
+      uniqueSlug(stegaClean(category.name), usedIds),
+    )
+  }
+
   const tabs = [
-    { id: 'all', label: 'All' },
+    { id: DEFAULT_TAB_ID, label: 'All' },
     ...categories.map((category) => ({
-      id: stegaClean(category._key),
+      id: categoryIds.get(stegaClean(category._key))!,
       label: category.name,
     })),
   ]
 
   const items: MenuItem[] = categories.flatMap((category) => {
-    const categoryId = stegaClean(category._key)
+    const categoryId = categoryIds.get(stegaClean(category._key))!
 
     return (category.items ?? [])
       .filter(

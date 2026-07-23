@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import GalleryLoader from '@/components/gallery/loader'
 import { InfiniteCanvas } from '@/components/gallery/infinite-canvas'
+import { DEFAULT_TAB_ID } from '@/lib/utils/tab-query'
 import type {
   GalleryMediaItem,
   InfiniteCanvasConfig,
@@ -76,7 +77,7 @@ export default function GalleryCanvas({
   activeId,
 }: GalleryCanvasProps) {
   const media = useMemo(() => {
-    if (activeId === 'all') return images
+    if (activeId === DEFAULT_TAB_ID) return images
     const filtered = images.filter((item) => item.category === activeId)
     return filtered.length > 0 ? filtered : images
   }, [images, activeId])

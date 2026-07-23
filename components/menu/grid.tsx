@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 
 import MenuCard from '@/components/menu/card'
 import MenuEmpty from '@/components/menu/empty'
+import { DEFAULT_TAB_ID } from '@/lib/utils/tab-query'
 import type { MenuItem, MenuTab } from '@/types/menu'
 
 type MenuGridProps = {
@@ -15,7 +16,7 @@ type MenuGridProps = {
 
 export default function MenuGrid({ tabs, items, activeId }: MenuGridProps) {
   const visibleItems =
-    activeId === 'all'
+    activeId === DEFAULT_TAB_ID
       ? items
       : items.filter((item) => item.categoryId === activeId)
 

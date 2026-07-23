@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { GalleryCanvas, GalleryTabs } from '@/components/gallery'
+import { GalleryContent } from '@/components/gallery'
 import { resolveTabId, TAB_QUERY_KEY } from '@/lib/utils/tab-query'
 import { sanityFetch } from '@/sanity/lib/live'
 import {
@@ -53,21 +53,19 @@ export default async function GalleryPage({
   }
 
   const { tabs, images } = toGalleryContent(data as GalleryPageData)
-  const activeId = resolveTabId(
+  const initialActiveId = resolveTabId(
     params[TAB_QUERY_KEY],
     tabs.map((tab) => tab.id),
   )
 
   return (
     <div className="flex min-h-dvh flex-col bg-cream">
-      <GalleryTabs tabs={tabs} activeId={activeId} />
-      <div className="relative min-h-[calc(100dvh-2.75rem)] flex-1">
-        <GalleryCanvas
-          images={images}
-          activeId={activeId}
-          config={canvasConfig}
-        />
-      </div>
+      <GalleryContent
+        tabs={tabs}
+        images={images}
+        initialActiveId={initialActiveId}
+        config={canvasConfig}
+      />
     </div>
   )
 }
