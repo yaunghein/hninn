@@ -42,12 +42,16 @@ export type GeneralFactsContent = {
   }
 }
 
+export type HomeMenuImageSize = 'normal' | 'wide'
+
 export type HomeMenuImage = {
   src: string
   alt: string
   lqip?: string
   /** width / height from Sanity metadata */
   aspectRatio?: number
+  /** Desktop column span: normal = 1, wide = 2 */
+  size: HomeMenuImageSize
 }
 
 export type HomeMenuItem = {

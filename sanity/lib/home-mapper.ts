@@ -10,6 +10,7 @@ import type {
   HomeHeroContent,
   HomeMenuContent,
   HomeMenuImage,
+  HomeMenuImageSize,
   HomeMenuItem,
   HomeSlide,
 } from '@/types/home'
@@ -78,6 +79,7 @@ export type HomePageData = {
             | {
                 image?: SanityImage
                 caption?: string | null
+                size?: string | null
               }[]
             | null
           /** @deprecated use `images` */
@@ -276,11 +278,25 @@ const FALLBACK_MENU: HomeMenuContent = {
           src: '/images/home_menu_1.png',
           alt: 'Signature Tea Leaf Salad',
           aspectRatio: 1.36,
+          size: 'normal',
         },
         {
           src: '/images/home_menu_2.png',
           alt: 'Signature Tea Leaf Salad plating',
+          aspectRatio: 1,
+          size: 'normal',
+        },
+        {
+          src: '/images/home_menu_1.png',
+          alt: 'Signature Tea Leaf Salad detail',
           aspectRatio: 1.36,
+          size: 'normal',
+        },
+        {
+          src: '/images/home_menu_2.png',
+          alt: 'Signature Tea Leaf Salad plate',
+          aspectRatio: 1.36,
+          size: 'normal',
         },
       ],
     },
@@ -290,10 +306,17 @@ const FALLBACK_MENU: HomeMenuContent = {
         {
           src: '/images/home_menu_2.png',
           alt: "Hninn's Brunch Mohinga",
+          size: 'normal',
         },
         {
           src: '/images/home_menu_1.png',
           alt: "Hninn's Brunch Mohinga bowl",
+          size: 'normal',
+        },
+        {
+          src: '/images/home_menu_2.png',
+          alt: "Hninn's Brunch Mohinga wide",
+          size: 'wide',
         },
       ],
     },
@@ -303,10 +326,17 @@ const FALLBACK_MENU: HomeMenuContent = {
         {
           src: '/images/home_menu_1.png',
           alt: 'Signature House Blend Coffee',
+          size: 'wide',
         },
         {
           src: '/images/home_menu_2.png',
           alt: 'Signature House Blend Coffee service',
+          size: 'normal',
+        },
+        {
+          src: '/images/home_menu_1.png',
+          alt: 'Signature House Blend Coffee detail',
+          size: 'normal',
         },
       ],
     },
@@ -316,10 +346,12 @@ const FALLBACK_MENU: HomeMenuContent = {
         {
           src: '/images/home_menu_2.png',
           alt: 'Signature Tea Leaf Salad 2',
+          size: 'normal',
         },
         {
           src: '/images/home_menu_1.png',
           alt: 'Signature Tea Leaf Salad 2 plating',
+          size: 'normal',
         },
       ],
     },
@@ -329,10 +361,12 @@ const FALLBACK_MENU: HomeMenuContent = {
         {
           src: '/images/home_menu_1.png',
           alt: "Hninn's Brunch Mohinga 2",
+          size: 'normal',
         },
         {
           src: '/images/home_menu_2.png',
           alt: "Hninn's Brunch Mohinga 2 bowl",
+          size: 'wide',
         },
       ],
     },
@@ -342,10 +376,12 @@ const FALLBACK_MENU: HomeMenuContent = {
         {
           src: '/images/home_menu_2.png',
           alt: 'Signature House Blend Coffee 2',
+          size: 'normal',
         },
         {
           src: '/images/home_menu_1.png',
           alt: 'Signature House Blend Coffee 2 service',
+          size: 'normal',
         },
       ],
     },
@@ -450,6 +486,12 @@ function toGeneralFacts(
   }
 }
 
+function asMenuImageSize(
+  value: string | null | undefined,
+): HomeMenuImageSize {
+  return stegaClean(value ?? '') === 'wide' ? 'wide' : 'normal'
+}
+
 function imageAspectRatio(image: SanityImage, fallback = 1.36) {
   const dimensions = image?.asset?.metadata?.dimensions
   const fromMeta = dimensions?.aspectRatio
@@ -476,6 +518,7 @@ function mapMenuImages(
           | {
               image?: SanityImage
               caption?: string | null
+              size?: string | null
             }[]
           | null
         image?: SanityImage
@@ -489,12 +532,14 @@ function mapMenuImages(
     .map((row, index): HomeMenuImage | null => {
       const fallbackImage = fallbackImages[index] ?? fallbackImages[0]
       const image = row.image
+      const size = asMenuImageSize(row.size ?? fallbackImage?.size)
       if (!image?.asset) {
         if (!fallbackImage) return null
         return {
           src: fallbackImage.src,
           alt: row.caption ?? fallbackImage.alt,
           aspectRatio: fallbackImage.aspectRatio ?? 1.36,
+          size,
           ...(fallbackImage.lqip ? { lqip: fallbackImage.lqip } : {}),
         }
       }
@@ -503,6 +548,7 @@ function mapMenuImages(
         src: urlFor(image).width(1200).url(),
         alt: row.caption ?? fallbackImage?.alt ?? name,
         aspectRatio: imageAspectRatio(image, fallbackImage?.aspectRatio ?? 1.36),
+        size,
       }
       const lqip = image.asset?.metadata?.lqip
       if (lqip) mapped.lqip = lqip
@@ -520,6 +566,7 @@ function mapMenuImages(
       src: urlFor(legacyImage).width(1200).url(),
       alt: legacyImage.caption ?? legacyImage.alt ?? name,
       aspectRatio: imageAspectRatio(legacyImage),
+      size: 'normal',
     }
     const lqip = legacyAsset.metadata?.lqip
     if (lqip) mapped.lqip = lqip

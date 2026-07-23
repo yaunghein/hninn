@@ -27,7 +27,7 @@ export default function HomeMenu({
           color={cta.color}
           hoverColor={cta.hoverColor}
         />
-        <p className="hidden max-w-84 text-base leading-[1.39] text-olive xs:block">
+        <p className="hidden max-w-84 text-base leading-[1.39] text-olive xs:block pb-28">
           {description}
         </p>
       </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import Image from 'next/image'
 import type { Swiper as SwiperInstance } from 'swiper'
 import { Autoplay } from 'swiper/modules'
@@ -8,8 +8,9 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
 import MenuTabs from '@/components/home/menu-tabs'
+import { cn } from '@/lib/utils/cn'
 import { useHomeMenuStore } from '@/stores/home-menu'
-import type { HomeMenuItem } from '@/types/home'
+import type { HomeMenuImage, HomeMenuItem } from '@/types/home'
 
 type MenuSliderProps = {
   title: string
@@ -28,6 +29,12 @@ type FlatSlide = {
   key: string
 }
 
+type MenuLoopSlide = {
+  item: HomeMenuItem
+  menuIndex: number
+  key: string
+}
+
 const XS_BREAKPOINT = 480
 const FALLBACK_ASPECT_RATIO = 1.36
 
@@ -35,6 +42,16 @@ const FALLBACK_ASPECT_RATIO = 1.36
 function aspectRatioCss(ratio: number) {
   if (ratio >= 1) return `${ratio} / 1`
   return `1 / ${1 / ratio}`
+}
+
+function subscribeDesktop(onChange: () => void) {
+  const mq = window.matchMedia(`(min-width: ${XS_BREAKPOINT}px)`)
+  mq.addEventListener('change', onChange)
+  return () => mq.removeEventListener('change', onChange)
+}
+
+function getDesktopSnapshot() {
+  return window.matchMedia(`(min-width: ${XS_BREAKPOINT}px)`).matches
 }
 
 function flattenItems(items: HomeMenuItem[]) {
@@ -63,6 +80,20 @@ function slidesForLoop(flat: Omit<FlatSlide, 'key'>[]): FlatSlide[] {
   ).flat()
 }
 
+/** Same loop padding for desktop menu-unit slides. */
+function menusForLoop(items: HomeMenuItem[]): MenuLoopSlide[] {
+  if (items.length === 0) return []
+  const minSlides = Math.max(8, items.length * 3)
+  const copies = Math.ceil(minSlides / items.length)
+  return Array.from({ length: copies }, (_, copy) =>
+    items.map((item, menuIndex) => ({
+      item,
+      menuIndex,
+      key: `${copy}-${menuIndex}-${item.name}`,
+    })),
+  ).flat()
+}
+
 function firstSlideIndexForMenu(items: HomeMenuItem[], menuIndex: number) {
   let index = 0
   for (let i = 0; i < menuIndex; i++) {
@@ -71,16 +102,42 @@ function firstSlideIndexForMenu(items: HomeMenuItem[], menuIndex: number) {
   return index
 }
 
-function tabProgress(
+function mobileTabProgress(
   localImageIndex: number,
   imageCount: number,
-  slidesPerGroup: number,
   autoplayFraction: number,
 ) {
-  const group = Math.max(1, slidesPerGroup)
-  const steps = Math.max(1, Math.ceil(imageCount / group))
-  const stepIndex = Math.floor(localImageIndex / group)
-  return Math.min(1, Math.max(0, (stepIndex + autoplayFraction) / steps))
+  const steps = Math.max(1, imageCount)
+  return Math.min(1, Math.max(0, (localImageIndex + autoplayFraction) / steps))
+}
+
+function MenuImage({
+  image,
+  className,
+  sizes,
+}: {
+  image: Pick<HomeMenuImage, 'src' | 'alt' | 'lqip' | 'aspectRatio'>
+  className?: string
+  sizes: string
+}) {
+  const aspectRatio = image.aspectRatio ?? FALLBACK_ASPECT_RATIO
+
+  return (
+    <div
+      className={cn('relative overflow-hidden', className)}
+      style={{ aspectRatio: aspectRatioCss(aspectRatio) }}
+    >
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        sizes={sizes}
+        className="object-cover"
+        placeholder={image.lqip ? 'blur' : 'empty'}
+        blurDataURL={image.lqip}
+      />
+    </div>
+  )
 }
 
 export default function MenuSlider({
@@ -92,21 +149,47 @@ export default function MenuSlider({
   const swiperRef = useRef<SwiperInstance | null>(null)
   const autoplayFractionRef = useRef(0)
   const syncTab = useHomeMenuStore((s) => s.syncTab)
+  // Snapshot once — don't subscribe; progress ticks must not re-render Swiper.
+  const [initialMenuIndex] = useState(
+    () => useHomeMenuStore.getState().activeIndex,
+  )
+
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    getDesktopSnapshot,
+    () => true,
+  )
 
   const flat = useMemo(() => flattenItems(items), [items])
-  const slides = useMemo(() => slidesForLoop(flat), [flat])
+  const mobileSlides = useMemo(() => slidesForLoop(flat), [flat])
+  const desktopSlides = useMemo(() => menusForLoop(items), [items])
   const flatCount = flat.length
+  const menuCount = items.length
+  const startMenuIndex = Math.min(initialMenuIndex, Math.max(0, menuCount - 1))
 
   function toFlatIndex(realIndex: number) {
     return flatCount === 0 ? 0 : realIndex % flatCount
   }
 
-  function slidesPerGroupOf(swiper: SwiperInstance) {
-    const value = swiper.params.slidesPerGroup
-    return typeof value === 'number' && value > 0 ? value : 1
+  function toMenuIndex(realIndex: number) {
+    return menuCount === 0 ? 0 : realIndex % menuCount
   }
 
-  function syncFromSwiper(swiper: SwiperInstance, autoplayFraction?: number) {
+  function syncDesktop(swiper: SwiperInstance, autoplayFraction?: number) {
+    if (menuCount === 0) return
+
+    const fraction =
+      autoplayFraction === undefined
+        ? autoplayFractionRef.current
+        : autoplayFraction
+    if (autoplayFraction !== undefined) {
+      autoplayFractionRef.current = autoplayFraction
+    }
+
+    syncTab(toMenuIndex(swiper.realIndex), fraction)
+  }
+
+  function syncMobile(swiper: SwiperInstance, autoplayFraction?: number) {
     if (flatCount === 0) return
 
     const fraction =
@@ -123,13 +206,20 @@ export default function MenuSlider({
     const imageCount = items[slide.menuIndex]?.images.length ?? 1
     syncTab(
       slide.menuIndex,
-      tabProgress(
-        slide.localImageIndex,
-        imageCount,
-        slidesPerGroupOf(swiper),
-        fraction,
-      ),
+      mobileTabProgress(slide.localImageIndex, imageCount, fraction),
     )
+  }
+
+  function handleSelect(menuIndex: number) {
+    const swiper = swiperRef.current
+    if (!swiper) return
+
+    if (isDesktop) {
+      swiper.slideToLoop(menuIndex)
+      return
+    }
+
+    swiper.slideToLoop(firstSlideIndexForMenu(items, menuIndex))
   }
 
   return (
@@ -137,11 +227,7 @@ export default function MenuSlider({
       <div className="order-2 xs:order-1">
         <MenuTabs
           items={items}
-          onSelect={(menuIndex) =>
-            swiperRef.current?.slideToLoop(
-              firstSlideIndexForMenu(items, menuIndex),
-            )
-          }
+          onSelect={handleSelect}
           onPrev={() => swiperRef.current?.slidePrev()}
           onNext={() => swiperRef.current?.slideNext()}
         />
@@ -157,69 +243,104 @@ export default function MenuSlider({
       </div>
 
       <div className="order-3 mt-6 overflow-hidden xs:mt-20">
-        <Swiper
-          className="home-menu-swiper w-full [&_.swiper-wrapper]:items-start [&_.swiper-wrapper]:pl-6 [&_.swiper-slide]:h-auto"
-          modules={[Autoplay]}
-          loop={slides.length >= 2}
-          loopAdditionalSlides={flatCount}
-          // Mobile: auto width so pl-6 + next-slide peek match desktop feel
-          slidesPerView="auto"
-          slidesPerGroup={1}
-          spaceBetween={12}
-          autoHeight
-          breakpoints={{
-            [XS_BREAKPOINT]: {
-              slidesPerView: 4.15,
-              slidesPerGroup: 2,
-            },
-          }}
-          grabCursor
-          allowTouchMove
-          watchOverflow={false}
-          speed={1000}
-          autoplay={{
-            delay: duration,
-            disableOnInteraction: false,
-            waitForTransition: false,
-          }}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper
-            syncFromSwiper(swiper, 0)
-          }}
-          onSlideChange={(swiper) => {
-            syncFromSwiper(swiper, 0)
-            swiper.updateAutoHeight(1000)
-          }}
-          onAutoplayTimeLeft={(swiper, _timeLeft, percentage) => {
-            syncFromSwiper(swiper, 1 - percentage)
-          }}
-          onBreakpoint={(swiper) => {
-            syncFromSwiper(swiper)
-            swiper.updateAutoHeight()
-          }}
-        >
-          {slides.map((slide) => (
-            <SwiperSlide
-              key={slide.key}
-              className="w-[calc(100vw-3rem)]! xs:w-[23.6%]!"
-            >
-              <div
-                className="relative w-full overflow-hidden"
-                style={{ aspectRatio: aspectRatioCss(slide.aspectRatio) }}
-              >
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  fill
-                  sizes="(max-width: 479px) 100vw, 25vw"
-                  className="object-cover"
-                  placeholder={slide.lqip ? 'blur' : 'empty'}
-                  blurDataURL={slide.lqip}
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {isDesktop ? (
+          <Swiper
+            key="desktop"
+            className="home-menu-swiper w-full [&_.swiper-wrapper]:items-start [&_.swiper-slide]:h-auto"
+            modules={[Autoplay]}
+            loop={desktopSlides.length >= 2}
+            loopAdditionalSlides={menuCount}
+            slidesPerView={1}
+            spaceBetween={0}
+            autoHeight
+            initialSlide={startMenuIndex}
+            grabCursor
+            allowTouchMove
+            watchOverflow={false}
+            speed={2000}
+            autoplay={{
+              delay: duration,
+              disableOnInteraction: false,
+              waitForTransition: true,
+            }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper
+              syncDesktop(swiper, 0)
+            }}
+            onSlideChange={(swiper) => {
+              syncDesktop(swiper, 0)
+            }}
+            onSlideChangeTransitionEnd={(swiper) => {
+              swiper.updateAutoHeight()
+            }}
+            onAutoplayTimeLeft={(swiper, _timeLeft, percentage) => {
+              syncDesktop(swiper, 1 - percentage)
+            }}
+          >
+            {desktopSlides.map(({ item, key }) => (
+              <SwiperSlide key={key}>
+                <div className="grid grid-cols-4 gap-3 px-6">
+                  {item.images.map((image, imageIndex) => (
+                    <MenuImage
+                      key={`${key}-${imageIndex}-${image.src}`}
+                      image={image}
+                      className={cn(
+                        'w-full',
+                        image.size === 'wide' ? 'col-span-2' : 'col-span-1',
+                      )}
+                      sizes={
+                        image.size === 'wide'
+                          ? '(max-width: 479px) 100vw, 50vw'
+                          : '(max-width: 479px) 100vw, 25vw'
+                      }
+                    />
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <Swiper
+            key="mobile"
+            className="home-menu-swiper w-full [&_.swiper-wrapper]:items-start [&_.swiper-wrapper]:pl-6 [&_.swiper-slide]:h-auto"
+            modules={[Autoplay]}
+            loop={mobileSlides.length >= 2}
+            loopAdditionalSlides={flatCount}
+            slidesPerView="auto"
+            slidesPerGroup={1}
+            spaceBetween={12}
+            autoHeight
+            initialSlide={firstSlideIndexForMenu(items, startMenuIndex)}
+            grabCursor
+            allowTouchMove
+            watchOverflow={false}
+            speed={2000}
+            autoplay={{
+              delay: duration,
+              disableOnInteraction: false,
+              waitForTransition: true,
+            }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper
+              syncMobile(swiper, 0)
+            }}
+            onSlideChange={(swiper) => {
+              syncMobile(swiper, 0)
+            }}
+            onSlideChangeTransitionEnd={(swiper) => {
+              swiper.updateAutoHeight()
+            }}
+            onAutoplayTimeLeft={(swiper, _timeLeft, percentage) => {
+              syncMobile(swiper, 1 - percentage)
+            }}
+          >
+            {mobileSlides.map((slide) => (
+              <SwiperSlide key={slide.key} className="w-[calc(100vw-3rem)]!">
+                <MenuImage image={slide} className="w-full" sizes="100vw" />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
     </div>
   )

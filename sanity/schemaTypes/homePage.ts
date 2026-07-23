@@ -235,7 +235,7 @@ export const homePage = defineType({
           name: 'duration',
           title: 'Slide duration (ms)',
           description:
-            'Autoplay interval between slider steps. Tab progress length is derived from each menu’s image count and how many slides move per step.',
+            'Autoplay interval between steps. Desktop: one menu per step. Mobile: one image per step (tab progress fills across that menu’s images).',
           type: 'number',
           initialValue: 3000,
           validation: (rule) => rule.required().min(1000),
@@ -283,15 +283,33 @@ export const homePage = defineType({
                                 'Caption is used as alt text for accessibility',
                               ),
                         }),
+                        defineField({
+                          name: 'size',
+                          title: 'Size',
+                          type: 'string',
+                          description:
+                            'Desktop layout only. Normal = 1 column, Wide = 2 columns. Aim for ~4 columns total per menu.',
+                          options: {
+                            list: [
+                              { title: 'Normal', value: 'normal' },
+                              { title: 'Wide', value: 'wide' },
+                            ],
+                            layout: 'radio',
+                          },
+                          initialValue: 'normal',
+                        }),
                       ],
                       preview: {
                         select: {
                           title: 'caption',
                           media: 'image',
+                          size: 'size',
                         },
-                        prepare({ title, media }) {
+                        prepare({ title, media, size }) {
+                          const label = size === 'wide' ? 'Wide' : 'Normal'
                           return {
                             title: title || 'Image',
+                            subtitle: label,
                             media,
                           }
                         },

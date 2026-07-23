@@ -75,7 +75,8 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
             hotspot,
             crop
           },
-          caption
+          caption,
+          size
         },
         // Legacy single image — still mapped if present until content is re-saved
         image{
