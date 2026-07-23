@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { GalleryCanvas, GalleryTabs } from '@/components/gallery'
+import { resolveTabId, TAB_QUERY_KEY } from '@/lib/utils/tab-query'
 import { sanityFetch } from '@/sanity/lib/live'
 import {
   toGalleryContent,
@@ -37,20 +38,35 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default async function GalleryPage() {
-  const { data } = await sanityFetch({ query: GALLERY_PAGE_QUERY })
+export default async function GalleryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const [{ data }, params] = await Promise.all([
+    sanityFetch({ query: GALLERY_PAGE_QUERY }),
+    searchParams,
+  ])
 
   if (!data) {
     notFound()
   }
 
   const { tabs, images } = toGalleryContent(data as GalleryPageData)
+  const activeId = resolveTabId(
+    params[TAB_QUERY_KEY],
+    tabs.map((tab) => tab.id),
+  )
 
   return (
     <div className="flex min-h-dvh flex-col bg-cream">
-      <GalleryTabs tabs={tabs} />
+      <GalleryTabs tabs={tabs} activeId={activeId} />
       <div className="relative min-h-[calc(100dvh-2.75rem)] flex-1">
-        <GalleryCanvas images={images} config={canvasConfig} />
+        <GalleryCanvas
+          images={images}
+          activeId={activeId}
+          config={canvasConfig}
+        />
       </div>
     </div>
   )

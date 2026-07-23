@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react'
 
 import GalleryLoader from '@/components/gallery/loader'
 import { InfiniteCanvas } from '@/components/gallery/infinite-canvas'
-import { useGalleryStore } from '@/stores/gallery'
 import type {
   GalleryMediaItem,
   InfiniteCanvasConfig,
@@ -12,6 +11,7 @@ import type {
 
 type GalleryCanvasProps = {
   images: GalleryMediaItem[]
+  activeId: string
   config?: Partial<InfiniteCanvasConfig>
 }
 
@@ -70,9 +70,11 @@ function GalleryCanvasInner({ media, config }: GalleryCanvasInnerProps) {
   )
 }
 
-export default function GalleryCanvas({ images, config }: GalleryCanvasProps) {
-  const activeId = useGalleryStore((s) => s.activeId)
-
+export default function GalleryCanvas({
+  images,
+  config,
+  activeId,
+}: GalleryCanvasProps) {
   const media = useMemo(() => {
     if (activeId === 'all') return images
     const filtered = images.filter((item) => item.category === activeId)

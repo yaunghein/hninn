@@ -5,24 +5,21 @@ import { useEffect } from 'react'
 
 import MenuCard from '@/components/menu/card'
 import MenuEmpty from '@/components/menu/empty'
-import { useMenuStore } from '@/stores/menu'
 import type { MenuItem, MenuTab } from '@/types/menu'
 
 type MenuGridProps = {
   tabs: MenuTab[]
   items: MenuItem[]
+  activeId: string
 }
 
-export default function MenuGrid({ tabs, items }: MenuGridProps) {
-  const activeId = useMenuStore((state) => state.activeId)
-
+export default function MenuGrid({ tabs, items, activeId }: MenuGridProps) {
   const visibleItems =
     activeId === 'all'
       ? items
       : items.filter((item) => item.categoryId === activeId)
 
-  const activeLabel =
-    tabs.find((tab) => tab.id === activeId)?.label ?? 'All'
+  const activeLabel = tabs.find((tab) => tab.id === activeId)?.label ?? 'All'
 
   useEffect(() => {
     ScrollTrigger.refresh()

@@ -1,17 +1,21 @@
 'use client'
 
+import { Suspense } from 'react'
+
+import { useSelectTabQuery } from '@/lib/hooks/use-select-tab-query'
 import { cn } from '@/lib/utils/cn'
-import { useMenuStore } from '@/stores/menu'
 import type { MenuTab } from '@/types/menu'
 
 type MenuTabsProps = {
   tabs: MenuTab[]
+  activeId: string
 }
 
-export default function MenuTabs({ tabs }: MenuTabsProps) {
-  const activeId = useMenuStore((state) => state.activeId)
-  const setActiveId = useMenuStore((state) => state.setActiveId)
-
+function MenuTabsBar({
+  tabs,
+  activeId,
+  onSelect,
+}: MenuTabsProps & { onSelect: (id: string) => void }) {
   return (
     <div className="sticky top-0 z-10 border-y border-sand bg-cream">
       <div
@@ -34,7 +38,7 @@ export default function MenuTabs({ tabs }: MenuTabsProps) {
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => setActiveId(tab.id)}
+                onClick={() => onSelect(tab.id)}
                 className={cn(
                   'flex min-w-28 cursor-pointer items-center justify-center whitespace-nowrap px-6 text-sm font-medium leading-[1.39] transition-colors xs:min-w-0 xs:flex-1 xs:px-3',
                   isActive
@@ -49,5 +53,22 @@ export default function MenuTabs({ tabs }: MenuTabsProps) {
         })}
       </div>
     </div>
+  )
+}
+
+function MenuTabsWithQuery({ tabs, activeId }: MenuTabsProps) {
+  const selectTab = useSelectTabQuery()
+  return <MenuTabsBar tabs={tabs} activeId={activeId} onSelect={selectTab} />
+}
+
+export default function MenuTabs({ tabs, activeId }: MenuTabsProps) {
+  return (
+    <Suspense
+      fallback={
+        <MenuTabsBar tabs={tabs} activeId={activeId} onSelect={() => {}} />
+      }
+    >
+      <MenuTabsWithQuery tabs={tabs} activeId={activeId} />
+    </Suspense>
   )
 }

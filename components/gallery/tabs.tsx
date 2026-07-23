@@ -1,7 +1,9 @@
 'use client'
 
+import { Suspense } from 'react'
+
+import { useSelectTabQuery } from '@/lib/hooks/use-select-tab-query'
 import { cn } from '@/lib/utils/cn'
-import { useGalleryStore } from '@/stores/gallery'
 
 export type GalleryTab = {
   id: string
@@ -10,12 +12,14 @@ export type GalleryTab = {
 
 type GalleryTabsProps = {
   tabs: GalleryTab[]
+  activeId: string
 }
 
-export default function GalleryTabs({ tabs }: GalleryTabsProps) {
-  const activeId = useGalleryStore((s) => s.activeId)
-  const setActiveId = useGalleryStore((s) => s.setActiveId)
-
+function GalleryTabsBar({
+  tabs,
+  activeId,
+  onSelect,
+}: GalleryTabsProps & { onSelect: (id: string) => void }) {
   return (
     <div className="border-b border-sand bg-cream">
       <div
@@ -27,10 +31,7 @@ export default function GalleryTabs({ tabs }: GalleryTabsProps) {
           const isActive = tab.id === activeId
 
           return (
-            <div
-              key={tab.id}
-              className="flex shrink-0 xs:min-w-0 xs:flex-1"
-            >
+            <div key={tab.id} className="flex shrink-0 xs:min-w-0 xs:flex-1">
               {index > 0 && (
                 <div
                   className="w-px shrink-0 self-stretch bg-sand"
@@ -41,7 +42,7 @@ export default function GalleryTabs({ tabs }: GalleryTabsProps) {
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => setActiveId(tab.id)}
+                onClick={() => onSelect(tab.id)}
                 className={cn(
                   'flex min-w-28 cursor-pointer items-center justify-center whitespace-nowrap px-6 text-sm font-medium leading-[1.39] transition-colors xs:min-w-0 xs:flex-1 xs:px-3',
                   isActive
@@ -56,5 +57,24 @@ export default function GalleryTabs({ tabs }: GalleryTabsProps) {
         })}
       </div>
     </div>
+  )
+}
+
+function GalleryTabsWithQuery({ tabs, activeId }: GalleryTabsProps) {
+  const selectTab = useSelectTabQuery()
+  return (
+    <GalleryTabsBar tabs={tabs} activeId={activeId} onSelect={selectTab} />
+  )
+}
+
+export default function GalleryTabs({ tabs, activeId }: GalleryTabsProps) {
+  return (
+    <Suspense
+      fallback={
+        <GalleryTabsBar tabs={tabs} activeId={activeId} onSelect={() => {}} />
+      }
+    >
+      <GalleryTabsWithQuery tabs={tabs} activeId={activeId} />
+    </Suspense>
   )
 }
