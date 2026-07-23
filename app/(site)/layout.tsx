@@ -1,20 +1,30 @@
-import { Navbar } from '@/components/common'
+import { Navbar, SiteFooter } from '@/components/common'
 import { sanityFetch } from '@/sanity/lib/live'
-import { NAVBAR_QUERY } from '@/sanity/lib/queries'
-import { toNavbarContent, type NavbarData } from '@/sanity/lib/site-mapper'
+import { FOOTER_QUERY, NAVBAR_QUERY } from '@/sanity/lib/queries'
+import {
+  toFooterContent,
+  toNavbarContent,
+  type FooterData,
+  type NavbarData,
+} from '@/sanity/lib/site-mapper'
 
 export default async function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { data } = await sanityFetch({ query: NAVBAR_QUERY })
-  const navbar = toNavbarContent(data as NavbarData)
+  const [{ data: navbarData }, { data: footerData }] = await Promise.all([
+    sanityFetch({ query: NAVBAR_QUERY }),
+    sanityFetch({ query: FOOTER_QUERY }),
+  ])
+  const navbar = toNavbarContent(navbarData as NavbarData)
+  const footer = toFooterContent(footerData as FooterData)
 
   return (
     <>
       <Navbar {...navbar} />
       <main className="flex-1">{children}</main>
+      <SiteFooter {...footer} />
     </>
   )
 }

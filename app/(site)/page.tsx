@@ -5,13 +5,10 @@ import HomeHero from '@/components/home/hero'
 import HomeMenu from '@/components/home/menu'
 import StickyAtEnd from '@/components/home/sticky-at-end'
 import UnderHero from '@/components/home/under-hero'
-import { Footer } from '@/components/common'
 import { toHomeContent, type HomePageData } from '@/sanity/lib/home-mapper'
 import { HOME_PAGE_QUERY } from '@/sanity/lib/home-query'
 import { sanityFetch } from '@/sanity/lib/live'
-import { FOOTER_QUERY } from '@/sanity/lib/queries'
 import { buildPageMetadata, type PageSeo } from '@/sanity/lib/seo'
-import { toFooterContent, type FooterData } from '@/sanity/lib/site-mapper'
 import { notFound } from 'next/navigation'
 
 async function getHomePage() {
@@ -30,10 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [{ data }, { data: footerData }] = await Promise.all([
-    sanityFetch({ query: HOME_PAGE_QUERY }),
-    sanityFetch({ query: FOOTER_QUERY }),
-  ])
+  const { data } = await sanityFetch({ query: HOME_PAGE_QUERY })
 
   if (!data) {
     notFound()
@@ -42,19 +36,17 @@ export default async function Home() {
   const { hero, generalFacts, menu, findUs } = toHomeContent(
     data as HomePageData,
   )
-  const footer = toFooterContent(footerData as FooterData)
 
   return (
     <div className="relative">
-      {/* <UnderHero hero={<HomeHero {...hero} />}>
+      <UnderHero hero={<HomeHero {...hero} />}>
         <StickyAtEnd className="z-0">
           <GeneralFacts {...generalFacts} />
         </StickyAtEnd>
-      </UnderHero> */}
+      </UnderHero>
       <div className="relative z-20">
         <HomeMenu {...menu} />
-        {/* <HomeFindUs {...findUs} />
-        <Footer {...footer} /> */}
+        <HomeFindUs {...findUs} />
       </div>
     </div>
   )

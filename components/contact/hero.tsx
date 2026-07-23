@@ -57,7 +57,7 @@ export default function ContactHero({
           </ul>
         </div>
 
-        <p className="mt-20 flex-1 flex items-center justify-center xs:flex-0 mb-25 max-w-48 text-center text-sm leading-normal xs:mt-auto xs:mb-6">
+        <p className="flex-col mt-20 flex-1 flex items-center justify-center xs:flex-0 mb-25 max-w-48 text-center text-sm leading-normal xs:mt-auto xs:mb-6">
           <span>{hours.open} </span>
           <span className="italic">{hours.closed}</span>
         </p>

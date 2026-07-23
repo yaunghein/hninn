@@ -1,14 +1,12 @@
 import type { Metadata } from 'next'
 import { ContactHero } from '@/components/contact'
-import { Footer } from '@/components/common'
 import { sanityFetch } from '@/sanity/lib/live'
 import {
   toContactContent,
   type ContactPageData,
 } from '@/sanity/lib/mappers'
-import { CONTACT_PAGE_QUERY, FOOTER_QUERY } from '@/sanity/lib/queries'
+import { CONTACT_PAGE_QUERY } from '@/sanity/lib/queries'
 import { buildPageMetadata, type PageSeo } from '@/sanity/lib/seo'
-import { toFooterContent, type FooterData } from '@/sanity/lib/site-mapper'
 import { notFound } from 'next/navigation'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -22,22 +20,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const [{ data }, { data: footerData }] = await Promise.all([
-    sanityFetch({ query: CONTACT_PAGE_QUERY }),
-    sanityFetch({ query: FOOTER_QUERY }),
-  ])
+  const { data } = await sanityFetch({ query: CONTACT_PAGE_QUERY })
 
   if (!data) {
     notFound()
   }
 
   const contact = toContactContent(data as ContactPageData)
-  const footer = toFooterContent(footerData as FooterData)
 
-  return (
-    <>
-      <ContactHero {...contact} />
-      <Footer {...footer} />
-    </>
-  )
+  return <ContactHero {...contact} />
 }

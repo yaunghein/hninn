@@ -18,7 +18,7 @@ export const WEBHOOK_PROJECTION = /* groq */ `{
     _type == "eventsPage" => ["/events"],
     _type == "galleryPage" => ["/gallery"],
     _type == "contactPage" => ["/contact"],
-    _type == "footer" => ["/", "/contact"],
+    _type == "footer" => ["/", "/concept", "/menu", "/events", "/contact"],
     _type == "navbar" => ["/", "/concept", "/menu", "/events", "/gallery", "/contact"],
     []
   ),
