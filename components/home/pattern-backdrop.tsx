@@ -1,44 +1,49 @@
 import { bgColorClass, type Color } from '@/lib/constants/colors'
 import { cn } from '@/lib/utils/cn'
 
-/** Enough strips for tall sections; overflow is clipped. */
-const PATTERN_ROWS = 80
+/** Motif viewBox 1440×54 */
+const PATTERN_ASPECT = 54 / 1440
+
+const TILE_SIZE = `100cqw calc(100cqw * ${PATTERN_ASPECT})`
 
 type PatternBackdropProps = {
   color?: Color
+  /** Classes for the tiled layer (size / offset). Must oversize past the clip. */
+  className?: string
 }
 
 /**
- * Tiled brand motif. Stacks one-tile masked strips so color stays dynamic and
- * the full height fills reliably (CSS mask-repeat on a single layer is flaky
- * for this SVG). The SVG asset is shared — keeps ISR HTML small.
+ * Single-layer tiled brand motif. Tile size is locked to container width via
+ * `cqw` so mask-repeat has an explicit height. The layer is oversized (not
+ * `inset-0` + translate) so offsets never leave empty edges inside the clip.
  */
 export default function PatternBackdrop({
   color = 'olive-dark',
+  className,
 }: PatternBackdropProps) {
   return (
     <div
       className="pointer-events-none absolute inset-0 overflow-hidden"
       aria-hidden
     >
-      <div className="flex w-[250%] translate-x-[-4%] -translate-y-4 flex-col opacity-20 xs:w-[110%]">
-        {Array.from({ length: PATTERN_ROWS }, (_, index) => (
-          <div
-            key={index}
-            className={cn(
-              'aspect-[26.67/1] w-full shrink-0',
-              bgColorClass[color],
-            )}
-            style={{
-              WebkitMaskImage: 'url(/images/pattern.svg)',
-              maskImage: 'url(/images/pattern.svg)',
-              WebkitMaskSize: '100% 100%',
-              maskSize: '100% 100%',
-              WebkitMaskRepeat: 'no-repeat',
-              maskRepeat: 'no-repeat',
-            }}
-          />
-        ))}
+      <div
+        className={cn(
+          '@container absolute opacity-20',
+          className ??
+            '-top-4 left-[-4%] h-[calc(100%+2rem)] w-[250%] xs:left-0 xs:w-[110%]',
+        )}
+      >
+        <div
+          className={cn('size-full', bgColorClass[color])}
+          style={{
+            WebkitMaskImage: 'url(/images/pattern.svg)',
+            maskImage: 'url(/images/pattern.svg)',
+            WebkitMaskRepeat: 'repeat',
+            maskRepeat: 'repeat',
+            WebkitMaskSize: TILE_SIZE,
+            maskSize: TILE_SIZE,
+          }}
+        />
       </div>
     </div>
   )

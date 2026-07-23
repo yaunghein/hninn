@@ -6,7 +6,8 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
-import { Logo, Menu, Pattern } from '@/components/svgs'
+import PatternBackdrop from '@/components/home/pattern-backdrop'
+import { Logo, Menu } from '@/components/svgs'
 import { colorTokens } from '@/lib/constants/colors'
 import { cn } from '@/lib/utils/cn'
 
@@ -26,7 +27,6 @@ export type NavbarContent = {
 
 type NavbarProps = NavbarContent
 
-const PATTERN_ROWS = 9
 const SPRING = 'elastic.out(1, 0.75)'
 const EASE_OUT = 'power2.out'
 const EASE_IO = 'power3.inOut'
@@ -325,16 +325,10 @@ export default function Navbar({
           aria-label="Site menu"
           aria-hidden={!menuOpen}
         >
-          <div
-            className="pointer-events-none absolute inset-0 overflow-hidden opacity-20"
-            aria-hidden
-          >
-            <div className="flex w-[420%] translate-x-[-8%] translate-y-[-6%] flex-col">
-              {Array.from({ length: PATTERN_ROWS }, (_, index) => (
-                <Pattern key={index} color="olive-dark" />
-              ))}
-            </div>
-          </div>
+          <PatternBackdrop
+            color="olive-dark"
+            className="-top-[10%] left-[-8%] h-[120%] w-[420%]"
+          />
 
           <nav className="relative flex flex-col items-center gap-8 text-center text-2xl font-semibold uppercase leading-none text-sand">
             {menuLinks.map((link) => (
@@ -355,7 +349,7 @@ export default function Navbar({
             id="navbar-bar"
             className={cn(
               'relative flex h-12 w-full items-center justify-between rounded-[1.75rem] border-2 border-sand bg-cream px-1.25 xs:h-14',
-              menuOpen ? 'xs:px-2' : 'xs:px-5',
+              menuOpen ? 'xs:px-2' : 'xs:px-4',
             )}
             aria-label="Primary"
           >
