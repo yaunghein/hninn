@@ -4,6 +4,7 @@ import GeneralFacts from '@/components/home/general-facts'
 import HomeHero from '@/components/home/hero'
 import HomeMenu from '@/components/home/menu'
 import StickyAtEnd from '@/components/home/sticky-at-end'
+import UnderHero from '@/components/home/under-hero'
 import { Footer } from '@/components/common'
 import {
   toHomeContent,
@@ -48,12 +49,11 @@ export default async function Home() {
 
   return (
     <div className="relative">
-      <StickyAtEnd className="z-0">
-        <HomeHero {...hero} />
-      </StickyAtEnd>
-      <StickyAtEnd className="z-10">
-        <GeneralFacts {...generalFacts} />
-      </StickyAtEnd>
+      <UnderHero hero={<HomeHero {...hero} />}>
+        <StickyAtEnd className="z-0">
+          <GeneralFacts {...generalFacts} />
+        </StickyAtEnd>
+      </UnderHero>
       <div className="relative z-20">
         <HomeMenu {...menu} />
         <HomeFindUs {...findUs} />
