@@ -1,4 +1,5 @@
 import {
+  BasketIcon,
   CommentIcon,
   ConfettiIcon,
   EarthGlobeIcon,
@@ -17,6 +18,7 @@ const singletonTypes = new Set([
   'contactPage',
   'eventsPage',
   'galleryPage',
+  'menuPage',
 ])
 
 export const structure: StructureResolver = (S) =>
@@ -35,6 +37,11 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.document().schemaType('conceptPage').documentId('conceptPage'),
         ),
+      S.listItem()
+        .title('Menu Page')
+        .id('menuPage')
+        .icon(BasketIcon)
+        .child(S.document().schemaType('menuPage').documentId('menuPage')),
       S.listItem()
         .title('Events Page')
         .id('eventsPage')

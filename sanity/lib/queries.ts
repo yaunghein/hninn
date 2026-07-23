@@ -114,6 +114,46 @@ export const EVENTS_PAGE_QUERY = defineQuery(/* groq */ `
   }
 `)
 
+export const MENU_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "menuPage" && _id == "menuPage"][0]{
+    categories[]{
+      _key,
+      name,
+      items[]{
+        _key,
+        name,
+        description,
+        price,
+        image{
+          asset->{
+            _id,
+            url,
+            metadata{
+              dimensions{
+                width,
+                height
+              },
+              lqip
+            }
+          },
+          hotspot,
+          crop,
+          caption
+        }
+      }
+    },
+    "seo": {
+      "title": coalesce(seo.title, "Menu"),
+      "description": coalesce(
+        seo.description,
+        "Explore the in-store menu at Hninn — contemporary Burmese brunch in Bangkok.",
+        ""
+      ),
+      "ogImage": seo.ogImage
+    }
+  }
+`)
+
 export const GALLERY_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "galleryPage" && _id == "galleryPage"][0]{
     blocks[]{

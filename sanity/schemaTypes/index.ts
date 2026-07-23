@@ -6,6 +6,7 @@ import { eventsPage } from './eventsPage'
 import { footer } from './footer'
 import { galleryPage } from './galleryPage'
 import { homePage } from './homePage'
+import { menuPage } from './menuPage'
 import { navbar } from './navbar'
 import { seoType } from './seoType'
 
@@ -19,5 +20,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     contactPage,
     eventsPage,
     galleryPage,
+    menuPage,
   ],
 }
