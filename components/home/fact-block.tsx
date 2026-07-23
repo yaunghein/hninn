@@ -11,8 +11,8 @@ import type { GeneralFact, GeneralFactImage } from '@/types/home'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-const PARALLAX_DESKTOP = { min: 6, max: 18 }
-const PARALLAX_MOBILE = { min: 3, max: 9 }
+const PARALLAX_DESKTOP = 10
+const PARALLAX_MOBILE = 5
 
 type FactBlockProps = GeneralFact
 
@@ -85,7 +85,7 @@ function parallaxItems(
   items: HTMLElement[],
   offset: 'left' | 'right',
   side: 'left' | 'right',
-  range: { min: number; max: number },
+  travelRem: number,
   scrollTrigger: {
     trigger: HTMLElement
     start: string
@@ -93,10 +93,10 @@ function parallaxItems(
     scrub: number
   },
 ) {
-  items.forEach((item) => {
-    const travel = `${gsap.utils.random(range.min, range.max, 0.25)}rem`
-    const { from, to } = parallaxRange(offset, side, travel)
+  const travel = `${travelRem}rem`
+  const { from, to } = parallaxRange(offset, side, travel)
 
+  items.forEach((item) => {
     gsap.fromTo(
       item,
       { y: from },
@@ -159,10 +159,10 @@ export default function FactBlock({
             '[data-parallax="right"]',
             scope,
           )
-          const range = isMobile ? PARALLAX_MOBILE : PARALLAX_DESKTOP
+          const travel = isMobile ? PARALLAX_MOBILE : PARALLAX_DESKTOP
 
-          parallaxItems(leftItems, offset, 'left', range, scrollTrigger)
-          parallaxItems(rightItems, offset, 'right', range, scrollTrigger)
+          parallaxItems(leftItems, offset, 'left', travel, scrollTrigger)
+          parallaxItems(rightItems, offset, 'right', travel, scrollTrigger)
         },
       )
     },
@@ -210,7 +210,7 @@ export default function FactBlock({
       >
         <div
           className={cn(
-            'flex flex-col gap-10 pr-2.5 pl-40',
+            'flex flex-col gap-10 pr-2.5 pl-52',
             offset === 'left' && 'pt-16',
           )}
         >
@@ -227,7 +227,7 @@ export default function FactBlock({
 
         <div
           className={cn(
-            'flex flex-col gap-10 pl-2.5 pr-40',
+            'flex flex-col gap-10 pl-2.5 pr-52',
             offset === 'right' && 'pt-16',
           )}
         >
