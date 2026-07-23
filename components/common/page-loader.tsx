@@ -7,6 +7,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { Logo } from '@/components/svgs'
 import {
+  HOME_SLIDE_REVEAL_DURATION,
+  HOME_SLIDE_REVEAL_EASE,
+} from '@/lib/constants/home-slider'
+import {
   hasRecentPageLoader,
   markPageLoaderShown,
 } from '@/lib/utils/page-loader-cookie'
@@ -53,7 +57,16 @@ export default function PageLoader() {
           { height: '100%' },
           { height: '0%', duration: 2.5, delay: 0.35 },
         )
-        .to(root, { opacity: 0, duration: 1, delay: 0.2 })
+        .fromTo(
+          root,
+          { clipPath: 'inset(0% 0% 0% 0%)' },
+          {
+            clipPath: 'inset(0% 0% 100% 0%)',
+            duration: HOME_SLIDE_REVEAL_DURATION + 0.75,
+            ease: HOME_SLIDE_REVEAL_EASE,
+            delay: 0.2,
+          },
+        )
     },
     { scope: rootRef, dependencies: [show] },
   )
@@ -61,7 +74,11 @@ export default function PageLoader() {
   if (!show) return null
 
   return (
-    <div ref={rootRef} className="fixed inset-0 z-100 bg-cream" aria-hidden>
+    <div
+      ref={rootRef}
+      className="fixed inset-0 z-100 bg-cream will-change-[clip-path]"
+      aria-hidden
+    >
       <div className="absolute inset-0 top-auto bottom-6 w-full aspect-[4.1/1] px-6">
         <Logo color="olive" className="w-full" />
         <div
