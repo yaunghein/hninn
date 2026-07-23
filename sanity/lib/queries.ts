@@ -27,6 +27,14 @@ export const FOOTER_QUERY = defineQuery(/* groq */ `
       label,
       href
     },
+    delivery[]{
+      label,
+      href
+    },
+    petPolicy{
+      label,
+      href
+    },
     address,
     hours,
     legal[]{

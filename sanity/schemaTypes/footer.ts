@@ -3,6 +3,24 @@ import { defineArrayMember, defineField, defineType } from 'sanity'
 
 import { linkHrefField } from './fields'
 
+function footerLinkMember() {
+  return defineArrayMember({
+    type: 'object',
+    fields: [
+      defineField({
+        name: 'label',
+        title: 'Label',
+        type: 'string',
+        validation: (rule) => rule.required(),
+      }),
+      linkHrefField(),
+    ],
+    preview: {
+      select: { title: 'label', subtitle: 'href' },
+    },
+  })
+}
+
 export const footer = defineType({
   name: 'footer',
   title: 'Footer',
@@ -13,24 +31,29 @@ export const footer = defineType({
       name: 'social',
       title: 'Social links',
       type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'label',
-              title: 'Label',
-              type: 'string',
-              validation: (rule) => rule.required(),
-            }),
-            linkHrefField(),
-          ],
-          preview: {
-            select: { title: 'label', subtitle: 'href' },
-          },
-        }),
-      ],
+      of: [footerLinkMember()],
       validation: (rule) => rule.required().min(1),
+    }),
+    defineField({
+      name: 'delivery',
+      title: 'Delivery links',
+      description: 'e.g. Grab, Line Man',
+      type: 'array',
+      of: [footerLinkMember()],
+    }),
+    defineField({
+      name: 'petPolicy',
+      title: 'Pet policy',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'label',
+          title: 'Label',
+          type: 'string',
+          validation: (rule) => rule.required(),
+        }),
+        linkHrefField(),
+      ],
     }),
     defineField({
       name: 'address',
@@ -50,24 +73,9 @@ export const footer = defineType({
     defineField({
       name: 'legal',
       title: 'Legal links',
+      description: 'e.g. Terms & Conditions, Privacy Policy',
       type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'label',
-              title: 'Label',
-              type: 'string',
-              validation: (rule) => rule.required(),
-            }),
-            linkHrefField(),
-          ],
-          preview: {
-            select: { title: 'label', subtitle: 'href' },
-          },
-        }),
-      ],
+      of: [footerLinkMember()],
       validation: (rule) => rule.required().min(1),
     }),
   ],

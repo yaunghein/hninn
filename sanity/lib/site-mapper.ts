@@ -19,6 +19,8 @@ export type NavbarData = {
 
 export type FooterData = {
   social?: SanityLink[] | null
+  delivery?: SanityLink[] | null
+  petPolicy?: SanityLink
   address?: string | null
   hours?: string | null
   legal?: SanityLink[] | null
@@ -40,10 +42,16 @@ const FALLBACK_NAVBAR: NavbarContent = {
 
 const FALLBACK_FOOTER: FooterContent = {
   social: [
-    { label: 'Instagram', href: 'https://instagram.com' },
-    { label: 'Facebook', href: 'https://facebook.com' },
+    { label: 'Line OA', href: 'https://line.me' },
     { label: 'Tiktok', href: 'https://tiktok.com' },
+    { label: 'Facebook', href: 'https://facebook.com' },
+    { label: 'Instagram', href: 'https://instagram.com' },
   ],
+  delivery: [
+    { label: 'Grab', href: 'https://grab.com' },
+    { label: 'Line Man', href: 'https://lineman.line.me' },
+  ],
+  petPolicy: { label: 'Pet Policy', href: '/pet-policy' },
   address: '1980 Phetchaburi Rd, Bang Kapi, Huai Khwang, Bangkok 10310',
   hours: '7:00 AM – 9:00 PM\n(Closed Wednesdays)',
   legal: [
@@ -96,6 +104,11 @@ export function toFooterContent(data: FooterData): FooterContent {
 
   return {
     social: mapLinks(data.social, FALLBACK_FOOTER.social) as FooterLink[],
+    delivery: mapLinks(data.delivery, FALLBACK_FOOTER.delivery) as FooterLink[],
+    petPolicy: mapLink(
+      data.petPolicy,
+      FALLBACK_FOOTER.petPolicy,
+    ) as FooterLink,
     address: data.address ?? FALLBACK_FOOTER.address,
     hours: data.hours ?? FALLBACK_FOOTER.hours,
     legal: mapLinks(data.legal, FALLBACK_FOOTER.legal) as FooterLink[],

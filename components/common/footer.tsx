@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { Logo, Pattern } from '@/components/svgs'
+import { cn } from '@/lib/utils/cn'
 
 export type FooterLink = {
   label: string
@@ -9,6 +10,8 @@ export type FooterLink = {
 
 export type FooterContent = {
   social: FooterLink[]
+  delivery: FooterLink[]
+  petPolicy: FooterLink
   address: string
   hours: string
   legal: FooterLink[]
@@ -16,13 +19,31 @@ export type FooterContent = {
 
 type FooterProps = FooterContent
 
+function FooterNavLink({
+  label,
+  href,
+  className,
+}: FooterLink & { className?: string }) {
+  return (
+    <Link
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn('transition-opacity hover:opacity-70', className)}
+    >
+      {label}
+    </Link>
+  )
+}
+
 export default function Footer({
   social,
+  delivery,
+  petPolicy,
   address,
   hours,
   legal,
 }: FooterProps) {
-  const [instagram, facebook, tiktok] = social
   const [terms, privacy] = legal
   const copyright = `© ${new Date().getFullYear()} Hninn. All rights reserved.`
 
@@ -37,37 +58,35 @@ export default function Footer({
       </div>
 
       <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 text-sm leading-[1.39] xs:grid-cols-8 pt-13">
-        <nav className="flex justify-between xs:contents" aria-label="Social">
-          {instagram && (
-            <Link
-              href={instagram.href}
-              className="transition-opacity hover:opacity-70 xs:col-start-3"
-            >
-              {instagram.label}
-            </Link>
-          )}
-          {facebook && (
-            <Link
-              href={facebook.href}
-              className="transition-opacity hover:opacity-70 xs:col-start-6"
-            >
-              {facebook.label}
-            </Link>
-          )}
-          {tiktok && (
-            <Link
-              href={tiktok.href}
-              className="transition-opacity hover:opacity-70 xs:col-start-8 xs:justify-self-end"
-            >
-              {tiktok.label}
-            </Link>
-          )}
+        <nav
+          className="flex flex-col gap-2 xs:col-span-2 xs:col-start-3"
+          aria-label="Social"
+        >
+          {social.map((link) => (
+            <FooterNavLink key={`${link.label}-${link.href}`} {...link} />
+          ))}
         </nav>
 
-        <p className="mt-13 max-w-45 xs:max-w-62 leading-[1.4] xs:col-span-2 xs:col-start-3 xs:mt-23">
+        <nav
+          className="mt-6 flex flex-col gap-3 xs:col-span-2 xs:col-start-6 xs:mt-0"
+          aria-label="Delivery"
+        >
+          {delivery.map((link) => (
+            <FooterNavLink key={`${link.label}-${link.href}`} {...link} />
+          ))}
+        </nav>
+
+        <nav
+          className="mt-6 xs:col-start-8 xs:mt-0 xs:justify-self-end"
+          aria-label="Pet policy"
+        >
+          <FooterNavLink {...petPolicy} />
+        </nav>
+
+        <p className="mt-13 max-w-45 xs:max-w-62 leading-[1.4] xs:col-span-2 xs:col-start-3 xs:mt-13">
           {address}
         </p>
-        <p className="mt-6 max-w-44.5 whitespace-pre-line leading-[1.4] xs:col-span-2 xs:col-start-6 xs:mt-23">
+        <p className="mt-6 max-w-44.5 whitespace-pre-line leading-[1.4] xs:col-span-2 xs:col-start-6 xs:mt-13">
           {hours}
         </p>
 
@@ -76,26 +95,22 @@ export default function Footer({
           aria-label="Legal"
         >
           {terms && (
-            <Link
-              href={terms.href}
-              className="transition-opacity hover:opacity-70 xs:col-start-3 xs:mt-6"
-            >
-              {terms.label}
-            </Link>
+            <FooterNavLink
+              {...terms}
+              className="xs:col-start-3 xs:mt-6"
+            />
           )}
           {privacy && (
-            <Link
-              href={privacy.href}
-              className="transition-opacity hover:opacity-70 xs:col-start-6 xs:mt-6"
-            >
-              {privacy.label}
-            </Link>
+            <FooterNavLink
+              {...privacy}
+              className="xs:col-start-6 xs:mt-6"
+            />
           )}
         </nav>
 
         <div className="col-span-full mt-4 flex flex-col gap-3 xs:mt-23">
           <Logo color="brown-muted" className="w-full" />
-          <p className="text-left xs:text-center mb-1 xs:mb-0">{copyright}</p>
+          <p className="mb-1 text-left xs:mb-0 xs:text-center">{copyright}</p>
         </div>
       </div>
     </footer>
