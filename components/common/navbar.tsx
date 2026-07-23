@@ -91,7 +91,8 @@ export default function Navbar({
       if (!ctas || !menu || !links.length) return
 
       const ctasWidth = ctas.offsetWidth
-      gsap.set(ctas, { width: ctasWidth, overflow: 'hidden' })
+      gsap.set(ctas, { width: ctasWidth })
+      // gsap.set(ctas, { width: ctasWidth, overflow: 'hidden' })
 
       const split = SplitText.create(links, {
         type: 'lines',
@@ -352,7 +353,10 @@ export default function Navbar({
         <div id="navbar" className="mx-auto w-full xs:max-w-216.25">
           <nav
             id="navbar-bar"
-            className="relative flex h-12 w-full items-center justify-between rounded-[1.75rem] border-2 border-sand bg-cream px-1.25 xs:h-14 xs:px-5"
+            className={cn(
+              'relative flex h-12 w-full items-center justify-between rounded-[1.75rem] border-2 border-sand bg-cream px-1.25 xs:h-14',
+              menuOpen ? 'xs:px-2' : 'xs:px-5',
+            )}
             aria-label="Primary"
           >
             {/* Logo: desktop always; mobile only when menu is open */}
@@ -412,7 +416,10 @@ export default function Navbar({
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               onClick={handleToggle}
-              className="absolute top-1/2 right-2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center transition-opacity hover:opacity-70 xs:right-5 xs:size-9"
+              className={cn(
+                'absolute top-1/2 right-2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center transition-opacity hover:opacity-70 xs:size-9',
+                menuOpen ? 'xs:right-2' : 'xs:right-5',
+              )}
             >
               <Menu color={menuOpen ? 'cream' : 'olive'} open={menuOpen} />
             </button>

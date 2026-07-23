@@ -125,7 +125,7 @@ export default function MenuCard({ item }: MenuCardProps) {
               : 'flex items-center justify-between gap-4',
           )}
         >
-          <div className="w-[140%] xs:w-[320%] opacity-50 absolute inset-0">
+          <div className="w-[140%] xs:w-[320%] absolute inset-0">
             <PatternBackdrop color="olive-dark" />
           </div>
 

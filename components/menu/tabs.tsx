@@ -13,7 +13,7 @@ export default function MenuTabs({ tabs }: MenuTabsProps) {
   const setActiveId = useMenuStore((state) => state.setActiveId)
 
   return (
-    <div className="border-y border-sand bg-cream">
+    <div className="sticky top-0 z-10 border-y border-sand bg-cream">
       <div
         className="flex h-11 items-stretch overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden"
         role="tablist"
