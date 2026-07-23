@@ -12,7 +12,7 @@ export default function GeneralFacts({ facts, cta }: GeneralFactsProps) {
         <PatternBackdrop color="olive-dark" />
       </div>
 
-      <div className="mt-[-100dvh] pt-13 pb-36 xs:pt-24 xs:pb-32">
+      <div className="mt-[-100dvh] py-13 xs:py-24">
         <div className="relative z-10 flex flex-col gap-13 xs:gap-30">
           {facts.map((fact) => (
             <FactBlock key={fact.title} {...fact} />

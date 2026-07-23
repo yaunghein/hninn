@@ -12,7 +12,8 @@ import type { GeneralFact, GeneralFactImage } from '@/types/home'
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 const PARALLAX_DESKTOP = 10
-const PARALLAX_MOBILE = 5
+/** Mobile: yPercent travel — even/odd stack indices for depth (same direction) */
+const PARALLAX_MOBILE_Y = [22, 9] as const
 
 type FactBlockProps = GeneralFact
 
@@ -81,17 +82,12 @@ function parallaxRange(
     : { from: `-${travel}`, to: travel }
 }
 
-function parallaxItems(
+function parallaxDesktop(
   items: HTMLElement[],
   offset: 'left' | 'right',
   side: 'left' | 'right',
   travelRem: number,
-  scrollTrigger: {
-    trigger: HTMLElement
-    start: string
-    end: string
-    scrub: number
-  },
+  trigger: HTMLElement,
 ) {
   const travel = `${travelRem}rem`
   const { from, to } = parallaxRange(offset, side, travel)
@@ -104,7 +100,40 @@ function parallaxItems(
         y: to,
         ease: 'none',
         force3D: true,
-        scrollTrigger: { ...scrollTrigger },
+        scrollTrigger: {
+          trigger,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2,
+        },
+      },
+    )
+  })
+}
+
+/**
+ * Mobile zigzag: every card rises (never against scroll), but even/odd
+ * cards use different travel so neighbors drift apart — that's the depth.
+ * Each card drives its own trigger so motion happens while it's on screen.
+ */
+function parallaxMobile(items: HTMLElement[]) {
+  items.forEach((item, index) => {
+    const travel = PARALLAX_MOBILE_Y[index % 2]!
+
+    gsap.fromTo(
+      item,
+      { yPercent: travel },
+      {
+        yPercent: -travel,
+        ease: 'none',
+        force3D: true,
+        scrollTrigger: {
+          trigger: item,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
       },
     )
   })
@@ -138,33 +167,44 @@ export default function FactBlock({
         },
         (context) => {
           const { isMobile, isDesktop } = context.conditions!
-          const scrollTrigger = {
-            trigger: root,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2,
+
+          if (isMobile) {
+            const scope = root.querySelector<HTMLElement>(
+              '[data-parallax-scope="mobile"]',
+            )
+            if (!scope) return
+
+            parallaxMobile(
+              gsap.utils.toArray<HTMLElement>('[data-parallax]', scope),
+            )
+            return
           }
 
-          const scope = isDesktop
-            ? root.querySelector<HTMLElement>('[data-parallax-scope="desktop"]')
-            : root.querySelector<HTMLElement>('[data-parallax-scope="mobile"]')
+          if (!isDesktop) return
 
+          const scope = root.querySelector<HTMLElement>(
+            '[data-parallax-scope="desktop"]',
+          )
           if (!scope) return
 
-          const leftItems = gsap.utils.toArray<HTMLElement>(
-            '[data-parallax="left"]',
-            scope,
+          parallaxDesktop(
+            gsap.utils.toArray<HTMLElement>('[data-parallax="left"]', scope),
+            offset,
+            'left',
+            PARALLAX_DESKTOP,
+            root,
           )
-          const rightItems = gsap.utils.toArray<HTMLElement>(
-            '[data-parallax="right"]',
-            scope,
+          parallaxDesktop(
+            gsap.utils.toArray<HTMLElement>('[data-parallax="right"]', scope),
+            offset,
+            'right',
+            PARALLAX_DESKTOP,
+            root,
           )
-          const travel = isMobile ? PARALLAX_MOBILE : PARALLAX_DESKTOP
-
-          parallaxItems(leftItems, offset, 'left', travel, scrollTrigger)
-          parallaxItems(rightItems, offset, 'right', travel, scrollTrigger)
         },
       )
+
+      return () => mm.revert()
     },
     { scope: rootRef, dependencies: [offset] },
   )
