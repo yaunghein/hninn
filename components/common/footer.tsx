@@ -57,31 +57,33 @@ export default function Footer({
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-x-3 px-6 pb-24 text-sm leading-[1.39] xs:grid-cols-8 pt-13">
-        <nav
-          className="flex flex-col gap-2 xs:col-span-2 xs:col-start-3"
-          aria-label="Social"
-        >
-          {social.map((link) => (
-            <FooterNavLink key={`${link.label}-${link.href}`} {...link} />
-          ))}
-        </nav>
+      <div className="grid grid-cols-1 gap-x-3 px-6 pb-22 xs:pb-24 text-sm leading-[1.39] xs:grid-cols-8 pt-13">
+        <div className="col-span-full grid grid-cols-3 gap-x-3 xs:grid-cols-8">
+          <nav
+            className="flex flex-col gap-1 xs:col-span-2 xs:col-start-3 xs:gap-2"
+            aria-label="Social"
+          >
+            {social.map((link) => (
+              <FooterNavLink key={`${link.label}-${link.href}`} {...link} />
+            ))}
+          </nav>
 
-        <nav
-          className="mt-6 flex flex-col gap-3 xs:col-span-2 xs:col-start-6 xs:mt-0"
-          aria-label="Delivery"
-        >
-          {delivery.map((link) => (
-            <FooterNavLink key={`${link.label}-${link.href}`} {...link} />
-          ))}
-        </nav>
+          <nav
+            className="flex flex-col gap-1 translate-x-6 xs:col-span-2 xs:col-start-6 xs:translate-x-0 xs:gap-2"
+            aria-label="Delivery"
+          >
+            {delivery.map((link) => (
+              <FooterNavLink key={`${link.label}-${link.href}`} {...link} />
+            ))}
+          </nav>
 
-        <nav
-          className="mt-6 xs:col-start-8 xs:mt-0 xs:justify-self-end"
-          aria-label="Pet policy"
-        >
-          <FooterNavLink {...petPolicy} />
-        </nav>
+          <nav
+            className="justify-self-end xs:col-start-8"
+            aria-label="Pet policy"
+          >
+            <FooterNavLink {...petPolicy} />
+          </nav>
+        </div>
 
         <p className="mt-13 max-w-45 xs:max-w-62 leading-[1.4] xs:col-span-2 xs:col-start-3 xs:mt-13">
           {address}
@@ -95,16 +97,10 @@ export default function Footer({
           aria-label="Legal"
         >
           {terms && (
-            <FooterNavLink
-              {...terms}
-              className="xs:col-start-3 xs:mt-6"
-            />
+            <FooterNavLink {...terms} className="xs:col-start-3 xs:mt-6" />
           )}
           {privacy && (
-            <FooterNavLink
-              {...privacy}
-              className="xs:col-start-6 xs:mt-6"
-            />
+            <FooterNavLink {...privacy} className="xs:col-start-6 xs:mt-6" />
           )}
         </nav>
 

@@ -1,6 +1,12 @@
 import { cookies } from 'next/headers'
 
-import { Navbar, PageLoader, SiteFooter, SmoothScroll } from '@/components/common'
+import {
+  // GridGuide,
+  Navbar,
+  PageLoader,
+  SiteFooter,
+  SmoothScroll,
+} from '@/components/common'
 import {
   hasRecentPageLoader,
   PAGE_LOADER_COOKIE,
@@ -33,6 +39,7 @@ export default async function SiteLayout({
 
   return (
     <SmoothScroll>
+      {/* <GridGuide /> */}
       <PageLoader showInitially={showLoader} />
       <Navbar {...navbar} />
       <main className="flex-1">{children}</main>
