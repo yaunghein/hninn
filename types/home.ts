@@ -42,10 +42,17 @@ export type GeneralFactsContent = {
   }
 }
 
-export type HomeMenuItem = {
-  name: string
+export type HomeMenuImage = {
   src: string
   alt: string
+  lqip?: string
+  /** width / height from Sanity metadata */
+  aspectRatio?: number
+}
+
+export type HomeMenuItem = {
+  name: string
+  images: HomeMenuImage[]
 }
 
 export type HomeMenuContent = {

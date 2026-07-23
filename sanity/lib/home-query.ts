@@ -58,15 +58,43 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
       duration,
       items[]{
         name,
+        images[]{
+          image{
+            asset->{
+              _id,
+              url,
+              metadata{
+                lqip,
+                dimensions{
+                  aspectRatio,
+                  width,
+                  height
+                }
+              }
+            },
+            hotspot,
+            crop
+          },
+          caption
+        },
+        // Legacy single image — still mapped if present until content is re-saved
         image{
           asset->{
             _id,
             url,
-            metadata{ lqip }
+            metadata{
+              lqip,
+              dimensions{
+                aspectRatio,
+                width,
+                height
+              }
+            }
           },
           hotspot,
           crop,
-          alt
+          alt,
+          caption
         }
       },
       cta{ label, href }

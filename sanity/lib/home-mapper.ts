@@ -9,6 +9,7 @@ import type {
   HomeFindUsContent,
   HomeHeroContent,
   HomeMenuContent,
+  HomeMenuImage,
   HomeMenuItem,
   HomeSlide,
 } from '@/types/home'
@@ -17,7 +18,14 @@ type SanityImage = {
   asset?: {
     _id: string
     url?: string
-    metadata?: { lqip?: string | null } | null
+    metadata?: {
+      lqip?: string | null
+      dimensions?: {
+        width?: number | null
+        height?: number | null
+        aspectRatio?: number | null
+      } | null
+    } | null
   } | null
   hotspot?: unknown
   crop?: unknown
@@ -66,6 +74,13 @@ export type HomePageData = {
     items?:
       | {
           name?: string | null
+          images?:
+            | {
+                image?: SanityImage
+                caption?: string | null
+              }[]
+            | null
+          /** @deprecated use `images` */
           image?: SanityImage
         }[]
       | null
@@ -252,37 +267,87 @@ const FALLBACK_MENU: HomeMenuContent = {
   title: 'Bright, Bold, and Brunch-Ready',
   description:
     "See what you'd like to try before you even walk through the doors.",
-  duration: 4000,
+  duration: 3000,
   items: [
     {
       name: 'Signature Tea Leaf Salad',
-      src: '/images/home_menu_1.png',
-      alt: 'Hninn dish with tea service',
+      images: [
+        {
+          src: '/images/home_menu_1.png',
+          alt: 'Signature Tea Leaf Salad',
+          aspectRatio: 1.36,
+        },
+        {
+          src: '/images/home_menu_2.png',
+          alt: 'Signature Tea Leaf Salad plating',
+          aspectRatio: 1.36,
+        },
+      ],
     },
     {
       name: "Hninn's Brunch Mohinga",
-      src: '/images/home_menu_2.png',
-      alt: 'Hninn dish with tea service',
+      images: [
+        {
+          src: '/images/home_menu_2.png',
+          alt: "Hninn's Brunch Mohinga",
+        },
+        {
+          src: '/images/home_menu_1.png',
+          alt: "Hninn's Brunch Mohinga bowl",
+        },
+      ],
     },
     {
       name: 'Signature House Blend Coffee',
-      src: '/images/home_menu_1.png',
-      alt: 'Hninn dish with tea service',
+      images: [
+        {
+          src: '/images/home_menu_1.png',
+          alt: 'Signature House Blend Coffee',
+        },
+        {
+          src: '/images/home_menu_2.png',
+          alt: 'Signature House Blend Coffee service',
+        },
+      ],
     },
     {
       name: 'Signature Tea Leaf Salad 2',
-      src: '/images/home_menu_2.png',
-      alt: 'Hninn dish with tea service',
+      images: [
+        {
+          src: '/images/home_menu_2.png',
+          alt: 'Signature Tea Leaf Salad 2',
+        },
+        {
+          src: '/images/home_menu_1.png',
+          alt: 'Signature Tea Leaf Salad 2 plating',
+        },
+      ],
     },
     {
       name: "Hninn's Brunch Mohinga 2",
-      src: '/images/home_menu_1.png',
-      alt: 'Hninn dish with tea service',
+      images: [
+        {
+          src: '/images/home_menu_1.png',
+          alt: "Hninn's Brunch Mohinga 2",
+        },
+        {
+          src: '/images/home_menu_2.png',
+          alt: "Hninn's Brunch Mohinga 2 bowl",
+        },
+      ],
     },
     {
       name: 'Signature House Blend Coffee 2',
-      src: '/images/home_menu_2.png',
-      alt: 'Hninn dish with tea service',
+      images: [
+        {
+          src: '/images/home_menu_2.png',
+          alt: 'Signature House Blend Coffee 2',
+        },
+        {
+          src: '/images/home_menu_1.png',
+          alt: 'Signature House Blend Coffee 2 service',
+        },
+      ],
     },
   ],
   cta: {
@@ -385,6 +450,85 @@ function toGeneralFacts(
   }
 }
 
+function imageAspectRatio(image: SanityImage, fallback = 1.36) {
+  const dimensions = image?.asset?.metadata?.dimensions
+  const fromMeta = dimensions?.aspectRatio
+  if (typeof fromMeta === 'number' && fromMeta > 0) return fromMeta
+
+  const width = dimensions?.width
+  const height = dimensions?.height
+  if (
+    typeof width === 'number' &&
+    typeof height === 'number' &&
+    width > 0 &&
+    height > 0
+  ) {
+    return width / height
+  }
+
+  return fallback
+}
+
+function mapMenuImages(
+  entry:
+    | {
+        images?:
+          | {
+              image?: SanityImage
+              caption?: string | null
+            }[]
+          | null
+        image?: SanityImage
+      }
+    | null
+    | undefined,
+  name: string,
+  fallbackImages: HomeMenuImage[],
+): HomeMenuImage[] {
+  const fromList = (entry?.images ?? [])
+    .map((row, index): HomeMenuImage | null => {
+      const fallbackImage = fallbackImages[index] ?? fallbackImages[0]
+      const image = row.image
+      if (!image?.asset) {
+        if (!fallbackImage) return null
+        return {
+          src: fallbackImage.src,
+          alt: row.caption ?? fallbackImage.alt,
+          aspectRatio: fallbackImage.aspectRatio ?? 1.36,
+          ...(fallbackImage.lqip ? { lqip: fallbackImage.lqip } : {}),
+        }
+      }
+
+      const mapped: HomeMenuImage = {
+        src: urlFor(image).width(1200).url(),
+        alt: row.caption ?? fallbackImage?.alt ?? name,
+        aspectRatio: imageAspectRatio(image, fallbackImage?.aspectRatio ?? 1.36),
+      }
+      const lqip = image.asset?.metadata?.lqip
+      if (lqip) mapped.lqip = lqip
+      return mapped
+    })
+    .filter((image): image is HomeMenuImage => Boolean(image))
+
+  if (fromList.length > 0) return fromList
+
+  // Legacy single image until content is moved into `images`
+  const legacyImage = entry?.image
+  const legacyAsset = legacyImage?.asset
+  if (legacyImage && legacyAsset) {
+    const mapped: HomeMenuImage = {
+      src: urlFor(legacyImage).width(1200).url(),
+      alt: legacyImage.caption ?? legacyImage.alt ?? name,
+      aspectRatio: imageAspectRatio(legacyImage),
+    }
+    const lqip = legacyAsset.metadata?.lqip
+    if (lqip) mapped.lqip = lqip
+    return [mapped]
+  }
+
+  return fallbackImages
+}
+
 function toMenu(data: HomePageData['menu']): HomeMenuContent {
   const fallback = FALLBACK_MENU
   const items = (data?.items ?? [])
@@ -393,20 +537,14 @@ function toMenu(data: HomePageData['menu']): HomeMenuContent {
       const name = item.name ?? fallbackItem?.name
       if (!name) return null
 
-      if (item.image?.asset) {
-        return {
-          name,
-          src: urlFor(item.image).width(1200).url(),
-          alt: item.image.alt ?? fallbackItem?.alt ?? name,
-        }
-      }
-
-      if (!fallbackItem) return null
-      return {
+      const images = mapMenuImages(
+        item,
         name,
-        src: fallbackItem.src,
-        alt: item.image?.alt ?? fallbackItem.alt,
-      }
+        fallbackItem?.images ?? [],
+      )
+      if (images.length === 0) return null
+
+      return { name, images }
     })
     .filter((item): item is HomeMenuItem => Boolean(item))
 

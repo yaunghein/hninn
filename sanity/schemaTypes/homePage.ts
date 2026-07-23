@@ -234,8 +234,10 @@ export const homePage = defineType({
         defineField({
           name: 'duration',
           title: 'Slide duration (ms)',
+          description:
+            'Autoplay interval between slider steps. Tab progress length is derived from each menu’s image count and how many slides move per step.',
           type: 'number',
-          initialValue: 4000,
+          initialValue: 3000,
           validation: (rule) => rule.required().min(1000),
         }),
         defineField({
@@ -253,19 +255,87 @@ export const homePage = defineType({
                   validation: (rule) => rule.required(),
                 }),
                 defineField({
-                  name: 'image',
-                  title: 'Image',
-                  type: 'image',
-                  description: imageFieldDescription,
-                  options: { hotspot: true },
-                  fields: altImageFields(),
-                  validation: (rule) => rule.required(),
+                  name: 'images',
+                  title: 'Images',
+                  type: 'array',
+                  of: [
+                    defineArrayMember({
+                      type: 'object',
+                      fields: [
+                        defineField({
+                          name: 'image',
+                          title: 'Image',
+                          type: 'image',
+                          description: imageFieldDescription,
+                          options: { hotspot: true },
+                          validation: (rule) => rule.required(),
+                        }),
+                        defineField({
+                          name: 'caption',
+                          title: 'Caption',
+                          type: 'string',
+                          description:
+                            'Used as image alt text on the site (not shown as visible UI).',
+                          validation: (rule) =>
+                            rule
+                              .required()
+                              .warning(
+                                'Caption is used as alt text for accessibility',
+                              ),
+                        }),
+                      ],
+                      preview: {
+                        select: {
+                          title: 'caption',
+                          media: 'image',
+                        },
+                        prepare({ title, media }) {
+                          return {
+                            title: title || 'Image',
+                            media,
+                          }
+                        },
+                      },
+                    }),
+                  ],
+                  validation: (rule) => rule.required().min(1),
                 }),
               ],
               preview: {
                 select: {
                   title: 'name',
-                  media: 'image',
+                  media: 'images.0.image',
+                  legacyMedia: 'image',
+                  // Preview select often won't pass a real array for `images`;
+                  // count via item keys instead.
+                  i0: 'images.0._key',
+                  i1: 'images.1._key',
+                  i2: 'images.2._key',
+                  i3: 'images.3._key',
+                  i4: 'images.4._key',
+                  i5: 'images.5._key',
+                  i6: 'images.6._key',
+                  i7: 'images.7._key',
+                  i8: 'images.8._key',
+                  i9: 'images.9._key',
+                  i10: 'images.10._key',
+                  i11: 'images.11._key',
+                },
+                prepare({ title, media, legacyMedia, ...rest }) {
+                  const count = Object.entries(rest).filter(
+                    ([key, value]) => /^i\d+$/.test(key) && Boolean(value),
+                  ).length
+
+                  return {
+                    title: title || 'Untitled',
+                    subtitle:
+                      count > 0
+                        ? `${count} image${count === 1 ? '' : 's'}`
+                        : legacyMedia
+                          ? 'Add images (legacy photo only)'
+                          : '0 images',
+                    media: media || legacyMedia,
+                  }
                 },
               },
             }),

@@ -6,10 +6,7 @@ import HomeMenu from '@/components/home/menu'
 import StickyAtEnd from '@/components/home/sticky-at-end'
 import UnderHero from '@/components/home/under-hero'
 import { Footer } from '@/components/common'
-import {
-  toHomeContent,
-  type HomePageData,
-} from '@/sanity/lib/home-mapper'
+import { toHomeContent, type HomePageData } from '@/sanity/lib/home-mapper'
 import { HOME_PAGE_QUERY } from '@/sanity/lib/home-query'
 import { sanityFetch } from '@/sanity/lib/live'
 import { FOOTER_QUERY } from '@/sanity/lib/queries'
@@ -49,15 +46,15 @@ export default async function Home() {
 
   return (
     <div className="relative">
-      <UnderHero hero={<HomeHero {...hero} />}>
+      {/* <UnderHero hero={<HomeHero {...hero} />}>
         <StickyAtEnd className="z-0">
           <GeneralFacts {...generalFacts} />
         </StickyAtEnd>
-      </UnderHero>
+      </UnderHero> */}
       <div className="relative z-20">
         <HomeMenu {...menu} />
-        <HomeFindUs {...findUs} />
-        <Footer {...footer} />
+        {/* <HomeFindUs {...findUs} />
+        <Footer {...footer} /> */}
       </div>
     </div>
   )
