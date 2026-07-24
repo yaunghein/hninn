@@ -29,7 +29,7 @@ export default function ContentPanel({
       )}
       style={homeSlideRevealTransitionStyle}
     >
-      <div className="relative z-10 flex flex-1 flex-col justify-between xs:justify-start p-6 pb-24 xs:pb-6 aspect-square xs:aspect-auto">
+      <div className="relative z-10 flex flex-1 flex-col justify-between xs:justify-start p-6 aspect-square xs:aspect-auto">
         <h1
           className={cn(
             'text-3xl font-semibold uppercase leading-none tracking-[-0.02em] transition-colors xs:text-5xl xs:leading-[1.15] xs:tracking-tight',

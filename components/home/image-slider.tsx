@@ -90,7 +90,7 @@ export default function ImageSlider({ slides, duration }: ImageSliderProps) {
   const slide = slides[activeIndex] ?? slides[0]
 
   return (
-    <div className="relative flex min-h-dvh bg-black w-full flex-col overflow-hidden xs:h-full">
+    <div className="relative flex w-full flex-col overflow-hidden bg-black xs:h-full">
       <div
         className={cn(
           'px-6 pt-6 pb-20 transition-colors xs:hidden',
