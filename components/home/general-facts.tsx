@@ -19,7 +19,7 @@ export default function GeneralFacts({ facts, cta }: GeneralFactsProps) {
           ))}
         </div>
 
-        <div className="relative z-10 mt-13 flex justify-center xs:mt-16">
+        <div className="relative z-10 mt-13 flex justify-center xs:mt-16 pb-16 xs:pb-8">
           <Button
             label={cta.label}
             href={cta.href}

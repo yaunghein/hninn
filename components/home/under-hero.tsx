@@ -14,11 +14,16 @@ type UnderHeroProps = {
 }
 
 /**
- * Desktop: hero scrolls away on top; children stay fixed underneath until the
- * hero is gone, then rejoin flow via `display: contents`.
+ * Hero scrolls away on top; children stay fixed underneath until the hero is
+ * gone, then rejoin flow via `display: contents`.
  *
- * Mobile: skip the fixed pin — it freezes element positions so ScrollTrigger
- * parallax never advances. Stack hero + children in normal document flow.
+ * An in-flow `[data-under-hero-flow]` sentinel marks where children live in the
+ * document so ScrollTrigger parallax can scrub against stable geometry while
+ * the visual layer is `position: fixed` — avoiding a progress reset on unpin.
+ *
+ * When unpinned, the outer wrapper is also `contents` so StickyAtEnd’s
+ * containing block is the page shell — facts can stick while menu / find-us
+ * scroll over them.
  */
 export default function UnderHero({ hero, children }: UnderHeroProps) {
   const heroRef = useRef<HTMLDivElement>(null)
@@ -26,19 +31,8 @@ export default function UnderHero({ hero, children }: UnderHeroProps) {
   const [heroHeight, setHeroHeight] = useState(0)
   const [factsHeight, setFactsHeight] = useState(0)
   const [pinned, setPinned] = useState(true)
-  const [desktopPin, setDesktopPin] = useState(false)
 
   useLayoutEffect(() => {
-    const mq = window.matchMedia('(min-width: 480px)')
-    const sync = () => setDesktopPin(mq.matches)
-    sync()
-    mq.addEventListener('change', sync)
-    return () => mq.removeEventListener('change', sync)
-  }, [])
-
-  useLayoutEffect(() => {
-    if (!desktopPin) return
-
     const heroNode = heroRef.current
     const factsNode = factsRef.current
     if (!heroNode || !factsNode) return
@@ -58,10 +52,10 @@ export default function UnderHero({ hero, children }: UnderHeroProps) {
       observer.observe(factsNode.firstElementChild)
     }
     return () => observer.disconnect()
-  }, [desktopPin])
+  }, [])
 
   useEffect(() => {
-    if (!desktopPin || !heroHeight) return
+    if (!heroHeight) return
 
     const syncPin = () => {
       setPinned(window.scrollY < heroHeight)
@@ -70,31 +64,25 @@ export default function UnderHero({ hero, children }: UnderHeroProps) {
     syncPin()
     window.addEventListener('scroll', syncPin, { passive: true })
     return () => window.removeEventListener('scroll', syncPin)
-  }, [desktopPin, heroHeight])
+  }, [heroHeight])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // Spacer ↔ contents swap keeps total document height stable; refresh so
+    // triggers below UnderHero pick up the handoff. Fact parallax measures the
+    // in-flow sentinel, so progress stays continuous across this refresh.
     ScrollTrigger.refresh()
-  }, [desktopPin, pinned])
-
-  // Mobile: normal flow so fact-block parallax can scrub with scroll
-  if (!desktopPin) {
-    return (
-      <>
-        <div ref={heroRef} className="relative z-10">
-          {hero}
-        </div>
-        <div ref={factsRef} className="relative z-0">
-          {children}
-        </div>
-      </>
-    )
-  }
+  }, [pinned])
 
   return (
-    <>
+    <div
+      data-under-hero={pinned ? 'pinned' : 'flow'}
+      className={cn(!pinned && 'contents')}
+    >
       <div ref={heroRef} className="relative z-10">
         {hero}
       </div>
+      {/* Stable in-flow anchor for ScrollTrigger while the visual layer is fixed */}
+      <div data-under-hero-flow className="relative h-0 w-full" aria-hidden />
       {pinned ? (
         <div style={{ height: factsHeight }} aria-hidden />
       ) : null}
@@ -104,6 +92,6 @@ export default function UnderHero({ hero, children }: UnderHeroProps) {
       >
         {children}
       </div>
-    </>
+    </div>
   )
 }

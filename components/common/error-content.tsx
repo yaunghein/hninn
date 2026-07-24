@@ -19,7 +19,7 @@ export default function ErrorContent({ actions }: ErrorContentProps) {
       </p>
       <h1
         id="error-heading"
-        className="max-w-md text-2xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:text-4xl xs:tracking-tight"
+        className="max-w-md text-2xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:text-4xl xs:tracking-tight"
       >
         The wok got a little too hot
       </h1>

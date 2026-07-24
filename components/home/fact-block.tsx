@@ -82,15 +82,33 @@ function parallaxRange(
     : { from: `-${travel}`, to: travel }
 }
 
+/**
+ * Prefer UnderHero's in-flow sentinel when present so scrub progress tracks
+ * document geometry while the facts layer is `position: fixed` under the hero.
+ * Each block offsets start/end by its position within the facts section so
+ * later blocks don't all share the sentinel's range.
+ */
 function parallaxDesktop(
   items: HTMLElement[],
   offset: 'left' | 'right',
   side: 'left' | 'right',
   travelRem: number,
-  trigger: HTMLElement,
+  root: HTMLElement,
 ) {
   const travel = `${travelRem}rem`
   const { from, to } = parallaxRange(offset, side, travel)
+  const flow = root
+    .closest('[data-under-hero]')
+    ?.querySelector<HTMLElement>('[data-under-hero-flow]')
+  const section = root.closest('section')
+  const trigger = flow ?? root
+
+  const blockOffset = () => {
+    if (!flow || !section) return 0
+    return (
+      root.getBoundingClientRect().top - section.getBoundingClientRect().top
+    )
+  }
 
   items.forEach((item) => {
     gsap.fromTo(
@@ -102,9 +120,14 @@ function parallaxDesktop(
         force3D: true,
         scrollTrigger: {
           trigger,
-          start: 'top bottom',
-          end: 'bottom top',
+          start: () =>
+            flow ? `top+=${blockOffset()} bottom` : 'top bottom',
+          end: () =>
+            flow
+              ? `top+=${blockOffset() + root.offsetHeight} top`
+              : 'bottom top',
           scrub: 1.2,
+          invalidateOnRefresh: true,
         },
       },
     )
@@ -114,11 +137,23 @@ function parallaxDesktop(
 /**
  * Mobile zigzag: every card rises (never against scroll), but even/odd
  * cards use different travel so neighbors drift apart — that's the depth.
- * Each card drives its own trigger so motion happens while it's on screen.
+ * Prefer UnderHero's in-flow sentinel when present (same reason as desktop).
  */
 function parallaxMobile(items: HTMLElement[]) {
   items.forEach((item, index) => {
     const travel = PARALLAX_MOBILE_Y[index % 2]!
+    const flow = item
+      .closest('[data-under-hero]')
+      ?.querySelector<HTMLElement>('[data-under-hero-flow]')
+    const section = item.closest('section')
+    const trigger = flow ?? item
+
+    const itemOffset = () => {
+      if (!flow || !section) return 0
+      return (
+        item.getBoundingClientRect().top - section.getBoundingClientRect().top
+      )
+    }
 
     gsap.fromTo(
       item,
@@ -128,9 +163,13 @@ function parallaxMobile(items: HTMLElement[]) {
         ease: 'none',
         force3D: true,
         scrollTrigger: {
-          trigger: item,
-          start: 'top bottom',
-          end: 'bottom top',
+          trigger,
+          start: () =>
+            flow ? `top+=${itemOffset()} bottom` : 'top bottom',
+          end: () =>
+            flow
+              ? `top+=${itemOffset() + item.offsetHeight} top`
+              : 'bottom top',
           scrub: true,
           invalidateOnRefresh: true,
         },
