@@ -3,9 +3,14 @@ import { stegaClean } from 'next-sanity'
 import { DEFAULT_TAB_ID } from '@/lib/utils/tab-query'
 import { uniqueSlug } from '@/lib/utils/slugify'
 import { urlFor } from '@/sanity/lib/image'
-import type { MenuItem, MenuPageContent } from '@/types/menu'
+import type { MenuCta, MenuItem, MenuPageContent } from '@/types/menu'
 
 const FALLBACK_IMAGE_SRC = '/images/home_good_food_3.jpg'
+
+type SanityLink = {
+  label?: string | null
+  href?: string | null
+}
 
 type SanityMenuImage = {
   asset?: {
@@ -35,7 +40,15 @@ type SanityMenuCategory = {
 }
 
 export type MenuPageData = {
+  cta?: SanityLink | null
   categories?: SanityMenuCategory[] | null
+}
+
+const FALLBACK_CTA: MenuCta = {
+  label: 'In-store menu',
+  href: '#',
+  color: 'olive',
+  hoverColor: 'sand',
 }
 
 const FALLBACK_CATEGORIES: {
@@ -95,7 +108,16 @@ const FALLBACK_CATEGORIES: {
   },
 ]
 
-function fallbackMenuContent(): MenuPageContent {
+function mapCta(cta: SanityLink | null | undefined): MenuCta {
+  return {
+    label: cta?.label ?? FALLBACK_CTA.label,
+    href: cta?.href ?? FALLBACK_CTA.href,
+    color: FALLBACK_CTA.color,
+    hoverColor: FALLBACK_CTA.hoverColor,
+  }
+}
+
+function fallbackMenuContent(cta: MenuCta): MenuPageContent {
   const tabs = [
     { id: DEFAULT_TAB_ID, label: 'All' },
     ...FALLBACK_CATEGORIES.map((category) => ({
@@ -112,7 +134,7 @@ function fallbackMenuContent(): MenuPageContent {
     })),
   )
 
-  return { tabs, items }
+  return { cta, tabs, items }
 }
 
 function mapMenuImage(
@@ -134,13 +156,15 @@ function mapMenuImage(
 }
 
 export function toMenuContent(data: MenuPageData | null): MenuPageContent {
+  const cta = mapCta(data?.cta)
+
   const categories = (data?.categories ?? []).filter(
     (category): category is SanityMenuCategory & { _key: string; name: string } =>
       Boolean(category?._key && category?.name),
   )
 
   if (categories.length === 0) {
-    return fallbackMenuContent()
+    return fallbackMenuContent(cta)
   }
 
   const usedIds = new Set<string>([DEFAULT_TAB_ID])
@@ -186,8 +210,8 @@ export function toMenuContent(data: MenuPageData | null): MenuPageContent {
   })
 
   if (items.length === 0) {
-    return fallbackMenuContent()
+    return fallbackMenuContent(cta)
   }
 
-  return { tabs, items }
+  return { cta, tabs, items }
 }

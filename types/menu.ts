@@ -1,3 +1,5 @@
+import type { Color } from '@/lib/constants/colors'
+
 export type MenuItem = {
   id: string
   categoryId: string
@@ -16,7 +18,15 @@ export type MenuTab = {
   label: string
 }
 
+export type MenuCta = {
+  label: string
+  href: string
+  color: Color
+  hoverColor: Color
+}
+
 export type MenuPageContent = {
+  cta: MenuCta
   tabs: MenuTab[]
   items: MenuItem[]
 }

@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 
+import AppLink from '@/components/common/app-link'
 import PatternBackdrop from '@/components/home/pattern-backdrop'
 import { Logo, Menu } from '@/components/svgs'
 import { colorTokens } from '@/lib/constants/colors'
@@ -27,9 +28,16 @@ export type NavbarContent = {
 
 type NavbarProps = NavbarContent
 
-const SPRING = 'elastic.out(1, 0.75)'
-const EASE_OUT = 'power2.out'
-const EASE_IO = 'power3.inOut'
+const EASE = 'power2.inOut'
+const DURATION = 0.6
+const DURATION_MOBILE = 0.35
+const LINES_OPEN_DURATION = 0.7
+const LINES_OPEN_STAGGER = 0.04
+const LINES_CLOSE_DURATION = 0.3
+const LINES_CLOSE_STAGGER = 0.03
+const MENU_CLOSE_DURATION = 0.28
+const CTAS_FADE_IN_DURATION = 0.12
+const CTAS_FADE_IN_AT = 0.55
 
 function NavCta({
   href,
@@ -43,7 +51,7 @@ function NavCta({
   className?: string
 }) {
   return (
-    <Link
+    <AppLink
       href={href}
       className={cn(
         'group relative inline-flex h-9 items-center justify-center overflow-hidden border border-olive px-4 font-bold uppercase leading-[1.6] tracking-[0.02em] xs:h-10 rounded-[1.25rem] xs:px-6 text-[0.8rem] xs:text-sm',
@@ -67,7 +75,7 @@ function NavCta({
       >
         {label}
       </span>
-    </Link>
+    </AppLink>
   )
 }
 
@@ -92,7 +100,7 @@ export default function Navbar({
 
       const ctasWidth = ctas.offsetWidth
       gsap.set(ctas, { width: ctasWidth })
-      // gsap.set(ctas, { width: ctasWidth, overflow: 'hidden' })
+      gsap.set(ctas, { width: ctasWidth, overflow: 'hidden' })
 
       const split = SplitText.create(links, {
         type: 'lines',
@@ -110,14 +118,12 @@ export default function Navbar({
 
       let active: gsap.core.Timeline | null = null
       const isDesktop = () => window.matchMedia('(min-width: 480px)').matches
-      const navEase = () => (isDesktop() ? SPRING : EASE_OUT)
-      const navDuration = () => (isDesktop() ? 0.75 : 0.35)
+      const navDuration = () => (isDesktop() ? DURATION : DURATION_MOBILE)
 
       playOpenRef.current = () => {
         active?.kill()
         active = gsap.timeline()
 
-        const ease = navEase()
         const duration = navDuration()
         const desktop = isDesktop()
 
@@ -128,8 +134,8 @@ export default function Navbar({
               autoAlpha: 0,
               scale: 0.9,
               width: 0,
-              duration: 0.7,
-              ease,
+              duration,
+              ease: EASE,
             },
             0,
           )
@@ -142,7 +148,7 @@ export default function Navbar({
               width: 0,
               scale: 0.9,
               duration,
-              ease: EASE_OUT,
+              ease: EASE,
             },
             0,
           )
@@ -155,7 +161,7 @@ export default function Navbar({
             borderColor: colorTokens['olive-light'],
             borderRadius: '0.5rem',
             duration,
-            ease,
+            ease: EASE,
           },
           0,
         )
@@ -166,7 +172,7 @@ export default function Navbar({
             {
               maxWidth: '23.25rem',
               duration,
-              ease,
+              ease: EASE,
             },
             0,
           )
@@ -178,8 +184,8 @@ export default function Navbar({
           {
             scale: 1,
             autoAlpha: 1,
-            duration: 0.75,
-            ease: SPRING,
+            duration,
+            ease: EASE,
             pointerEvents: 'auto',
           },
           0,
@@ -190,9 +196,9 @@ export default function Navbar({
           { yPercent: 110 },
           {
             yPercent: 0,
-            duration: 1.2,
-            ease: 'power3.out',
-            stagger: 0.05,
+            duration: LINES_OPEN_DURATION,
+            ease: EASE,
+            stagger: LINES_OPEN_STAGGER,
           },
           0,
         )
@@ -206,7 +212,6 @@ export default function Navbar({
           },
         })
 
-        const ease = navEase()
         const duration = navDuration()
         const desktop = isDesktop()
 
@@ -214,9 +219,9 @@ export default function Navbar({
           split.lines,
           {
             yPercent: 100,
-            duration: 0.32,
-            ease: EASE_IO,
-            stagger: 0.04,
+            duration: LINES_CLOSE_DURATION,
+            ease: EASE,
+            stagger: LINES_CLOSE_STAGGER,
           },
           0,
         )
@@ -226,8 +231,8 @@ export default function Navbar({
           {
             scale: 0.75,
             autoAlpha: 0,
-            duration: 0.175,
-            ease: EASE_OUT,
+            duration: MENU_CLOSE_DURATION,
+            ease: EASE,
           },
           0,
         )
@@ -239,8 +244,8 @@ export default function Navbar({
               autoAlpha: 1,
               scale: 1,
               width: ctasWidth,
-              duration: 0.7,
-              ease,
+              duration,
+              ease: EASE,
             },
             0,
           )
@@ -252,7 +257,7 @@ export default function Navbar({
               width: ctasWidth,
               scale: 1,
               duration,
-              ease: EASE_OUT,
+              ease: EASE,
             },
             0,
           )
@@ -260,10 +265,10 @@ export default function Navbar({
             '#navbar-ctas',
             {
               autoAlpha: 1,
-              duration: 0.15,
-              ease: EASE_OUT,
+              duration: CTAS_FADE_IN_DURATION,
+              ease: EASE,
             },
-            duration * 0.55,
+            duration * CTAS_FADE_IN_AT,
           )
         }
 
@@ -274,7 +279,7 @@ export default function Navbar({
             borderColor: colorTokens.sand,
             borderRadius: '1.75rem',
             duration,
-            ease,
+            ease: EASE,
           },
           0,
         )
@@ -285,7 +290,7 @@ export default function Navbar({
             {
               maxWidth: '54.0625rem',
               duration,
-              ease,
+              ease: EASE,
             },
             0,
           )
@@ -327,19 +332,19 @@ export default function Navbar({
         >
           <PatternBackdrop
             color="olive-dark"
-            className="-top-[10%] left-[-8%] h-[120%] w-[420%]"
+            className="top-[-10%] left-[-8%] h-[120%] w-[420%]"
           />
 
           <nav className="relative flex flex-col items-center gap-8 text-center text-2xl font-semibold uppercase leading-none text-sand">
             {menuLinks.map((link) => (
-              <Link
+              <AppLink
                 key={link.href}
                 href={link.href}
                 onClick={handleClose}
                 className="nav-menu-link transition-opacity hover:opacity-70"
               >
                 {link.label}
-              </Link>
+              </AppLink>
             ))}
           </nav>
         </div>

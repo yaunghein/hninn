@@ -1,7 +1,7 @@
 import { BasketIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
-import { imageFieldDescription } from './fields'
+import { ctaFields, imageFieldDescription } from './fields'
 import { seoField } from './seoType'
 
 export const menuPage = defineType({
@@ -11,6 +11,15 @@ export const menuPage = defineType({
   icon: BasketIcon,
   fields: [
     seoField,
+    defineField({
+      name: 'cta',
+      title: 'In-store menu',
+      description:
+        'Button under the page title. Link to the full in-store menu (PDF or external URL).',
+      type: 'object',
+      fields: ctaFields(),
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: 'categories',
       title: 'Menu categories',

@@ -137,27 +137,6 @@ export const contactPage = defineType({
           ],
           validation: (rule) => rule.required(),
         }),
-        defineField({
-          name: 'map',
-          title: 'Map image (Deprecated)',
-          type: 'image',
-          description:
-            'No longer used — the site embeds Google Maps instead. Safe to clear.',
-          deprecated: {
-            reason: 'Replaced by an embedded Google Map on the site.',
-          },
-          readOnly: true,
-          hidden: ({ value }) => value === undefined,
-          initialValue: undefined,
-          options: { hotspot: true },
-          fields: [
-            defineField({
-              name: 'alt',
-              title: 'Alternative text',
-              type: 'string',
-            }),
-          ],
-        }),
       ],
       validation: (rule) => rule.required(),
     }),

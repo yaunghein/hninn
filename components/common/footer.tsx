@@ -1,5 +1,4 @@
-import Link from 'next/link'
-
+import AppLink from '@/components/common/app-link'
 import { Logo, Pattern } from '@/components/svgs'
 import { cn } from '@/lib/utils/cn'
 
@@ -25,14 +24,12 @@ function FooterNavLink({
   className,
 }: FooterLink & { className?: string }) {
   return (
-    <Link
+    <AppLink
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
       className={cn('transition-opacity hover:opacity-70', className)}
     >
       {label}
-    </Link>
+    </AppLink>
   )
 }
 

@@ -123,6 +123,10 @@ export const EVENTS_PAGE_QUERY = defineQuery(/* groq */ `
 
 export const MENU_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "menuPage" && _id == "menuPage"][0]{
+    cta{
+      label,
+      href
+    },
     categories[]{
       _key,
       name,

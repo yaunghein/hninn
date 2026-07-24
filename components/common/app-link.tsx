@@ -18,13 +18,13 @@ export default function AppLink({ href, ...props }: AppLinkProps) {
     return <Link href={normalized} {...props} />
   }
 
+  const external = isExternalHref(href)
+
   return (
     <a
       href={normalized}
-      {...(isExternalHref(href)
-        ? { target: '_blank', rel: 'noopener noreferrer' }
-        : {})}
       {...props}
+      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     />
   )
 }

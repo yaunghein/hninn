@@ -28,7 +28,7 @@ export default async function MenuPage({
     sanityFetch({ query: MENU_PAGE_QUERY }),
     searchParams,
   ])
-  const { tabs, items } = toMenuContent(data as MenuPageData | null)
+  const { cta, tabs, items } = toMenuContent(data as MenuPageData | null)
   const initialActiveId = resolveTabId(
     params[TAB_QUERY_KEY],
     tabs.map((tab) => tab.id),
@@ -36,7 +36,7 @@ export default async function MenuPage({
 
   return (
     <div className="bg-cream">
-      <MenuHeader />
+      <MenuHeader cta={cta} />
       <MenuContent
         tabs={tabs}
         items={items}
