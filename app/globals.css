@@ -29,6 +29,11 @@
     overscroll-behavior: none;
   }
 
+  a,
+  button {
+    cursor: pointer;
+  }
+
   @media screen and (max-width: 479px) {
     html {
       font-size: 4.2vw;
