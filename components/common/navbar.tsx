@@ -402,7 +402,7 @@ export default function Navbar({
                 <NavCta
                   href={reservation.href}
                   label={reservation.label}
-                  className="nav-cta"
+                  className="nav-cta -translate-x-px"
                 />
               </div>
             </div>
