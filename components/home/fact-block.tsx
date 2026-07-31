@@ -13,7 +13,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 const PARALLAX_DESKTOP = 10
 /** Mobile: yPercent travel — even/odd stack indices for depth (same direction) */
-const PARALLAX_MOBILE_Y = [22, 9] as const
+const PARALLAX_MOBILE_Y = [14, 6] as const
 
 type FactBlockProps = GeneralFact
 
@@ -120,8 +120,7 @@ function parallaxDesktop(
         force3D: true,
         scrollTrigger: {
           trigger,
-          start: () =>
-            flow ? `top+=${blockOffset()} bottom` : 'top bottom',
+          start: () => (flow ? `top+=${blockOffset()} bottom` : 'top bottom'),
           end: () =>
             flow
               ? `top+=${blockOffset() + root.offsetHeight} top`
@@ -164,8 +163,7 @@ function parallaxMobile(items: HTMLElement[]) {
         force3D: true,
         scrollTrigger: {
           trigger,
-          start: () =>
-            flow ? `top+=${itemOffset()} bottom` : 'top bottom',
+          start: () => (flow ? `top+=${itemOffset()} bottom` : 'top bottom'),
           end: () =>
             flow
               ? `top+=${itemOffset() + item.offsetHeight} top`
@@ -266,16 +264,18 @@ export default function FactBlock({
       {/* Mobile: single-column zigzag (Figma 700:1325) */}
       <div
         data-parallax-scope="mobile"
-        className="flex flex-col gap-6 px-6 pt-32 xs:hidden"
+        className="flex flex-col px-6 pt-32 xs:hidden"
       >
-        {mobileStack.map((image) => (
+        {mobileStack.map((image, index) => (
           <div
             key={image.key}
             data-parallax={image.side}
             className={cn(
-              'w-3/4 will-change-transform',
+              'relative w-[55%] will-change-transform',
+              index > 0 && '-mt-24',
               image.side === 'left' ? 'mr-auto' : 'ml-auto',
             )}
+            style={{ zIndex: index }}
           >
             <FactImage src={image.src} alt={image.alt} />
           </div>
