@@ -1,6 +1,10 @@
 import { stegaClean } from 'next-sanity'
 
-import type { ConceptContent } from '@/types/concept'
+import type {
+  ConceptContent,
+  ConceptStoryContent,
+  ConceptStoryTone,
+} from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
 import type { EventsContent } from '@/types/events'
 import type { GalleryContent, GalleryMediaItem } from '@/types/gallery'
@@ -38,7 +42,39 @@ export type ConceptPageData = {
         body?: string | null
       }[]
     | null
+  stories?:
+    | {
+        _key?: string | null
+        title?: string | null
+        titleWidth?: number | null
+        contentSide?: 'left' | 'right' | null
+        tone?: ConceptStoryTone | null
+        contentType?: 'blocks' | 'paragraphs' | null
+        image?: SanityImage
+        blocks?:
+          | {
+              title?: string | null
+              body?: string | null
+              width?: number | null
+            }[]
+          | null
+        paragraphs?:
+          | {
+              body?: string | null
+              width?: number | null
+            }[]
+          | null
+      }[]
+    | null
 }
+
+const FALLBACK_STORY_IMAGES = [
+  '/images/concept-1.webp',
+  '/images/concept-2.webp',
+  '/images/concept-3.webp',
+] as const
+
+const STORY_TONES = new Set<ConceptStoryTone>(['sand', 'peach', 'olive'])
 
 export type ContactPageData = {
   title?: string | null
@@ -283,6 +319,69 @@ export function toConceptContent(data: ConceptPageData): ConceptContent {
         body: block.body,
       })),
   }
+}
+
+export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
+  return (data.stories ?? []).flatMap((story, index) => {
+    const title = story?.title?.trim()
+    const titleWidth = story?.titleWidth
+    if (!title || typeof titleWidth !== 'number') return []
+
+    const tone = STORY_TONES.has(story?.tone as ConceptStoryTone)
+      ? (story.tone as ConceptStoryTone)
+      : 'sand'
+    const contentSide = story?.contentSide === 'left' ? 'left' : 'right'
+    const contentType =
+      story?.contentType === 'paragraphs' ? 'paragraphs' : 'blocks'
+
+    const imageSrc = story?.image?.asset
+      ? urlFor(story.image).width(2880).url()
+      : (FALLBACK_STORY_IMAGES[index] ?? FALLBACK_STORY_IMAGES[0])
+
+    const base: ConceptStoryContent = {
+      id: story._key ?? `story-${index}`,
+      title,
+      titleWidth,
+      imageSrc,
+      imageAlt: story?.image?.alt ?? '',
+      contentSide,
+      tone,
+    }
+
+    if (contentType === 'paragraphs') {
+      const paragraphs = (story.paragraphs ?? [])
+        .filter(
+          (paragraph): paragraph is { body: string; width?: number | null } =>
+            Boolean(paragraph?.body),
+        )
+        .map((paragraph) => ({
+          body: paragraph.body,
+          ...(typeof paragraph.width === 'number'
+            ? { width: paragraph.width }
+            : {}),
+        }))
+
+      if (!paragraphs.length) return []
+      return [{ ...base, paragraphs }]
+    }
+
+    const blocks = (story.blocks ?? [])
+      .filter(
+        (
+          block,
+        ): block is { title: string; body: string; width: number } =>
+          Boolean(block?.title && block?.body) &&
+          typeof block?.width === 'number',
+      )
+      .map((block) => ({
+        title: block.title,
+        body: block.body,
+        width: block.width,
+      }))
+
+    if (!blocks.length) return []
+    return [{ ...base, blocks }]
+  })
 }
 
 export function toContactContent(data: ContactPageData): ContactContent {

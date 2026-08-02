@@ -51,6 +51,39 @@ export const CONCEPT_PAGE_QUERY = defineQuery(/* groq */ `
       title,
       body
     },
+    stories[]{
+      _key,
+      title,
+      titleWidth,
+      contentSide,
+      tone,
+      contentType,
+      image{
+        asset->{
+          _id,
+          url,
+          metadata{
+            lqip,
+            dimensions{
+              width,
+              height
+            }
+          }
+        },
+        hotspot,
+        crop,
+        alt
+      },
+      blocks[]{
+        title,
+        body,
+        width
+      },
+      paragraphs[]{
+        body,
+        width
+      }
+    },
     "seo": {
       "title": coalesce(seo.title, title, "Concept"),
       "description": coalesce(seo.description, blocks[0].body, ""),
