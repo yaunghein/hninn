@@ -54,9 +54,8 @@ export default function ConceptStory({
       )
         return
 
-      // Initials via GSAP only — Tailwind translate/scale utilities fight GSAP's transform
       gsap.set(imageInner, { y: '8rem', scale: 1.5 })
-      gsap.set(content, { xPercent: 100, x: 0 })
+      gsap.set(content, { xPercent: 100 })
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -64,7 +63,7 @@ export default function ConceptStory({
           trigger,
           start: 'top bottom',
           end: 'bottom bottom',
-          scrub: true,
+          scrub: 1.2,
         },
       })
 
@@ -74,8 +73,8 @@ export default function ConceptStory({
         .to(header, { width: '50%' })
         .to(content, { xPercent: 0 }, '<')
         .to(imageWrapper, { width: '75%' }, '<')
-        .to(imageInner, { scale: 1 }, '<')
-        .to({}, { duration: 0.2 })
+        .to(imageInner, { scale: 1.1 }, '<')
+        .to(imageInner, { scale: 1 }, '<50%')
     },
     { scope: rootRef },
   )
@@ -94,7 +93,6 @@ export default function ConceptStory({
             <div
               id="concept-scroll-image-wrapper-inner-1"
               className="relative h-full w-full"
-              style={{ transform: 'translateY(8rem) scale(1.5)' }}
             >
               <Image
                 src={imageSrc}
@@ -119,9 +117,11 @@ export default function ConceptStory({
           <div
             id="concept-scroll-content-1"
             className="absolute inset-y-0 right-0 flex h-svh w-1/2 flex-col items-center justify-center bg-sand px-10 py-10 text-center text-brown"
-            style={{ transform: 'translateX(100%)' }}
           >
-            <div className="flex w-84.75 flex-col items-center gap-20">
+            <div
+              id="concept-scroll-content-text-1"
+              className="flex w-84.75 flex-col items-center gap-20"
+            >
               {blocks.map((block) => (
                 <article
                   key={block.title}
