@@ -30,6 +30,8 @@ export type ConceptStoryContent = {
   titleWidth: number
   imageSrc: string
   imageAlt?: string
+  /** Sanity LQIP data URL for Next.js blur placeholder */
+  imageLqip?: string
   /** Which side the content panel sits on (desktop). Default `right`. */
   contentSide?: 'left' | 'right'
   tone?: ConceptStoryTone

@@ -106,6 +106,7 @@ export default function ConceptStory({
   titleWidth,
   imageSrc,
   imageAlt = '',
+  imageLqip,
   contentSide = 'right',
   tone = 'sand',
   blocks,
@@ -228,9 +229,10 @@ export default function ConceptStory({
                 src={imageSrc}
                 alt={imageAlt}
                 fill
-                // 150vw: image starts at scale 1.5, so request extra resolution
                 sizes="150vw"
                 quality={90}
+                placeholder={imageLqip ? 'blur' : 'empty'}
+                blurDataURL={imageLqip}
                 className="object-cover"
               />
             </div>

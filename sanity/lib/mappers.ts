@@ -342,6 +342,7 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
     const imageSrc = story?.image?.asset
       ? urlFor(story.image).width(2880).url()
       : (FALLBACK_STORY_IMAGES[index] ?? FALLBACK_STORY_IMAGES[0])
+    const imageLqip = story?.image?.asset?.metadata?.lqip ?? undefined
 
     const base: Omit<ConceptStoryContent, 'blocks' | 'paragraphs'> = {
       id: story._key ?? `story-${index}`,
@@ -349,6 +350,7 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
       titleWidth,
       imageSrc,
       imageAlt: story?.image?.alt ?? '',
+      ...(imageLqip ? { imageLqip } : {}),
       contentSide,
       tone,
     }
