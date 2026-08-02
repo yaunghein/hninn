@@ -322,15 +322,20 @@ export function toConceptContent(data: ConceptPageData): ConceptContent {
 }
 
 export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
-  return (data.stories ?? []).flatMap((story, index) => {
+  const stories: ConceptStoryContent[] = []
+
+  for (const [index, story] of (data.stories ?? []).entries()) {
     const title = story?.title?.trim()
     const titleWidth = story?.titleWidth
-    if (!title || typeof titleWidth !== 'number') return []
+    if (!title || typeof titleWidth !== 'number') continue
 
-    const tone = STORY_TONES.has(story?.tone as ConceptStoryTone)
+    const tone: ConceptStoryTone = STORY_TONES.has(
+      story?.tone as ConceptStoryTone,
+    )
       ? (story.tone as ConceptStoryTone)
       : 'sand'
-    const contentSide = story?.contentSide === 'left' ? 'left' : 'right'
+    const contentSide: ConceptStoryContent['contentSide'] =
+      story?.contentSide === 'left' ? 'left' : 'right'
     const contentType =
       story?.contentType === 'paragraphs' ? 'paragraphs' : 'blocks'
 
@@ -338,7 +343,7 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
       ? urlFor(story.image).width(2880).url()
       : (FALLBACK_STORY_IMAGES[index] ?? FALLBACK_STORY_IMAGES[0])
 
-    const base: ConceptStoryContent = {
+    const base: Omit<ConceptStoryContent, 'blocks' | 'paragraphs'> = {
       id: story._key ?? `story-${index}`,
       title,
       titleWidth,
@@ -361,8 +366,9 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
             : {}),
         }))
 
-      if (!paragraphs.length) return []
-      return [{ ...base, paragraphs }]
+      if (!paragraphs.length) continue
+      stories.push({ ...base, paragraphs })
+      continue
     }
 
     const blocks = (story.blocks ?? [])
@@ -379,9 +385,11 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
         width: block.width,
       }))
 
-    if (!blocks.length) return []
-    return [{ ...base, blocks }]
-  })
+    if (!blocks.length) continue
+    stories.push({ ...base, blocks })
+  }
+
+  return stories
 }
 
 export function toContactContent(data: ContactPageData): ContactContent {
