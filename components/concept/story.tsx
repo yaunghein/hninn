@@ -6,11 +6,34 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Image from 'next/image'
 import { useRef } from 'react'
 
-import type { ConceptStoryContent } from '@/types/concept'
+import type { ConceptStoryBlock, ConceptStoryContent } from '@/types/concept'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 type ConceptStoryProps = ConceptStoryContent
+
+function StoryBlocks({ blocks }: { blocks: ConceptStoryBlock[] }) {
+  return (
+    <>
+      {blocks.map((block) => (
+        <article
+          key={block.title}
+          className="flex w-full flex-col items-center gap-1"
+        >
+          <h3 className="text-base font-semibold uppercase leading-normal">
+            {block.title}
+          </h3>
+          <p
+            className="max-w-full text-sm leading-normal"
+            style={{ width: `${block.width}rem` }}
+          >
+            {block.body}
+          </p>
+        </article>
+      ))}
+    </>
+  )
+}
 
 export default function ConceptStory({
   title,
@@ -54,37 +77,66 @@ export default function ConceptStory({
       )
         return
 
-      gsap.set(imageInner, { y: '8rem', scale: 1.5 })
-      gsap.set(content, { xPercent: 100 })
+      const mm = gsap.matchMedia()
 
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger,
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: 1.2,
-        },
+      mm.add('(max-width: 479px)', () => {
+        gsap.set(imageInner, { y: '8rem', scale: 1.5 })
+        gsap.set(headerWrapper, { fontSize: '2.5rem' })
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger,
+            start: 'top bottom',
+            end: 'bottom bottom',
+            scrub: 1.2,
+          },
+        })
+
+        tl.to(imageInner, { y: 0 })
+          .to(headerWrapper, { fontSize: '1.5rem' }, '<')
+          .to(imageInner, { scale: 1 })
       })
 
-      tl.to(imageInner, { y: 0 })
-        .to(headerWrapper, { fontSize: '3.25rem' }, '<')
-        .to({}, { duration: 0.1 })
-        .to(header, { width: '50%' })
-        .to(content, { xPercent: 0 }, '<')
-        .to(imageWrapper, { width: '75%' }, '<')
-        .to(imageInner, { scale: 1.1 }, '<')
-        .to(imageInner, { scale: 1 }, '<50%')
+      mm.add('(min-width: 480px)', () => {
+        gsap.set(imageInner, { y: '8rem', scale: 1.5 })
+        gsap.set(headerWrapper, { fontSize: '5.75rem' })
+        gsap.set(content, { xPercent: 100 })
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger,
+            start: 'top bottom',
+            end: 'bottom bottom',
+            scrub: 1.2,
+          },
+        })
+
+        tl.to(imageInner, { y: 0 })
+          .to(headerWrapper, { fontSize: '3.25rem' }, '<')
+          .to({}, { duration: 0.1 })
+          .to(header, { width: '50%' })
+          .to(content, { xPercent: 0 }, '<')
+          .to(imageWrapper, { width: '75%' }, '<')
+          .to(imageInner, { scale: 1.1 }, '<')
+          .to(imageInner, { scale: 1 }, '<50%')
+      })
+
+      return () => mm.revert()
     },
     { scope: rootRef },
   )
 
   return (
     <section ref={rootRef}>
-      <div id="concept-scroll-trigger-1" className="relative h-[300svh]">
+      <div
+        id="concept-scroll-trigger-1"
+        className="relative h-[200svh] xs:h-[300svh]"
+      >
         <div
           id="concept-scroll-sticky-container-1"
-          className="sticky top-0 h-svh w-full"
+          className="sticky top-0 z-0 h-svh w-full"
         >
           <div
             id="concept-scroll-image-wrapper-1"
@@ -109,36 +161,30 @@ export default function ConceptStory({
           >
             <h2
               id="concept-scroll-header-wrapper-1"
-              className="whitespace-pre-line text-[5.75rem] font-bold uppercase leading-none"
+              className="whitespace-pre-line text-[2.5rem] font-bold uppercase leading-none xs:text-[5.75rem]"
             >
               {title}
             </h2>
           </div>
           <div
             id="concept-scroll-content-1"
-            className="absolute inset-y-0 right-0 flex h-svh w-1/2 flex-col items-center justify-center bg-sand px-10 py-10 text-center text-brown"
+            className="absolute inset-y-0 right-0 hidden h-svh w-1/2 flex-col items-center justify-center bg-sand px-10 py-10 text-center text-brown xs:flex"
           >
             <div
               id="concept-scroll-content-text-1"
               className="flex w-84.75 flex-col items-center gap-20"
             >
-              {blocks.map((block) => (
-                <article
-                  key={block.title}
-                  className="flex w-full flex-col items-center gap-1"
-                >
-                  <h3 className="text-base font-semibold uppercase leading-normal">
-                    {block.title}
-                  </h3>
-                  <p
-                    className="text-sm leading-normal"
-                    style={{ width: `${block.width}rem` }}
-                  >
-                    {block.body}
-                  </p>
-                </article>
-              ))}
+              <StoryBlocks blocks={blocks} />
             </div>
+          </div>
+        </div>
+
+        <div
+          id="concept-scroll-content-mobile-1"
+          className="relative z-10 flex min-h-svh flex-col items-center justify-center bg-sand px-6 py-16 text-center text-brown xs:hidden"
+        >
+          <div className="flex w-full max-w-84.75 flex-col items-center gap-12">
+            <StoryBlocks blocks={blocks} />
           </div>
         </div>
       </div>
