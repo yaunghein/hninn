@@ -7,16 +7,18 @@ import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 
+import { Button } from '@/components/common'
 import MenuTabs from '@/components/home/menu-tabs'
 import { cn } from '@/lib/utils/cn'
 import { useHomeMenuStore } from '@/stores/home-menu'
-import type { HomeMenuImage, HomeMenuItem } from '@/types/home'
+import type { HomeMenuContent, HomeMenuImage, HomeMenuItem } from '@/types/home'
 
 type MenuSliderProps = {
   title: string
   description: string
   items: HomeMenuItem[]
   duration: number
+  cta: HomeMenuContent['cta']
 }
 
 type FlatSlide = {
@@ -24,6 +26,7 @@ type FlatSlide = {
   alt: string
   lqip?: string
   aspectRatio: number
+  size: HomeMenuImage['size']
   menuIndex: number
   localImageIndex: number
   key: string
@@ -60,6 +63,7 @@ function flattenItems(items: HomeMenuItem[]) {
       src: image.src,
       alt: image.alt,
       aspectRatio: image.aspectRatio ?? FALLBACK_ASPECT_RATIO,
+      size: image.size,
       ...(image.lqip ? { lqip: image.lqip } : {}),
       menuIndex,
       localImageIndex,
@@ -145,6 +149,7 @@ export default function MenuSlider({
   description,
   items,
   duration,
+  cta,
 }: MenuSliderProps) {
   const swiperRef = useRef<SwiperInstance | null>(null)
   const autoplayFractionRef = useRef(0)
@@ -233,16 +238,27 @@ export default function MenuSlider({
         />
       </div>
 
-      <div className="order-1 flex flex-col gap-13 px-6 pt-6 pb-8 xs:order-2 xs:mt-20 xs:gap-0 xs:p-0">
-        <h2 className="text-3xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:px-6 xs:text-5xl xs:leading-[1.15] xs:tracking-tight">
+      {/* Mobile: title → desc above tabs. Desktop: title | desc | CTA between tabs and images. */}
+      <div className="order-1 flex flex-col gap-4 px-6 pt-6 pb-5 xs:order-2 xs:mt-12 xs:flex-row xs:items-start xs:justify-between xs:gap-3 xs:px-6 xs:py-0">
+        <h2 className="text-3xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:shrink-0 xs:text-5xl xs:leading-[1.15] xs:tracking-tight">
           {title}
         </h2>
-        <p className="max-w-45.5 self-end text-sm leading-[1.39] text-olive xs:hidden">
-          {description}
-        </p>
+        <div className="w-full flex justify-end xs:justify-start">
+          <p className="max-w-45.5 self-end text-sm leading-[1.39] text-olive xs:max-w-84 xs:self-start xs:pb-1 xs:text-base">
+            {description}
+          </p>
+        </div>
+        <div className="hidden shrink-0 xs:block">
+          <Button
+            label={cta.label}
+            href={cta.href}
+            color={cta.color}
+            hoverColor={cta.hoverColor}
+          />
+        </div>
       </div>
 
-      <div className="order-3 mt-6 overflow-hidden xs:mt-20">
+      <div className="order-3 overflow-hidden mt-6 xs:mt-12">
         {isDesktop ? (
           <Swiper
             key="desktop"
@@ -302,14 +318,13 @@ export default function MenuSlider({
         ) : (
           <Swiper
             key="mobile"
-            className="home-menu-swiper w-full [&_.swiper-wrapper]:items-start [&_.swiper-wrapper]:pl-6 [&_.swiper-slide]:h-auto"
+            className="home-menu-swiper w-full [&_.swiper-wrapper]:items-start [&_.swiper-wrapper]:pl-6"
             modules={[Autoplay]}
             loop={mobileSlides.length >= 2}
             loopAdditionalSlides={flatCount}
             slidesPerView="auto"
             slidesPerGroup={1}
             spaceBetween={12}
-            autoHeight
             initialSlide={firstSlideIndexForMenu(items, startMenuIndex)}
             grabCursor
             allowTouchMove
@@ -327,20 +342,40 @@ export default function MenuSlider({
             onSlideChange={(swiper) => {
               syncMobile(swiper, 0)
             }}
-            onSlideChangeTransitionEnd={(swiper) => {
-              swiper.updateAutoHeight()
-            }}
             onAutoplayTimeLeft={(swiper, _timeLeft, percentage) => {
               syncMobile(swiper, 1 - percentage)
             }}
           >
-            {mobileSlides.map((slide) => (
-              <SwiperSlide key={slide.key} className="w-[calc(100vw-3rem)]!">
-                <MenuImage image={slide} className="w-full" sizes="100vw" />
-              </SwiperSlide>
-            ))}
+            {mobileSlides.map((slide) => {
+              const isWide = slide.size === 'wide'
+              return (
+                <SwiperSlide
+                  key={slide.key}
+                  className={
+                    isWide
+                      ? 'w-[calc(100vw-3rem)]!'
+                      : 'w-[calc((100vw-3rem-0.75rem)/2)]!'
+                  }
+                >
+                  <MenuImage
+                    image={slide}
+                    className="w-full"
+                    sizes={isWide ? '100vw' : '50vw'}
+                  />
+                </SwiperSlide>
+              )
+            })}
           </Swiper>
         )}
+      </div>
+
+      <div className="order-4 mt-8 flex justify-center px-6 xs:hidden">
+        <Button
+          label={cta.label}
+          href={cta.href}
+          color={cta.color}
+          hoverColor={cta.hoverColor}
+        />
       </div>
     </div>
   )
