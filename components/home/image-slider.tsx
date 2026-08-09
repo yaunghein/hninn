@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import Image from 'next/image'
 import gsap from 'gsap'
 import type { Swiper as SwiperInstance } from 'swiper'
@@ -26,6 +26,16 @@ type ImageSliderProps = {
   duration: number
 }
 
+export type ImageSliderControls = {
+  slideNext: () => void
+  /** Call on pointerdown so a prior swipe doesn't swallow the next tap. */
+  armClick: () => void
+  /** False when the gesture was a swipe (suppress the synthetic click). */
+  shouldAdvanceOnClick: () => boolean
+}
+
+type RevealDirection = 'forward' | 'backward'
+
 function stackSlides(swiper: SwiperInstance) {
   swiper.slides.forEach((slide, index) => {
     const el = slide as HTMLElement
@@ -39,7 +49,11 @@ function stackSlides(swiper: SwiperInstance) {
   })
 }
 
-function revealSlide(slideEl: HTMLElement | undefined, instant = false) {
+function revealSlide(
+  slideEl: HTMLElement | undefined,
+  instant = false,
+  direction: RevealDirection = 'forward',
+) {
   if (!slideEl) return
 
   const mask = slideEl.querySelector<HTMLElement>('[data-slide-mask]')
@@ -58,9 +72,13 @@ function revealSlide(slideEl: HTMLElement | undefined, instant = false) {
     return
   }
 
+  // forward: wipe right → left; backward: wipe left → right
+  const fromClip =
+    direction === 'forward' ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)'
+
   gsap.fromTo(
     mask,
-    { clipPath: 'inset(0% 0% 0% 100%)' },
+    { clipPath: fromClip },
     {
       clipPath: 'inset(0% 0% 0% 0%)',
       duration: HOME_SLIDE_REVEAL_DURATION,
@@ -81,108 +99,154 @@ function revealSlide(slideEl: HTMLElement | undefined, instant = false) {
   )
 }
 
-export default function ImageSlider({ slides, duration }: ImageSliderProps) {
-  const swiperRef = useRef<SwiperInstance | null>(null)
-  const readyRef = useRef(false)
-  const activeIndex = useHomeSliderStore((s) => s.activeIndex)
-  const setActiveIndex = useHomeSliderStore((s) => s.setActiveIndex)
-  const setProgress = useHomeSliderStore((s) => s.setProgress)
-  const slide = slides[activeIndex] ?? slides[0]
+const ImageSlider = forwardRef<ImageSliderControls, ImageSliderProps>(
+  function ImageSlider({ slides, duration }, ref) {
+    const swiperRef = useRef<SwiperInstance | null>(null)
+    const readyRef = useRef(false)
+    const directionRef = useRef<RevealDirection | null>(null)
+    const skipNextClickRef = useRef(false)
+    const activeIndex = useHomeSliderStore((s) => s.activeIndex)
+    const setActiveIndex = useHomeSliderStore((s) => s.setActiveIndex)
+    const setProgress = useHomeSliderStore((s) => s.setProgress)
+    const slide = slides[activeIndex] ?? slides[0]
 
-  return (
-    <div className="relative flex w-full flex-col overflow-hidden bg-black xs:h-full">
-      <div
-        className={cn(
-          'px-6 pt-6 pb-20 transition-colors xs:hidden',
-          bgColorClass[slide.background],
-        )}
-        style={homeSlideRevealTransitionStyle}
-      >
-        <div className="aspect-[3.95/1] w-full">
-          <Logo
-            color={slide.text}
-            className="w-full transition-colors"
-            style={homeSlideRevealTransitionStyle}
-          />
-        </div>
-      </div>
+    useImperativeHandle(ref, () => ({
+      slideNext: () => {
+        directionRef.current = 'forward'
+        swiperRef.current?.slideNext()
+      },
+      armClick: () => {
+        skipNextClickRef.current = false
+      },
+      shouldAdvanceOnClick: () => {
+        if (skipNextClickRef.current) {
+          skipNextClickRef.current = false
+          return false
+        }
+        return true
+      },
+    }))
 
-      <div className="relative aspect-[1/1.35] w-full xs:aspect-auto xs:min-h-0 xs:flex-1">
-        <Swiper
-          className="home-swiper absolute inset-0 h-full w-full [&_.swiper-slide]:h-full [&_.swiper-slide]:opacity-100! [&_.swiper-wrapper]:h-full"
-          modules={[Autoplay, EffectFade]}
-          effect="fade"
-          fadeEffect={{ crossFade: true }}
-          // Instant Swiper transition — GSAP owns the visual reveal.
-          // Non-zero fade speed + opacity override blocks transitionend and
-          // leaves swiper.animating stuck, which kills autoplay.
-          speed={0}
-          loop
-          allowTouchMove
-          autoplay={{
-            delay: duration,
-            disableOnInteraction: false,
-            waitForTransition: false,
-          }}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper
-            stackSlides(swiper)
-            revealSlide(swiper.slides[swiper.activeIndex] as HTMLElement, true)
-            readyRef.current = true
-          }}
-          onSlideChangeTransitionStart={(swiper) => {
-            if (!readyRef.current) return
-            stackSlides(swiper)
-            // Start colors + media reveal in the same frame
-            setActiveIndex(swiper.realIndex)
-            revealSlide(swiper.slides[swiper.activeIndex] as HTMLElement)
-          }}
-          onAutoplayTimeLeft={(_swiper, _timeLeft, percentage) => {
-            setProgress(1 - percentage)
-          }}
+    function resolveDirection(swiper: SwiperInstance): RevealDirection {
+      const explicit = directionRef.current
+      directionRef.current = null
+      if (explicit) return explicit
+      if (swiper.swipeDirection === 'prev') return 'backward'
+      return 'forward'
+    }
+
+    return (
+      <div className="relative flex w-full flex-col overflow-hidden bg-black xs:h-full">
+        <div
+          className={cn(
+            'px-6 pt-6 pb-20 transition-colors xs:hidden',
+            bgColorClass[slide.background],
+          )}
+          style={homeSlideRevealTransitionStyle}
         >
-          {slides.map((item, index) => (
-            <SwiperSlide
-              key={`${item.src}-${index}`}
-              className="relative h-full w-full"
-            >
-              <div
-                data-slide-mask
-                className="absolute inset-0 h-full w-full will-change-[clip-path]"
+          <div className="aspect-[3.95/1] w-full">
+            <Logo
+              color={slide.text}
+              className="w-full transition-colors"
+              style={homeSlideRevealTransitionStyle}
+            />
+          </div>
+        </div>
+
+        <div className="relative aspect-[1/1.35] w-full xs:aspect-auto xs:min-h-0 xs:flex-1">
+          <Swiper
+            className="home-swiper absolute inset-0 h-full w-full [&_.swiper-slide]:h-full [&_.swiper-slide]:opacity-100! [&_.swiper-wrapper]:h-full"
+            modules={[Autoplay, EffectFade]}
+            effect="fade"
+            fadeEffect={{ crossFade: true }}
+            // Instant Swiper transition — GSAP owns the visual reveal.
+            // Non-zero fade speed + opacity override blocks transitionend and
+            // leaves swiper.animating stuck, which kills autoplay.
+            speed={0}
+            loop
+            allowTouchMove
+            autoplay={{
+              delay: duration,
+              disableOnInteraction: false,
+              waitForTransition: false,
+            }}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper
+              stackSlides(swiper)
+              revealSlide(
+                swiper.slides[swiper.activeIndex] as HTMLElement,
+                true,
+              )
+              readyRef.current = true
+            }}
+            onSlideChangeTransitionStart={(swiper) => {
+              if (!readyRef.current) return
+              stackSlides(swiper)
+              const direction = resolveDirection(swiper)
+              // Start colors + media reveal in the same frame
+              setActiveIndex(swiper.realIndex)
+              revealSlide(
+                swiper.slides[swiper.activeIndex] as HTMLElement,
+                false,
+                direction,
+              )
+            }}
+            onAutoplayTimeLeft={(_swiper, _timeLeft, percentage) => {
+              setProgress(1 - percentage)
+            }}
+            onSliderMove={() => {
+              skipNextClickRef.current = true
+            }}
+          >
+            {slides.map((item, index) => (
+              <SwiperSlide
+                key={`${item.src}-${index}`}
+                className="relative h-full w-full"
               >
                 <div
-                  data-slide-media
-                  className="relative h-full w-full origin-center will-change-transform"
+                  data-slide-mask
+                  className="absolute inset-0 h-full w-full will-change-[clip-path]"
                 >
-                  <Image
-                    src={item.src}
-                    alt={item.caption}
-                    fill
-                    priority={index === 0}
-                    sizes="(max-width: 479px) 100vw, 50vw"
-                    className="object-cover"
-                  />
+                  <div
+                    data-slide-media
+                    className="relative h-full w-full origin-center will-change-transform"
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.caption}
+                      fill
+                      priority={index === 0}
+                      sizes="(max-width: 479px) 100vw, 50vw"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center px-2.5 pt-3">
-          <SlideProgress
-            count={slides.length}
-            className="pointer-events-auto"
-            onSelect={(index) => {
-              swiperRef.current?.slideToLoop(index)
-            }}
-          />
-          <Logo
-            color={slide.logo}
-            className="mt-3 hidden w-full max-w-2xl transition-colors xs:block"
-            style={homeSlideRevealTransitionStyle}
-          />
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col items-center px-2.5 pt-3">
+            <SlideProgress
+              count={slides.length}
+              className="pointer-events-auto"
+              onSelect={(index) => {
+                const swiper = swiperRef.current
+                if (!swiper || index === swiper.realIndex) return
+                directionRef.current =
+                  index < swiper.realIndex ? 'backward' : 'forward'
+                swiper.slideToLoop(index)
+              }}
+            />
+            <Logo
+              color={slide.logo}
+              className="mt-3 hidden w-full max-w-2xl transition-colors xs:block"
+              style={homeSlideRevealTransitionStyle}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  },
+)
+
+export default ImageSlider

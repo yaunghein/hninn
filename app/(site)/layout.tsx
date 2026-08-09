@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 
 import {
-  GridGuide,
+  // GridGuide,
   Navbar,
   PageLoader,
   SiteFooter,
@@ -39,7 +39,7 @@ export default async function SiteLayout({
 
   return (
     <SmoothScroll>
-      <GridGuide />
+      {/* <GridGuide /> */}
       <PageLoader showInitially={showLoader} />
       <Navbar {...navbar} />
       <main className="flex-1">{children}</main>

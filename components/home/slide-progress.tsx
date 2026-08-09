@@ -35,17 +35,22 @@ export default function SlideProgress({
             role="tab"
             aria-selected={isActive}
             aria-label={`Go to slide ${index + 1}`}
-            onClick={() => onSelect?.(index)}
-            className="h-0.5 shrink-0 basis-5 cursor-pointer overflow-hidden bg-white/35 transition-[flex-grow]"
+            onClick={(event) => {
+              event.stopPropagation()
+              onSelect?.(index)
+            }}
+            className="flex shrink-0 basis-5 cursor-pointer items-center -my-3 py-3 transition-[flex-grow]"
             style={{
               ...homeSlideRevealTransitionStyle,
               flexGrow: isActive ? 1 : 0,
             }}
           >
-            <span
-              className="block h-full origin-left bg-white will-change-transform"
-              style={{ transform: `scaleX(${fill})` }}
-            />
+            <span className="h-0.5 w-full overflow-hidden bg-white/35">
+              <span
+                className="block h-full origin-left bg-white will-change-transform"
+                style={{ transform: `scaleX(${fill})` }}
+              />
+            </span>
           </button>
         )
       })}
