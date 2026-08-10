@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils/cn'
 
 const MAP_EMBED_SRC =
-  'https://www.google.com/maps/d/u/0/embed?mid=1ctsSMQKAMJRihmnVhax7Mc5Qkq7pUW4&ehbc=2E312F&noprof=1'
+  'https://www.google.com/maps/d/u/0/embed?mid=1ctsSMQKAMJRihmnVhax7Mc5Qkq7pUW4&ehbc=2E312F&noprof=1&hl=en&gl=us'
 
 /** My Maps embeds a fixed toolbar; clip it so only the map shows. */
 const TOOLBAR_HEIGHT = '12rem'
