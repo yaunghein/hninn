@@ -16,12 +16,17 @@ const poppins = Poppins({
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000')
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'https://www.hninnbkk.com')
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: '/',
+  },
   title: {
     default: 'Hninn',
     template: '%s | Hninn',
@@ -29,6 +34,7 @@ export const metadata: Metadata = {
   description:
     'A cozy, pet-friendly space serving contemporary Burmese brunch in Phetchaburi, Bangkok.',
   openGraph: {
+    url: '/',
     siteName: 'Hninn',
     type: 'website',
     images: [
