@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 import {
   // GridGuide,
@@ -11,6 +12,7 @@ import {
   hasRecentPageLoader,
   PAGE_LOADER_COOKIE,
 } from '@/lib/utils/page-loader-cookie'
+import { PASSWORD_COOKIE_NAME } from '@/lib/constants/password-gate'
 import { sanityFetch } from '@/sanity/lib/live'
 import { FOOTER_QUERY, NAVBAR_QUERY } from '@/sanity/lib/queries'
 import {
@@ -26,6 +28,13 @@ export default async function SiteLayout({
   children: React.ReactNode
 }>) {
   const cookieStore = await cookies()
+  const expectedPassword = process.env.PASSWORD
+  const hasAccessCookie = cookieStore.has(PASSWORD_COOKIE_NAME)
+
+  if (expectedPassword && !hasAccessCookie) {
+    redirect('/password')
+  }
+
   const showLoader = !hasRecentPageLoader(
     cookieStore.get(PAGE_LOADER_COOKIE)?.value,
   )
