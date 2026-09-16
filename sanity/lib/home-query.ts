@@ -26,6 +26,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
     generalFacts{
       facts[]{
         title,
+        description,
         titleLines,
         titleAlign,
         offset,

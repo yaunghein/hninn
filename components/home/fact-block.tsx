@@ -178,6 +178,7 @@ function parallaxMobile(items: HTMLElement[]) {
 
 export default function FactBlock({
   title,
+  description,
   titleLines,
   titleAlign,
   offset,
@@ -248,23 +249,30 @@ export default function FactBlock({
 
   return (
     <div ref={rootRef} className="relative">
-      <h2
+      <header
         className={cn(
-          'pointer-events-none absolute top-0 z-10 px-6 text-6xl font-semibold uppercase leading-none tracking-[-0.02em] text-cream xs:top-32 xs:text-8xl',
-          titleAlign === 'left' ? 'left-0 text-left' : 'right-0 text-right',
+          'pointer-events-none absolute top-0 z-10 flex flex-col gap-4 px-6 xs:top-32 xs:gap-6',
+          titleAlign === 'left'
+            ? 'left-0 items-start text-left'
+            : 'right-0 items-end text-right',
         )}
       >
-        {lines.map((line) => (
-          <span key={line} className="block">
-            {line}
-          </span>
-        ))}
-      </h2>
+        <h2 className="text-4xl font-semibold uppercase leading-none tracking-[-0.02em] text-cream xs:text-6xl">
+          {lines.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
+        </h2>
+        <p className="max-w-72 text-sm leading-[1.39] text-cream xs:max-w-lg xs:text-base xs:leading-snug">
+          {description}
+        </p>
+      </header>
 
       {/* Mobile: single-column zigzag (Figma 700:1325) */}
       <div
         data-parallax-scope="mobile"
-        className="flex flex-col px-6 pt-32 xs:hidden"
+        className="flex flex-col px-6 pt-40 xs:hidden"
       >
         {mobileStack.map((image, index) => (
           <div

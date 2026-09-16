@@ -59,6 +59,7 @@ export type HomePageData = {
     facts?:
       | {
           title?: string | null
+          description?: string | null
           titleLines?: string[] | null
           titleAlign?: string | null
           offset?: string | null
@@ -180,7 +181,10 @@ const FALLBACK_HERO: HomeHeroContent = {
 const FALLBACK_FACTS: GeneralFactsContent = {
   facts: [
     {
-      title: 'Good Food',
+      title: 'Reimagined All-Day Brunch',
+      titleLines: ['Reimagined', 'All-Day Brunch'],
+      description:
+        'Burmese favorites, completely elevated. Explore a creative menu where traditional Burmese heritage seamlessly weaves into western culinary craftsmanship for a truly unique all-day dining experience.',
       titleAlign: 'left',
       offset: 'left',
       leftImages: [
@@ -205,8 +209,10 @@ const FALLBACK_FACTS: GeneralFactsContent = {
       ],
     },
     {
-      title: 'Amazing Space',
-      titleLines: ['Amazing', 'Space'],
+      title: 'Signature Rice Bowls',
+      titleLines: ['Signature', 'Rice Bowls'],
+      description:
+        'A rich tapestry of bold, vibrant comfort. Our expanded collection of house-specialty rice bowls brings together layered spices, crispy textures, and authentic local techniques crafted to satisfy every palate.',
       titleAlign: 'right',
       offset: 'right',
       leftImages: [
@@ -231,8 +237,10 @@ const FALLBACK_FACTS: GeneralFactsContent = {
       ],
     },
     {
-      title: 'Paws Included',
-      titleLines: ['Paws', 'Included'],
+      title: 'Warm Hospitality',
+      titleLines: ['Warm', 'Hospitality'],
+      description:
+        'A welcoming neighborhood destination for everyone. Enjoy unhurried dining in a pet-friendly atmosphere, complete with an airy backyard garden space.',
       titleAlign: 'left',
       offset: 'left',
       leftImages: [
@@ -460,6 +468,8 @@ function toGeneralFacts(
 
       return {
         title,
+        description:
+          fact.description ?? fallbackFact?.description ?? '',
         ...(titleLines && titleLines.length > 0 ? { titleLines } : {}),
         titleAlign: asAlign(fact.titleAlign ?? fallbackFact?.titleAlign),
         offset: asAlign(fact.offset ?? fallbackFact?.offset),

@@ -23,6 +23,7 @@ export type GeneralFactImage = {
 
 export type GeneralFact = {
   title: string
+  description: string
   /** Split title across lines when provided */
   titleLines?: string[]
   titleAlign: 'left' | 'right'

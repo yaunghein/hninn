@@ -132,6 +132,13 @@ export const homePage = defineType({
                   validation: (rule) => rule.required(),
                 }),
                 defineField({
+                  name: 'description',
+                  title: 'Description',
+                  type: 'text',
+                  rows: 4,
+                  validation: (rule) => rule.required(),
+                }),
+                defineField({
                   name: 'titleLines',
                   title: 'Title lines',
                   description: 'Optional line breaks for the display title',

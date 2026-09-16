@@ -244,7 +244,7 @@ export default function MenuSlider({
           {title}
         </h2>
         <div className="w-full flex justify-end xs:justify-start">
-          <p className="max-w-45.5 self-end text-sm leading-[1.39] text-olive xs:max-w-84 xs:self-start xs:pb-1 xs:text-base">
+          <p className="max-w-45.5 self-end text-sm leading-[1.39] text-olive xs:max-w-100 xs:self-start xs:pb-1 xs:text-base">
             {description}
           </p>
         </div>
