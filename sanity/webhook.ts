@@ -13,13 +13,13 @@ export const WEBHOOK_PROJECTION = /* groq */ `{
   _type,
   "paths": select(
     _type == "homePage" => ["/"],
-    _type == "conceptPage" => ["/concept"],
+    _type == "conceptPage" => ["/about"],
     _type == "menuPage" => ["/menu"],
     _type == "eventsPage" => ["/events"],
     _type == "galleryPage" => ["/gallery"],
     _type == "contactPage" => ["/contact"],
-    _type == "footer" => ["/", "/concept", "/menu", "/events", "/contact"],
-    _type == "navbar" => ["/", "/concept", "/menu", "/events", "/gallery", "/contact"],
+    _type == "footer" => ["/", "/about", "/menu", "/events", "/contact"],
+    _type == "navbar" => ["/", "/about", "/menu", "/events", "/gallery", "/contact"],
     []
   ),
   "layout": _type == "navbar"

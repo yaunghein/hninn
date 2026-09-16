@@ -16,11 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
     stega: false,
   })
   return buildPageMetadata((data as { seo?: PageSeo } | null)?.seo, {
-    path: '/concept',
+    path: '/about',
   })
 }
 
-export default async function ConceptPage() {
+export default async function AboutPage() {
   const { data } = await sanityFetch({ query: CONCEPT_PAGE_QUERY })
 
   if (!data) {
@@ -28,12 +28,12 @@ export default async function ConceptPage() {
   }
 
   const page = data as ConceptPageData
-  const concept = toConceptContent(page)
+  const about = toConceptContent(page)
   const stories = toConceptStories(page)
 
   return (
     <>
-      <ConceptHero {...concept} />
+      <ConceptHero {...about} />
       {stories.map((story) => (
         <ConceptStory key={story.id} {...story} />
       ))}

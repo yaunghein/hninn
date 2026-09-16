@@ -33,7 +33,7 @@ const FALLBACK_NAVBAR: NavbarContent = {
   menuLinks: [
     { label: 'Menu', href: '/menu' },
     { label: 'Gallery', href: '/gallery' },
-    { label: 'Concept', href: '/concept' },
+    { label: 'About', href: '/about' },
     { label: 'host an event', href: '/events' },
     { label: 'getting here', href: '/getting-here' },
     { label: 'contact', href: '/contact' },

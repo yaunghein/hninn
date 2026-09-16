@@ -47,23 +47,13 @@ export type ConceptPageData = {
         _key?: string | null
         title?: string | null
         titleWidth?: number | null
+        subtitle?: string | null
+        body?: string | null
+        quote?: string | null
+        quoteAttribution?: string | null
         contentSide?: 'left' | 'right' | null
         tone?: ConceptStoryTone | null
-        contentType?: 'blocks' | 'paragraphs' | null
         image?: SanityImage
-        blocks?:
-          | {
-              title?: string | null
-              body?: string | null
-              width?: number | null
-            }[]
-          | null
-        paragraphs?:
-          | {
-              body?: string | null
-              width?: number | null
-            }[]
-          | null
       }[]
     | null
 }
@@ -73,6 +63,79 @@ const FALLBACK_STORY_IMAGES = [
   '/images/concept-2.webp',
   '/images/concept-3.webp',
 ] as const
+
+const FALLBACK_STORIES: ConceptStoryContent[] = [
+  {
+    id: 'founder',
+    title: 'The Founder',
+    titleWidth: 20,
+    subtitle: 'Tradition & Innovation.',
+    body: 'HNINN was born from a singular vision: to share the authentic, soulful flavors and rich aromas of Burmese cuisine without ever losing their true essence, masterfully uniting them with international culinary techniques to present them in an entirely new light.',
+    quote: {
+      text: "Our goal is to honor the vital, irreplaceable elements of Myanmar's food heritage while building a hallmark destination for Burmese Modern & Contemporary Dining.",
+      attribution: 'Thawdar Hninn, Founder',
+    },
+    imageSrc: FALLBACK_STORY_IMAGES[2],
+    imageAlt: 'Hninn',
+    contentSide: 'right',
+    tone: 'sand',
+  },
+  {
+    id: 'foundation',
+    title: 'The Foundation',
+    titleWidth: 26,
+    subtitle: 'Family Heritage & Memories.',
+    body: 'The name HNINN carries deep personal meaning, standing as a heartfelt tribute to the women of our family—my mother, my younger sister, and myself. It is a space dedicated to kinship. Here, the cherished dishes we gathered around during our childhood are brought to life through a fresh, contemporary lens.',
+    imageSrc: FALLBACK_STORY_IMAGES[0],
+    imageAlt: 'Hninn',
+    contentSide: 'left',
+    tone: 'peach',
+  },
+  {
+    id: 'recipes',
+    title: 'The Masterchef\nRecipes',
+    titleWidth: 24,
+    subtitle: 'Craftsmanship by Chef Arkar.',
+    body: 'Every single plate is meticulously researched and conceptualized by our Head Chef, MasterChef Myanmar Season 2 Champion, Chef Arkar. Taking generational, private family recipes as his baseline, he infuses modern artistry into every dish to surprise and delight the palate.',
+    imageSrc: FALLBACK_STORY_IMAGES[1],
+    imageAlt: 'Hninn',
+    contentSide: 'right',
+    tone: 'olive',
+  },
+  {
+    id: 'ingredients',
+    title: 'The Ingredients',
+    titleWidth: 26,
+    subtitle: 'Authentic & Imported.',
+    body: 'To deliver an uncompromisingly authentic flavor profile, we source critical elements directly from their roots. For instance, the traditional toasted chickpea flour—the very soul of our signature Nan Gyi Thoke Dumpling/ravioli-style comfort—is carefully imported directly from Myanmar to ensure absolute depth and balance.',
+    imageSrc: FALLBACK_STORY_IMAGES[2],
+    imageAlt: 'Hninn',
+    contentSide: 'left',
+    tone: 'sand',
+  },
+  {
+    id: 'heritage',
+    title: 'Contemporary\nHeritage',
+    titleWidth: 28,
+    subtitle: 'Redefining Burmese Cuisine.',
+    body: 'Myanmar is a land woven with diverse cultures, ethnicities, and regional identities. We have chosen to completely redefine this culinary tapestry—not just through stunning modern presentation, but through structural recipe innovation. We take pride in creating an accessible pathway for international guests unfamiliar with Burmese food, allowing them to experience these complex flavor profiles instantly and seamlessly.',
+    imageSrc: FALLBACK_STORY_IMAGES[0],
+    imageAlt: 'Hninn',
+    contentSide: 'right',
+    tone: 'peach',
+  },
+  {
+    id: 'promise',
+    title: 'The Promise',
+    titleWidth: 20,
+    subtitle: 'A Global Gathering in Bangkok.',
+    body: 'Within our first year of opening, HNINN has had the privilege of welcoming a vibrant global community of diners. We are proud to have elevated the perceived status of Burmese cuisine on the international stage, and we pledge to continue moving forward as proud ambassadors of contemporary Myanmar dining.',
+    imageSrc: FALLBACK_STORY_IMAGES[1],
+    imageAlt: 'Hninn',
+    contentSide: 'left',
+    tone: 'olive',
+  },
+]
 
 const STORY_TONES = new Set<ConceptStoryTone>(['sand', 'peach', 'olive'])
 
@@ -326,8 +389,10 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
 
   for (const [index, story] of (data.stories ?? []).entries()) {
     const title = story?.title?.trim()
+    const subtitle = story?.subtitle?.trim()
+    const body = story?.body?.trim()
     const titleWidth = story?.titleWidth
-    if (!title || typeof titleWidth !== 'number') continue
+    if (!title || !subtitle || !body || typeof titleWidth !== 'number') continue
 
     const tone: ConceptStoryTone = STORY_TONES.has(
       story?.tone as ConceptStoryTone,
@@ -336,62 +401,37 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
       : 'sand'
     const contentSide: ConceptStoryContent['contentSide'] =
       story?.contentSide === 'left' ? 'left' : 'right'
-    const contentType =
-      story?.contentType === 'paragraphs' ? 'paragraphs' : 'blocks'
 
     const imageSrc = story?.image?.asset
       ? urlFor(story.image).width(2880).url()
       : (FALLBACK_STORY_IMAGES[index] ?? FALLBACK_STORY_IMAGES[0])
     const imageLqip = story?.image?.asset?.metadata?.lqip ?? undefined
+    const quoteText = story?.quote?.trim()
+    const quoteAttribution = story?.quoteAttribution?.trim()
 
-    const base: Omit<ConceptStoryContent, 'blocks' | 'paragraphs'> = {
+    stories.push({
       id: story._key ?? `story-${index}`,
       title,
       titleWidth,
+      subtitle,
+      body,
+      ...(quoteText
+        ? {
+            quote: {
+              text: quoteText,
+              ...(quoteAttribution ? { attribution: quoteAttribution } : {}),
+            },
+          }
+        : {}),
       imageSrc,
       imageAlt: story?.image?.alt ?? '',
       ...(imageLqip ? { imageLqip } : {}),
       contentSide,
       tone,
-    }
-
-    if (contentType === 'paragraphs') {
-      const paragraphs = (story.paragraphs ?? [])
-        .filter(
-          (paragraph): paragraph is { body: string; width?: number | null } =>
-            Boolean(paragraph?.body),
-        )
-        .map((paragraph) => ({
-          body: paragraph.body,
-          ...(typeof paragraph.width === 'number'
-            ? { width: paragraph.width }
-            : {}),
-        }))
-
-      if (!paragraphs.length) continue
-      stories.push({ ...base, paragraphs })
-      continue
-    }
-
-    const blocks = (story.blocks ?? [])
-      .filter(
-        (
-          block,
-        ): block is { title: string; body: string; width: number } =>
-          Boolean(block?.title && block?.body) &&
-          typeof block?.width === 'number',
-      )
-      .map((block) => ({
-        title: block.title,
-        body: block.body,
-        width: block.width,
-      }))
-
-    if (!blocks.length) continue
-    stories.push({ ...base, blocks })
+    })
   }
 
-  return stories
+  return stories.length > 0 ? stories : FALLBACK_STORIES
 }
 
 export function toContactContent(data: ContactPageData): ContactContent {

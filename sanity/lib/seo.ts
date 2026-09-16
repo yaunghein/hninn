@@ -25,7 +25,7 @@ function hasImageAsset(image: unknown): image is SanityImageSource {
 export function buildPageMetadata(
   seo: PageSeo | null | undefined,
   options?: {
-    /** Absolute path for this page, e.g. `/concept` */
+    /** Absolute path for this page, e.g. `/about` */
     path?: string
     /** Use a full title without the root `%s | Hninn` template */
     absoluteTitle?: boolean

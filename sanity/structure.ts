@@ -31,7 +31,7 @@ export const structure: StructureResolver = (S) =>
         .icon(HomeIcon)
         .child(S.document().schemaType('homePage').documentId('homePage')),
       S.listItem()
-        .title('Concept Page')
+        .title('About Page')
         .id('conceptPage')
         .icon(HeartIcon)
         .child(

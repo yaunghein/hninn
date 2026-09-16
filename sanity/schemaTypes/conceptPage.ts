@@ -4,49 +4,9 @@ import { defineArrayMember, defineField, defineType } from 'sanity'
 import { altImageFields, imageFieldDescription } from './fields'
 import { seoField } from './seoType'
 
-const storyBlockFields = [
-  defineField({
-    name: 'title',
-    title: 'Title',
-    type: 'string',
-    validation: (rule) => rule.required(),
-  }),
-  defineField({
-    name: 'body',
-    title: 'Body',
-    type: 'text',
-    rows: 3,
-    validation: (rule) => rule.required(),
-  }),
-  defineField({
-    name: 'width',
-    title: 'Body width (rem)',
-    type: 'number',
-    description: 'Unitless rem value, e.g. 18.3125 → 18.3125rem',
-    validation: (rule) => rule.required().positive(),
-  }),
-]
-
-const storyParagraphFields = [
-  defineField({
-    name: 'body',
-    title: 'Body',
-    type: 'text',
-    rows: 4,
-    validation: (rule) => rule.required(),
-  }),
-  defineField({
-    name: 'width',
-    title: 'Body width (rem)',
-    type: 'number',
-    description: 'Optional unitless rem value. Leave empty for full width.',
-    validation: (rule) => rule.positive(),
-  }),
-]
-
 export const conceptPage = defineType({
   name: 'conceptPage',
-  title: 'Concept Page',
+  title: 'About Page',
   type: 'document',
   icon: HeartIcon,
   fields: [
@@ -110,6 +70,32 @@ export const conceptPage = defineType({
               validation: (rule) => rule.required().positive(),
             }),
             defineField({
+              name: 'subtitle',
+              title: 'Subtitle',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'body',
+              title: 'Body',
+              type: 'text',
+              rows: 5,
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'quote',
+              title: 'Quote',
+              type: 'text',
+              rows: 3,
+              description: 'Optional pull quote shown under the body.',
+            }),
+            defineField({
+              name: 'quoteAttribution',
+              title: 'Quote attribution',
+              type: 'string',
+              hidden: ({ parent }) => !parent?.quote,
+            }),
+            defineField({
               name: 'image',
               title: 'Image',
               type: 'image',
@@ -147,75 +133,17 @@ export const conceptPage = defineType({
               initialValue: 'sand',
               validation: (rule) => rule.required(),
             }),
-            defineField({
-              name: 'contentType',
-              title: 'Content type',
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Titled blocks', value: 'blocks' },
-                  { title: 'Quote paragraphs', value: 'paragraphs' },
-                ],
-                layout: 'radio',
-              },
-              initialValue: 'blocks',
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: 'blocks',
-              title: 'Blocks',
-              type: 'array',
-              hidden: ({ parent }) => parent?.contentType !== 'blocks',
-              of: [
-                defineArrayMember({
-                  type: 'object',
-                  fields: storyBlockFields,
-                  preview: {
-                    select: { title: 'title', subtitle: 'body' },
-                  },
-                }),
-              ],
-              validation: (rule) =>
-                rule.custom((value, context) => {
-                  const parent = context.parent as { contentType?: string }
-                  if (parent?.contentType !== 'blocks') return true
-                  if (!value?.length) return 'Add at least one block'
-                  return true
-                }),
-            }),
-            defineField({
-              name: 'paragraphs',
-              title: 'Paragraphs',
-              type: 'array',
-              hidden: ({ parent }) => parent?.contentType !== 'paragraphs',
-              of: [
-                defineArrayMember({
-                  type: 'object',
-                  fields: storyParagraphFields,
-                  preview: {
-                    select: { title: 'body' },
-                  },
-                }),
-              ],
-              validation: (rule) =>
-                rule.custom((value, context) => {
-                  const parent = context.parent as { contentType?: string }
-                  if (parent?.contentType !== 'paragraphs') return true
-                  if (!value?.length) return 'Add at least one paragraph'
-                  return true
-                }),
-            }),
           ],
           preview: {
             select: {
               title: 'title',
-              tone: 'tone',
+              subtitle: 'subtitle',
               media: 'image',
             },
-            prepare({ title, tone, media }) {
+            prepare({ title, subtitle, media }) {
               return {
                 title: title?.replace(/\n/g, ' ') || 'Story section',
-                subtitle: tone ? `Tone: ${tone}` : undefined,
+                subtitle,
                 media,
               }
             },
@@ -227,7 +155,7 @@ export const conceptPage = defineType({
   ],
   preview: {
     prepare() {
-      return { title: 'Concept Page' }
+      return { title: 'About Page' }
     },
   },
 })

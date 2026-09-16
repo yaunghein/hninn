@@ -7,12 +7,7 @@ import Image from 'next/image'
 import { useRef } from 'react'
 
 import { cn } from '@/lib/utils/cn'
-import type {
-  ConceptStoryBlock,
-  ConceptStoryContent,
-  ConceptStoryParagraph,
-  ConceptStoryTone,
-} from '@/types/concept'
+import type { ConceptStoryContent, ConceptStoryTone } from '@/types/concept'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -30,87 +25,47 @@ const HEADING_SCALE = {
   desktop: { from: 4.75 / 3.25, to: 1 },
 } as const
 
-function StoryBlocks({ blocks }: { blocks: ConceptStoryBlock[] }) {
-  return (
-    <>
-      {blocks.map((block) => (
-        <article
-          key={block.title}
-          className="flex w-full flex-col items-center gap-1"
-        >
-          <h3 className="text-base font-semibold uppercase leading-normal">
-            {block.title}
-          </h3>
-          <p
-            className="max-w-full text-sm leading-normal"
-            style={{ width: `${block.width}rem` }}
-          >
-            {block.body}
-          </p>
-        </article>
-      ))}
-    </>
-  )
-}
-
-function StoryParagraphs({
-  paragraphs,
-}: {
-  paragraphs: ConceptStoryParagraph[]
-}) {
-  return (
-    <>
-      {paragraphs.map((paragraph) => (
-        <p
-          key={paragraph.body}
-          className="max-w-full text-base leading-normal"
-          style={
-            paragraph.width !== undefined
-              ? { width: `${paragraph.width}rem` }
-              : undefined
-          }
-        >
-          {paragraph.body}
-        </p>
-      ))}
-    </>
-  )
-}
-
 function StoryPanelBody({
-  blocks,
-  paragraphs,
-}: Pick<ConceptStoryContent, 'blocks' | 'paragraphs'>) {
-  if (paragraphs?.length) {
-    return (
-      <div className="flex w-full flex-col items-start gap-8 text-left">
-        <StoryParagraphs paragraphs={paragraphs} />
-      </div>
-    )
-  }
-
-  if (blocks?.length) {
-    return (
-      <div className="flex w-full flex-col items-center gap-20">
-        <StoryBlocks blocks={blocks} />
-      </div>
-    )
-  }
-
-  return null
+  subtitle,
+  body,
+  quote,
+}: Pick<ConceptStoryContent, 'subtitle' | 'body' | 'quote'>) {
+  return (
+    <div className="flex w-full flex-col items-center gap-8 text-center">
+      <article className="flex w-full flex-col items-center gap-3">
+        <h3 className="text-base font-semibold uppercase leading-normal">
+          {subtitle}
+        </h3>
+        <p className="max-w-full text-sm leading-normal">{body}</p>
+      </article>
+      {quote ? (
+        <blockquote className="flex w-full flex-col items-center gap-3">
+          <p className="max-w-full text-base leading-normal italic">
+            “{quote.text}”
+          </p>
+          {quote.attribution ? (
+            <footer className="text-sm leading-normal">
+              — {quote.attribution}
+            </footer>
+          ) : null}
+        </blockquote>
+      ) : null}
+    </div>
+  )
 }
 
 export default function ConceptStory({
   id,
   title,
   titleWidth,
+  subtitle,
+  body,
+  quote,
   imageSrc,
   imageAlt = '',
   imageLqip,
   contentSide = 'right',
   tone = 'sand',
-  blocks,
-  paragraphs,
 }: ConceptStoryProps) {
   const rootRef = useRef<HTMLElement>(null)
   const isContentLeft = contentSide === 'left'
@@ -253,27 +208,25 @@ export default function ConceptStory({
           <div
             data-story-content={id}
             className={cn(
-              'absolute inset-y-0 hidden h-svh w-1/2 flex-col items-center justify-center px-10 py-10 xs:flex',
+              'absolute inset-y-0 hidden h-svh w-1/2 flex-col items-center justify-center px-10 py-10 text-center xs:flex',
               isContentLeft ? 'left-0' : 'right-0',
               toneClass,
-              paragraphs?.length ? 'text-left' : 'text-center',
             )}
           >
             <div className="flex w-84.75 flex-col items-center">
-              <StoryPanelBody blocks={blocks} paragraphs={paragraphs} />
+              <StoryPanelBody subtitle={subtitle} body={body} quote={quote} />
             </div>
           </div>
         </div>
 
         <div
           className={cn(
-            'relative z-10 flex min-h-svh flex-col items-center justify-center px-6 py-16 xs:hidden',
+            'relative z-10 flex min-h-svh flex-col items-center justify-center px-6 py-16 text-center xs:hidden',
             toneClass,
-            paragraphs?.length ? 'text-left' : 'text-center',
           )}
         >
           <div className="flex w-full max-w-84.75 flex-col items-center">
-            <StoryPanelBody blocks={blocks} paragraphs={paragraphs} />
+            <StoryPanelBody subtitle={subtitle} body={body} quote={quote} />
           </div>
         </div>
       </div>
