@@ -78,11 +78,8 @@ export default function MenuTabs({
                   className="relative flex min-w-0 flex-1 cursor-pointer items-center justify-center overflow-hidden px-3"
                 >
                   <span
-                    className="absolute inset-y-0 left-0 w-full origin-left bg-peach-light will-change-transform"
-                    style={{
-                      transform: `scaleX(${fill})`,
-                      opacity: fill > 0 ? 1 : 0,
-                    }}
+                    className="absolute inset-y-0 left-0 w-full origin-left bg-peach-light will-change-transform transition-transform duration-500 ease-out"
+                    style={{ transform: `scaleX(${fill})` }}
                     aria-hidden
                   />
                   <span className="relative z-10 truncate text-[0.8rem] xs:text-sm font-medium leading-[1.39] text-taupe">
