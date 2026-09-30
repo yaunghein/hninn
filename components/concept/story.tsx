@@ -61,6 +61,7 @@ export default function ConceptStory({
   subtitle,
   body,
   quote,
+  width,
   imageSrc,
   imageAlt = '',
   imageLqip,
@@ -213,7 +214,10 @@ export default function ConceptStory({
               toneClass,
             )}
           >
-            <div className="flex w-84.75 flex-col items-center">
+            <div
+              className="flex flex-col items-center"
+              style={{ width: `${width}rem` }}
+            >
               <StoryPanelBody subtitle={subtitle} body={body} quote={quote} />
             </div>
           </div>
@@ -225,7 +229,10 @@ export default function ConceptStory({
             toneClass,
           )}
         >
-          <div className="flex w-full max-w-84.75 flex-col items-center">
+          <div
+            className="flex w-full flex-col items-center"
+            style={{ maxWidth: `${width}rem` }}
+          >
             <StoryPanelBody subtitle={subtitle} body={body} quote={quote} />
           </div>
         </div>

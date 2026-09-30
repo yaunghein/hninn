@@ -83,6 +83,14 @@ export const conceptPage = defineType({
               validation: (rule) => rule.required(),
             }),
             defineField({
+              name: 'width',
+              title: 'Content width (rem)',
+              type: 'number',
+              description: 'Unitless rem value for the text box, e.g. 24 → 24rem',
+              initialValue: 24,
+              validation: (rule) => rule.required().positive(),
+            }),
+            defineField({
               name: 'quote',
               title: 'Quote',
               type: 'text',

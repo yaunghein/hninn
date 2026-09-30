@@ -57,6 +57,7 @@ export const CONCEPT_PAGE_QUERY = defineQuery(/* groq */ `
       titleWidth,
       subtitle,
       body,
+      width,
       quote,
       quoteAttribution,
       contentSide,

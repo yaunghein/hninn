@@ -22,6 +22,8 @@ export type ConceptStoryContent = {
   titleWidth: number
   subtitle: string
   body: string
+  /** Text box width in rem (unitless, e.g. `24` → `24rem`) */
+  width: number
   quote?: ConceptStoryQuote
   imageSrc: string
   imageAlt?: string
