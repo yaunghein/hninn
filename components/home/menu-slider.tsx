@@ -236,24 +236,29 @@ export default function MenuSlider({
       </div>
       */}
 
-      {/* Mobile: title → desc above tabs. Desktop: title | desc | CTA between tabs and images. */}
-      <div className="order-1 flex flex-col items-center gap-4 px-6 text-center xs:order-2 xs:mt-12 xs:flex-row xs:items-start xs:justify-between xs:gap-3 xs:text-left">
-        <h2 className="text-3xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:shrink-0 xs:text-5xl xs:leading-[1.15] xs:tracking-tight">
+      {/* Centered stack on all sizes for now. Previous desktop row layout (title | desc | CTA):
+        wrapper: xs:order-2 xs:mt-12 xs:flex-row xs:items-start xs:justify-between xs:gap-3 xs:text-left
+        h2: xs:max-w-lg xs:shrink-0
+        desc wrapper: xs:justify-start — p: xs:self-start xs:pb-1
+        CTA: render the inline Button below with "hidden shrink-0 xs:block" and hide the bottom CTA on xs
+      */}
+      <div className="order-1 flex flex-col items-center gap-4 px-6 text-center xs:order-2">
+        <h2 className="text-3xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:text-5xl xs:leading-[1.15] xs:tracking-tight">
           {title}
         </h2>
-        <div className="w-full flex justify-center xs:justify-start">
-          <p className="max-w-80 text-sm leading-[1.39] text-olive xs:max-w-100 xs:self-start xs:pb-1 xs:text-base">
+        <div className="flex w-full justify-center">
+          <p className="max-w-80 text-balance text-sm leading-[1.39] text-olive xs:max-w-109 xs:text-base">
             {description}
           </p>
         </div>
-        <div className="hidden shrink-0 xs:block">
+        {/* <div className="hidden shrink-0 xs:block">
           <Button
             label={cta.label}
             href={cta.href}
             color={cta.color}
             hoverColor={cta.hoverColor}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Slider hidden for now — uncomment to restore
@@ -369,7 +374,7 @@ export default function MenuSlider({
       </div>
       */}
 
-      <div className="order-4 mt-8 flex justify-center px-6 xs:hidden">
+      <div className="order-4 mt-8 flex justify-center px-6 xs:mt-12">
         <Button
           label={cta.label}
           href={cta.href}
