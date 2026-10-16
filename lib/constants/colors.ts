@@ -88,19 +88,20 @@ export const hoverBgColorClass = {
   current: 'hover:bg-current',
 } as const satisfies Record<Color, string>
 
-export const groupHoverTextColorClass = {
-  cream: 'group-hover:text-cream',
-  sand: 'group-hover:text-sand',
-  olive: 'group-hover:text-olive',
-  'olive-light': 'group-hover:text-olive-light',
-  'olive-dark': 'group-hover:text-olive-dark',
-  peach: 'group-hover:text-peach',
-  'peach-light': 'group-hover:text-peach-light',
-  brown: 'group-hover:text-brown',
-  'brown-muted': 'group-hover:text-brown-muted',
-  taupe: 'group-hover:text-taupe',
-  white: 'group-hover:text-white',
-  black: 'group-hover:text-black',
-  transparent: 'group-hover:text-transparent',
-  current: 'group-hover:text-current',
+/** Text color on group hover (pointer) and group active (tap on touch) */
+export const groupInteractTextColorClass = {
+  cream: 'group-hover:text-cream group-active:text-cream',
+  sand: 'group-hover:text-sand group-active:text-sand',
+  olive: 'group-hover:text-olive group-active:text-olive',
+  'olive-light': 'group-hover:text-olive-light group-active:text-olive-light',
+  'olive-dark': 'group-hover:text-olive-dark group-active:text-olive-dark',
+  peach: 'group-hover:text-peach group-active:text-peach',
+  'peach-light': 'group-hover:text-peach-light group-active:text-peach-light',
+  brown: 'group-hover:text-brown group-active:text-brown',
+  'brown-muted': 'group-hover:text-brown-muted group-active:text-brown-muted',
+  taupe: 'group-hover:text-taupe group-active:text-taupe',
+  white: 'group-hover:text-white group-active:text-white',
+  black: 'group-hover:text-black group-active:text-black',
+  transparent: 'group-hover:text-transparent group-active:text-transparent',
+  current: 'group-hover:text-current group-active:text-current',
 } as const satisfies Record<Color, string>

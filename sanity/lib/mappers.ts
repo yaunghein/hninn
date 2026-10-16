@@ -3,6 +3,7 @@ import { stegaClean } from 'next-sanity'
 import type {
   ConceptContent,
   ConceptStoryContent,
+  ConceptStoryImage,
   ConceptStoryTone,
 } from '@/types/concept'
 import type { ContactContent } from '@/types/contact'
@@ -54,7 +55,7 @@ export type ConceptPageData = {
         quoteAttribution?: string | null
         contentSide?: 'left' | 'right' | null
         tone?: ConceptStoryTone | null
-        image?: SanityImage
+        images?: SanityImage[] | null
       }[]
     | null
 }
@@ -80,8 +81,7 @@ const FALLBACK_STORIES: ConceptStoryContent[] = [
       text: "Our goal is to honor the vital, irreplaceable elements of Myanmar's food heritage while building a hallmark destination for Burmese Modern & Contemporary Dining.",
       attribution: 'Thawdar Hninn, Founder',
     },
-    imageSrc: FALLBACK_STORY_IMAGES[2],
-    imageAlt: 'Hninn',
+    images: [{ src: FALLBACK_STORY_IMAGES[2], alt: 'Hninn' }],
     contentSide: 'right',
     tone: 'sand',
   },
@@ -92,8 +92,7 @@ const FALLBACK_STORIES: ConceptStoryContent[] = [
     width: CONTENT_WIDTH,
     subtitle: 'Family Heritage & Memories.',
     body: 'The name HNINN carries deep personal meaning, standing as a heartfelt tribute to the women of our family—my mother, my younger sister, and myself. It is a space dedicated to kinship. Here, the cherished dishes we gathered around during our childhood are brought to life through a fresh, contemporary lens.',
-    imageSrc: FALLBACK_STORY_IMAGES[0],
-    imageAlt: 'Hninn',
+    images: [{ src: FALLBACK_STORY_IMAGES[0], alt: 'Hninn' }],
     contentSide: 'left',
     tone: 'peach',
   },
@@ -104,8 +103,7 @@ const FALLBACK_STORIES: ConceptStoryContent[] = [
     width: CONTENT_WIDTH,
     subtitle: 'Craftsmanship by Chef Arkar.',
     body: 'Every single plate is meticulously researched and conceptualized by our Head Chef, MasterChef Myanmar Season 2 Champion, Chef Arkar. Taking generational, private family recipes as his baseline, he infuses modern artistry into every dish to surprise and delight the palate.',
-    imageSrc: FALLBACK_STORY_IMAGES[1],
-    imageAlt: 'Hninn',
+    images: [{ src: FALLBACK_STORY_IMAGES[1], alt: 'Hninn' }],
     contentSide: 'right',
     tone: 'olive',
   },
@@ -116,8 +114,7 @@ const FALLBACK_STORIES: ConceptStoryContent[] = [
     width: CONTENT_WIDTH,
     subtitle: 'Authentic & Imported.',
     body: 'To deliver an uncompromisingly authentic flavor profile, we source critical elements directly from their roots. For instance, the traditional toasted chickpea flour—the very soul of our signature Nan Gyi Thoke Dumpling/ravioli-style comfort—is carefully imported directly from Myanmar to ensure absolute depth and balance.',
-    imageSrc: FALLBACK_STORY_IMAGES[2],
-    imageAlt: 'Hninn',
+    images: [{ src: FALLBACK_STORY_IMAGES[2], alt: 'Hninn' }],
     contentSide: 'left',
     tone: 'sand',
   },
@@ -128,8 +125,7 @@ const FALLBACK_STORIES: ConceptStoryContent[] = [
     width: CONTENT_WIDTH,
     subtitle: 'Redefining Burmese Cuisine.',
     body: 'Myanmar is a land woven with diverse cultures, ethnicities, and regional identities. We have chosen to completely redefine this culinary tapestry—not just through stunning modern presentation, but through structural recipe innovation. We take pride in creating an accessible pathway for international guests unfamiliar with Burmese food, allowing them to experience these complex flavor profiles instantly and seamlessly.',
-    imageSrc: FALLBACK_STORY_IMAGES[0],
-    imageAlt: 'Hninn',
+    images: [{ src: FALLBACK_STORY_IMAGES[0], alt: 'Hninn' }],
     contentSide: 'right',
     tone: 'peach',
   },
@@ -140,8 +136,7 @@ const FALLBACK_STORIES: ConceptStoryContent[] = [
     width: CONTENT_WIDTH,
     subtitle: 'A Global Gathering in Bangkok.',
     body: 'Within our first year of opening, HNINN has had the privilege of welcoming a vibrant global community of diners. We are proud to have elevated the perceived status of Burmese cuisine on the international stage, and we pledge to continue moving forward as proud ambassadors of contemporary Myanmar dining.',
-    imageSrc: FALLBACK_STORY_IMAGES[1],
-    imageAlt: 'Hninn',
+    images: [{ src: FALLBACK_STORY_IMAGES[1], alt: 'Hninn' }],
     contentSide: 'left',
     tone: 'olive',
   },
@@ -394,6 +389,33 @@ export function toConceptContent(data: ConceptPageData): ConceptContent {
   }
 }
 
+const MAX_STORY_IMAGES = 3
+
+function toStoryImages(
+  images: SanityImage[] | null | undefined,
+  index: number,
+): ConceptStoryImage[] {
+  const mapped = (images ?? [])
+    .filter((image): image is NonNullable<SanityImage> => Boolean(image?.asset))
+    .slice(0, MAX_STORY_IMAGES)
+    .map((image): ConceptStoryImage => {
+      const lqip = image.asset?.metadata?.lqip
+      return {
+        src: urlFor(image).width(2880).url(),
+        alt: image.alt ?? '',
+        ...(lqip ? { lqip } : {}),
+      }
+    })
+
+  if (mapped.length > 0) return mapped
+  return [
+    {
+      src: FALLBACK_STORY_IMAGES[index] ?? FALLBACK_STORY_IMAGES[0],
+      alt: '',
+    },
+  ]
+}
+
 export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
   const stories: ConceptStoryContent[] = []
 
@@ -416,10 +438,7 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
     const contentSide: ConceptStoryContent['contentSide'] =
       story?.contentSide === 'left' ? 'left' : 'right'
 
-    const imageSrc = story?.image?.asset
-      ? urlFor(story.image).width(2880).url()
-      : (FALLBACK_STORY_IMAGES[index] ?? FALLBACK_STORY_IMAGES[0])
-    const imageLqip = story?.image?.asset?.metadata?.lqip ?? undefined
+    const images = toStoryImages(story?.images, index)
     const quoteText = story?.quote?.trim()
     const quoteAttribution = story?.quoteAttribution?.trim()
 
@@ -438,9 +457,7 @@ export function toConceptStories(data: ConceptPageData): ConceptStoryContent[] {
             },
           }
         : {}),
-      imageSrc,
-      imageAlt: story?.image?.alt ?? '',
-      ...(imageLqip ? { imageLqip } : {}),
+      images,
       contentSide,
       tone,
     })

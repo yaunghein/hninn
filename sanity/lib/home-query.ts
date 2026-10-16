@@ -34,7 +34,10 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
           asset->{
             _id,
             url,
-            metadata{ lqip }
+            metadata{
+              lqip,
+              dimensions{ aspectRatio, width, height }
+            }
           },
           hotspot,
           crop,

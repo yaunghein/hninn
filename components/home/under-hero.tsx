@@ -1,12 +1,8 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 import { cn } from '@/lib/utils/cn'
-
-gsap.registerPlugin(ScrollTrigger)
 
 type UnderHeroProps = {
   hero: ReactNode
@@ -19,7 +15,9 @@ type UnderHeroProps = {
  *
  * An in-flow `[data-under-hero-flow]` sentinel marks where children live in the
  * document so ScrollTrigger parallax can scrub against stable geometry while
- * the visual layer is `position: fixed` — avoiding a progress reset on unpin.
+ * the visual layer is `position: fixed`. The spacer ↔ contents swap keeps
+ * document height stable, so no ScrollTrigger refresh is needed on the
+ * handoff — a refresh would snap in-flight scrub easing.
  *
  * When unpinned, the outer wrapper is also `contents` so StickyAtEnd’s
  * containing block is the page shell — facts can stick while menu / find-us
@@ -65,13 +63,6 @@ export default function UnderHero({ hero, children }: UnderHeroProps) {
     window.addEventListener('scroll', syncPin, { passive: true })
     return () => window.removeEventListener('scroll', syncPin)
   }, [heroHeight])
-
-  useLayoutEffect(() => {
-    // Spacer ↔ contents swap keeps total document height stable; refresh so
-    // triggers below UnderHero pick up the handoff. Fact parallax measures the
-    // in-flow sentinel, so progress stays continuous across this refresh.
-    ScrollTrigger.refresh()
-  }, [pinned])
 
   return (
     <div

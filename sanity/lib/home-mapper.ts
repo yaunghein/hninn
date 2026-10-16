@@ -117,6 +117,9 @@ function imageSrc(image: SanityImage, width: number, fallback: string) {
   return image?.asset ? urlFor(image).width(width).url() : fallback
 }
 
+/** Fallback fact photos are 3:4 portrait */
+const FACT_ASPECT_RATIO = 0.75
+
 function mapFactImages(
   images: SanityImage[] | null | undefined,
   fallbacks: GeneralFactImage[],
@@ -128,12 +131,17 @@ function mapFactImages(
         return {
           src: urlFor(image).width(1200).url(),
           alt: image.alt ?? fallback?.alt ?? 'Hninn',
+          aspectRatio: imageAspectRatio(
+            image,
+            fallback?.aspectRatio ?? FACT_ASPECT_RATIO,
+          ),
         }
       }
       if (!fallback) return null
       return {
         src: fallback.src,
         alt: image?.alt ?? fallback.alt,
+        aspectRatio: fallback.aspectRatio,
       }
     })
     .filter((image): image is GeneralFactImage => Boolean(image))
@@ -191,20 +199,24 @@ const FALLBACK_FACTS: GeneralFactsContent = {
         {
           src: '/images/home_good_food_1.jpg',
           alt: 'Hninn dish plated with fresh herbs',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
         {
           src: '/images/home_good_food_2.jpg',
           alt: 'Hninn brunch spread on the table',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
       ],
       rightImages: [
         {
           src: '/images/home_good_food_3.jpg',
           alt: 'Close-up of a Hninn specialty dish',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
         {
           src: '/images/home_good_food_4.jpg',
           alt: 'Hninn tea and food pairing',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
       ],
     },
@@ -219,20 +231,24 @@ const FALLBACK_FACTS: GeneralFactsContent = {
         {
           src: '/images/home_amazing_space_1.jpg',
           alt: 'Hninn dining room interior',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
         {
           src: '/images/home_amazing_space_2.jpg',
           alt: 'Hninn seating and ambiance',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
       ],
       rightImages: [
         {
           src: '/images/home_amazing_space_3.jpg',
           alt: 'Hninn cafe space detail',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
         {
           src: '/images/home_amazing_space_4.jpg',
           alt: 'Hninn restaurant atmosphere',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
       ],
     },
@@ -247,20 +263,24 @@ const FALLBACK_FACTS: GeneralFactsContent = {
         {
           src: '/images/home_paws_included_1.jpg',
           alt: 'Dog-friendly moment at Hninn',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
         {
           src: '/images/home_paws_included_2.jpg',
           alt: 'Pet visiting Hninn with guests',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
       ],
       rightImages: [
         {
           src: '/images/home_paws_included_3.jpg',
           alt: 'Pet-friendly seating at Hninn',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
         {
           src: '/images/home_paws_included_4.jpg',
           alt: 'Welcome for pets at Hninn',
+          aspectRatio: FACT_ASPECT_RATIO,
         },
       ],
     },

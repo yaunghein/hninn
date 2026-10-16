@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     ]
   },
   images: {
+    // 90 is used by the about page story images
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: 'https',

@@ -1,13 +1,16 @@
 import Image from 'next/image'
 
-type FactImageProps = {
-  src: string
-  alt: string
-}
+import { aspectRatioCss } from '@/lib/utils/math'
+import type { GeneralFactImage } from '@/types/home'
 
-export default function FactImage({ src, alt }: FactImageProps) {
+type FactImageProps = GeneralFactImage
+
+export default function FactImage({ src, alt, aspectRatio }: FactImageProps) {
   return (
-    <div className="relative aspect-0.75/1 overflow-hidden">
+    <div
+      className="relative overflow-hidden"
+      style={{ aspectRatio: aspectRatioCss(aspectRatio) }}
+    >
       <Image
         src={src}
         alt={alt}

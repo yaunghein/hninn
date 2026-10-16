@@ -11,121 +11,104 @@ import type { GeneralFact, GeneralFactImage } from '@/types/home'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
-const PARALLAX_DESKTOP = 10
+/** Desktop: rem travel — both columns rise, the leading one faster for depth */
+const PARALLAX_DESKTOP = { lead: 14, trail: 4 } as const
 /** Mobile: yPercent travel — even/odd stack indices for depth (same direction) */
 const PARALLAX_MOBILE_Y = [14, 6] as const
+/** Light trailing ease on top of Lenis — enough to settle, not enough to lag */
+const PARALLAX_SCRUB = 0.6
 
 type FactBlockProps = GeneralFact
 
 type MobileImage = GeneralFactImage & {
   side: 'left' | 'right'
-  key: string
+  id: string
 }
 
-/** Interleave columns into the zigzag reading order from the mobile design */
+/**
+ * Interleave columns into the zigzag reading order from the mobile design.
+ * Sides alternate by position (not source column) so unbalanced columns never
+ * stack two images on the same side.
+ */
 function getMobileStack(
   offset: 'left' | 'right',
   leftImages: GeneralFactImage[],
   rightImages: GeneralFactImage[],
 ): MobileImage[] {
-  const stack: MobileImage[] = []
-  const length = Math.max(leftImages.length, rightImages.length)
+  const first = offset === 'left' ? rightImages : leftImages
+  const second = offset === 'left' ? leftImages : rightImages
+  const firstSide = offset === 'left' ? 'right' : 'left'
+  const length = Math.max(first.length, second.length)
 
-  for (let index = 0; index < length; index++) {
-    if (offset === 'left') {
-      if (rightImages[index]) {
-        stack.push({
-          ...rightImages[index],
-          side: 'right',
-          key: `right-${index}`,
-        })
-      }
-      if (leftImages[index]) {
-        stack.push({
-          ...leftImages[index],
-          side: 'left',
-          key: `left-${index}`,
-        })
-      }
-    } else {
-      if (leftImages[index]) {
-        stack.push({
-          ...leftImages[index],
-          side: 'left',
-          key: `left-${index}`,
-        })
-      }
-      if (rightImages[index]) {
-        stack.push({
-          ...rightImages[index],
-          side: 'right',
-          key: `right-${index}`,
-        })
-      }
-    }
-  }
+  const ordered = Array.from({ length }, (_, index) =>
+    [first[index], second[index]].filter(
+      (image): image is GeneralFactImage => Boolean(image),
+    ),
+  ).flat()
 
-  return stack
-}
-
-function parallaxRange(
-  offset: 'left' | 'right',
-  side: 'left' | 'right',
-  travel: string,
-) {
-  // Offset-left: left rises, right falls. Offset-right: reverse.
-  const leftRising = offset === 'left'
-  const rises = side === 'left' ? leftRising : !leftRising
-
-  return rises
-    ? { from: travel, to: `-${travel}` }
-    : { from: `-${travel}`, to: travel }
+  return ordered.map((image, index) => ({
+    ...image,
+    side: (index % 2 === 0) === (firstSide === 'left') ? 'left' : 'right',
+    id: `${index}-${image.src}`,
+  }))
 }
 
 /**
- * Prefer UnderHero's in-flow sentinel when present so scrub progress tracks
- * document geometry while the facts layer is `position: fixed` under the hero.
- * Each block offsets start/end by its position within the facts section so
- * later blocks don't all share the sentinel's range.
+ * Both columns rise (never against scroll) so neither looks stuck; the
+ * offset side leads at a faster rate. Symmetric ±travel keeps the columns
+ * aligned at the midpoint of the scroll range.
  */
+function parallaxTravel(offset: 'left' | 'right', side: 'left' | 'right') {
+  return side === offset ? PARALLAX_DESKTOP.lead : PARALLAX_DESKTOP.trail
+}
+
+/**
+ * Scrub range for a parallax target. Prefer UnderHero's in-flow sentinel when
+ * present so progress tracks document geometry while the facts layer is
+ * `position: fixed` under the hero. The sentinel sits right after the hero, so
+ * its document top is the scroll position where the hero is fully gone —
+ * nothing moves before that.
+ */
+function scrubRange(target: HTMLElement) {
+  const flow = target
+    .closest('[data-under-hero]')
+    ?.querySelector<HTMLElement>('[data-under-hero-flow]')
+  const section = target.closest('section')
+
+  if (!flow || !section) {
+    return { trigger: target, start: 'top bottom', end: 'bottom top' }
+  }
+
+  const flowTop = () => flow.getBoundingClientRect().top + window.scrollY
+  const offset = () =>
+    target.getBoundingClientRect().top - section.getBoundingClientRect().top
+
+  return {
+    trigger: flow,
+    start: () => flowTop() + Math.max(offset() - window.innerHeight, 0),
+    end: () => flowTop() + offset() + target.offsetHeight,
+  }
+}
+
 function parallaxDesktop(
   items: HTMLElement[],
   offset: 'left' | 'right',
   side: 'left' | 'right',
-  travelRem: number,
   root: HTMLElement,
 ) {
-  const travel = `${travelRem}rem`
-  const { from, to } = parallaxRange(offset, side, travel)
-  const flow = root
-    .closest('[data-under-hero]')
-    ?.querySelector<HTMLElement>('[data-under-hero-flow]')
-  const section = root.closest('section')
-  const trigger = flow ?? root
-
-  const blockOffset = () => {
-    if (!flow || !section) return 0
-    return (
-      root.getBoundingClientRect().top - section.getBoundingClientRect().top
-    )
-  }
+  const travel = parallaxTravel(offset, side)
 
   items.forEach((item) => {
     gsap.fromTo(
       item,
-      { y: from },
+      { y: `${travel}rem` },
       {
-        y: to,
+        y: `-${travel}rem`,
         ease: 'none',
         force3D: true,
         scrollTrigger: {
-          trigger,
-          start: () => (flow ? `top+=${blockOffset()} bottom` : 'top bottom'),
-          end: () =>
-            flow
-              ? `top+=${blockOffset() + root.offsetHeight} top`
-              : 'bottom top',
-          scrub: 1.2,
+          ...scrubRange(root),
+          scrub: PARALLAX_SCRUB,
           invalidateOnRefresh: true,
         },
       },
@@ -136,23 +119,10 @@ function parallaxDesktop(
 /**
  * Mobile zigzag: every card rises (never against scroll), but even/odd
  * cards use different travel so neighbors drift apart — that's the depth.
- * Prefer UnderHero's in-flow sentinel when present (same reason as desktop).
  */
 function parallaxMobile(items: HTMLElement[]) {
   items.forEach((item, index) => {
     const travel = PARALLAX_MOBILE_Y[index % 2]!
-    const flow = item
-      .closest('[data-under-hero]')
-      ?.querySelector<HTMLElement>('[data-under-hero-flow]')
-    const section = item.closest('section')
-    const trigger = flow ?? item
-
-    const itemOffset = () => {
-      if (!flow || !section) return 0
-      return (
-        item.getBoundingClientRect().top - section.getBoundingClientRect().top
-      )
-    }
 
     gsap.fromTo(
       item,
@@ -162,13 +132,8 @@ function parallaxMobile(items: HTMLElement[]) {
         ease: 'none',
         force3D: true,
         scrollTrigger: {
-          trigger,
-          start: () => (flow ? `top+=${itemOffset()} bottom` : 'top bottom'),
-          end: () =>
-            flow
-              ? `top+=${itemOffset() + item.offsetHeight} top`
-              : 'bottom top',
-          scrub: true,
+          ...scrubRange(item),
+          scrub: PARALLAX_SCRUB,
           invalidateOnRefresh: true,
         },
       },
@@ -187,6 +152,10 @@ export default function FactBlock({
 }: FactBlockProps) {
   const lines = titleLines ?? [title]
   const mobileStack = getMobileStack(offset, leftImages, rightImages)
+  // Unbalanced columns: center the shorter one between the longer one's images
+  const balanced = leftImages.length === rightImages.length
+  const centerLeft = leftImages.length < rightImages.length
+  const centerRight = rightImages.length < leftImages.length
   const rootRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
@@ -229,14 +198,12 @@ export default function FactBlock({
             gsap.utils.toArray<HTMLElement>('[data-parallax="left"]', scope),
             offset,
             'left',
-            PARALLAX_DESKTOP,
             root,
           )
           parallaxDesktop(
             gsap.utils.toArray<HTMLElement>('[data-parallax="right"]', scope),
             offset,
             'right',
-            PARALLAX_DESKTOP,
             root,
           )
         },
@@ -251,7 +218,7 @@ export default function FactBlock({
     <div ref={rootRef} className="relative">
       <header
         className={cn(
-          'pointer-events-none absolute top-0 z-10 flex flex-col gap-4 px-6 xs:top-32 xs:gap-6',
+          'pointer-events-none relative z-10 flex flex-col gap-4 px-6 xs:absolute xs:top-32 xs:gap-6',
           titleAlign === 'left'
             ? 'left-0 items-start text-left'
             : 'right-0 items-end text-right',
@@ -272,11 +239,11 @@ export default function FactBlock({
       {/* Mobile: single-column zigzag (Figma 700:1325) */}
       <div
         data-parallax-scope="mobile"
-        className="flex flex-col px-6 pt-40 xs:hidden"
+        className="flex flex-col px-6 pt-8 xs:hidden"
       >
         {mobileStack.map((image, index) => (
           <div
-            key={image.key}
+            key={image.id}
             data-parallax={image.side}
             className={cn(
               'relative w-[55%] will-change-transform',
@@ -285,7 +252,7 @@ export default function FactBlock({
             )}
             style={{ zIndex: index }}
           >
-            <FactImage src={image.src} alt={image.alt} />
+            <FactImage {...image} />
           </div>
         ))}
       </div>
@@ -298,7 +265,8 @@ export default function FactBlock({
         <div
           className={cn(
             'flex flex-col gap-10 pr-2.5 pl-52',
-            offset === 'left' && 'pt-16',
+            balanced && offset === 'left' && 'pt-16',
+            centerLeft && 'justify-center',
           )}
         >
           {leftImages.map((image, index) => (
@@ -307,7 +275,7 @@ export default function FactBlock({
               data-parallax="left"
               className="will-change-transform"
             >
-              <FactImage src={image.src} alt={image.alt} />
+              <FactImage {...image} />
             </div>
           ))}
         </div>
@@ -315,7 +283,8 @@ export default function FactBlock({
         <div
           className={cn(
             'flex flex-col gap-10 pl-2.5 pr-52',
-            offset === 'right' && 'pt-16',
+            balanced && offset === 'right' && 'pt-16',
+            centerRight && 'justify-center',
           )}
         >
           {rightImages.map((image, index) => (
@@ -324,7 +293,7 @@ export default function FactBlock({
               data-parallax="right"
               className="will-change-transform"
             >
-              <FactImage src={image.src} alt={image.alt} />
+              <FactImage {...image} />
             </div>
           ))}
         </div>

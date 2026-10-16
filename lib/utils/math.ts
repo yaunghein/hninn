@@ -18,3 +18,8 @@ export function hashString(str: string): number {
   }
   return Math.abs(h)
 }
+
+/** CSS aspect-ratio with one side kept at 1 (avoids large W/H numbers). */
+export function aspectRatioCss(ratio: number): string {
+  return ratio >= 1 ? `${ratio} / 1` : `1 / ${1 / ratio}`
+}

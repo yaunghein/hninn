@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { ConceptHero, ConceptStory } from '@/components/concept'
+// import { ConceptHero } from '@/components/concept'
+import { ConceptStory } from '@/components/concept'
 import { sanityFetch } from '@/sanity/lib/live'
 import {
-  toConceptContent,
+  // toConceptContent,
   toConceptStories,
   type ConceptPageData,
 } from '@/sanity/lib/mappers'
@@ -28,12 +29,12 @@ export default async function AboutPage() {
   }
 
   const page = data as ConceptPageData
-  const about = toConceptContent(page)
+  // const about = toConceptContent(page)
   const stories = toConceptStories(page)
 
   return (
     <>
-      <ConceptHero {...about} />
+      {/* <ConceptHero {...about} /> */}
       {stories.map((story) => (
         <ConceptStory key={story.id} {...story} />
       ))}

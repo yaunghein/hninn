@@ -104,13 +104,18 @@ export const conceptPage = defineType({
               hidden: ({ parent }) => !parent?.quote,
             }),
             defineField({
-              name: 'image',
-              title: 'Image',
-              type: 'image',
-              description: imageFieldDescription,
-              options: { hotspot: true },
-              fields: altImageFields(),
-              validation: (rule) => rule.required(),
+              name: 'images',
+              title: 'Images',
+              type: 'array',
+              description: `Up to 3 images, shown side by side on desktop. Mobile shows the first image only. ${imageFieldDescription}`,
+              of: [
+                defineArrayMember({
+                  type: 'image',
+                  options: { hotspot: true },
+                  fields: altImageFields(),
+                }),
+              ],
+              validation: (rule) => rule.required().min(1).max(3),
             }),
             defineField({
               name: 'contentSide',
@@ -146,7 +151,7 @@ export const conceptPage = defineType({
             select: {
               title: 'title',
               subtitle: 'subtitle',
-              media: 'image',
+              media: 'images.0',
             },
             prepare({ title, subtitle, media }) {
               return {

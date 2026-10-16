@@ -62,15 +62,15 @@ export default function ConceptStory({
   body,
   quote,
   width,
-  imageSrc,
-  imageAlt = '',
-  imageLqip,
+  images,
   contentSide = 'right',
   tone = 'sand',
 }: ConceptStoryProps) {
   const rootRef = useRef<HTMLElement>(null)
   const isContentLeft = contentSide === 'left'
   const toneClass = TONE_CLASS[tone]
+  // Image kept once the content panel is in: 2 → second, 3 → middle
+  const featuredIndex = Math.floor(images.length / 2)
 
   useGSAP(
     () => {
@@ -83,8 +83,15 @@ export default function ConceptStory({
       const imageWrapper = root.querySelector<HTMLElement>(
         `[data-story-image-wrapper="${id}"]`,
       )
-      const imageInner = root.querySelector<HTMLElement>(
+      // Each image zooms inside its own clipped column so columns stay equal
+      const imageInner = gsap.utils.toArray<HTMLElement>(
         `[data-story-image-inner="${id}"]`,
+        root,
+      )
+      // Non-featured columns collapse as the content panel slides in
+      const collapsingColumns = gsap.utils.toArray<HTMLElement>(
+        `[data-story-image-column="${id}"]:not([data-featured])`,
+        root,
       )
       const header = root.querySelector<HTMLElement>(
         `[data-story-header="${id}"]`,
@@ -99,7 +106,7 @@ export default function ConceptStory({
       if (
         !trigger ||
         !imageWrapper ||
-        !imageInner ||
+        imageInner.length === 0 ||
         !header ||
         !headerWrapper ||
         !content
@@ -160,7 +167,12 @@ export default function ConceptStory({
           .to(header, { width: '50%' })
           .to(content, { xPercent: 0 }, '<')
           .to(imageWrapper, { width: '50%' }, '<')
-          .to(imageInner, { scale: 1.1 }, '<')
+
+        if (collapsingColumns.length > 0) {
+          tl.to(collapsingColumns, { flexGrow: 0 }, '<')
+        }
+
+        tl.to(imageInner, { scale: 1.1 }, '<')
           .to(imageInner, { scale: 1 }, '<50%')
       })
 
@@ -180,17 +192,39 @@ export default function ConceptStory({
             data-story-image-wrapper={id}
             className="relative h-full w-full overflow-hidden"
           >
-            <div data-story-image-inner={id} className="relative h-full w-full">
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                sizes="150vw"
-                quality={90}
-                placeholder={imageLqip ? 'blur' : 'empty'}
-                blurDataURL={imageLqip}
-                className="object-cover"
-              />
+            {/* Desktop: images side by side. Mobile: first image only. */}
+            <div className="relative flex h-full w-full">
+              {images.map((image, index) => (
+                <div
+                  key={`${image.src}-${index}`}
+                  data-story-image-column={id}
+                  data-featured={index === featuredIndex || undefined}
+                  className={cn(
+                    'relative h-full flex-1 overflow-hidden',
+                    index > 0 && 'hidden xs:block',
+                  )}
+                >
+                  <div
+                    data-story-image-inner={id}
+                    className="relative h-full w-full"
+                  >
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes={`(max-width: 479px) 150vw, ${
+                        index === featuredIndex
+                          ? Math.max(50, Math.ceil(150 / images.length))
+                          : Math.ceil(150 / images.length)
+                      }vw`}
+                      quality={90}
+                      placeholder={image.lqip ? 'blur' : 'empty'}
+                      blurDataURL={image.lqip}
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
           <div className="absolute inset-0 bg-brown/40" />

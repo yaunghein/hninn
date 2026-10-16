@@ -11,7 +11,7 @@ export default function HomeMenu({
   cta,
 }: HomeMenuProps) {
   return (
-    <section className="bg-cream pb-13 xs:pb-24">
+    <section className="bg-cream py-20 xs:pt-0 xs:pb-24">
       <MenuSlider
         title={title}
         description={description}

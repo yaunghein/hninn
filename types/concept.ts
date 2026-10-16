@@ -15,6 +15,13 @@ export type ConceptStoryQuote = {
 
 export type ConceptStoryTone = 'sand' | 'peach' | 'olive'
 
+export type ConceptStoryImage = {
+  src: string
+  alt: string
+  /** Sanity LQIP data URL for Next.js blur placeholder */
+  lqip?: string
+}
+
 export type ConceptStoryContent = {
   id: string
   title: string
@@ -25,10 +32,8 @@ export type ConceptStoryContent = {
   /** Text box width in rem (unitless, e.g. `24` → `24rem`) */
   width: number
   quote?: ConceptStoryQuote
-  imageSrc: string
-  imageAlt?: string
-  /** Sanity LQIP data URL for Next.js blur placeholder */
-  imageLqip?: string
+  /** 1–3 images; desktop shows them side by side, mobile shows the first */
+  images: ConceptStoryImage[]
   /** Which side the content panel sits on (desktop). Default `right`. */
   contentSide?: 'left' | 'right'
   tone?: ConceptStoryTone

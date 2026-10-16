@@ -19,6 +19,8 @@ export type HomeHeroContent = {
 export type GeneralFactImage = {
   src: string
   alt: string
+  /** Width / height from the CMS asset */
+  aspectRatio: number
 }
 
 export type GeneralFact = {

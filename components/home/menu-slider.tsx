@@ -1,4 +1,5 @@
 'use client'
+/* eslint-disable @typescript-eslint/no-unused-vars -- tabs & slider JSX temporarily commented out */
 
 import { useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import Image from 'next/image'
@@ -10,6 +11,7 @@ import 'swiper/css'
 import { Button } from '@/components/common'
 import MenuTabs from '@/components/home/menu-tabs'
 import { cn } from '@/lib/utils/cn'
+import { aspectRatioCss } from '@/lib/utils/math'
 import { useHomeMenuStore } from '@/stores/home-menu'
 import type { HomeMenuContent, HomeMenuImage, HomeMenuItem } from '@/types/home'
 
@@ -40,12 +42,6 @@ type MenuLoopSlide = {
 
 const XS_BREAKPOINT = 480
 const FALLBACK_ASPECT_RATIO = 1.36
-
-/** Keep one side as 1 for CSS aspect-ratio (avoids large W/H numbers). */
-function aspectRatioCss(ratio: number) {
-  if (ratio >= 1) return `${ratio} / 1`
-  return `1 / ${1 / ratio}`
-}
 
 function subscribeDesktop(onChange: () => void) {
   const mq = window.matchMedia(`(min-width: ${XS_BREAKPOINT}px)`)
@@ -229,6 +225,7 @@ export default function MenuSlider({
 
   return (
     <div className="flex flex-col">
+      {/* Tabs hidden for now — uncomment to restore
       <div className="order-2 xs:order-1">
         <MenuTabs
           items={items}
@@ -237,14 +234,15 @@ export default function MenuSlider({
           onNext={() => swiperRef.current?.slideNext()}
         />
       </div>
+      */}
 
       {/* Mobile: title → desc above tabs. Desktop: title | desc | CTA between tabs and images. */}
-      <div className="order-1 flex flex-col gap-4 px-6 pt-6 pb-5 xs:order-2 xs:mt-12 xs:flex-row xs:items-start xs:justify-between xs:gap-3 xs:px-6 xs:py-0">
+      <div className="order-1 flex flex-col items-center gap-4 px-6 text-center xs:order-2 xs:mt-12 xs:flex-row xs:items-start xs:justify-between xs:gap-3 xs:text-left">
         <h2 className="text-3xl font-semibold uppercase leading-none tracking-[-0.02em] text-olive xs:max-w-lg xs:shrink-0 xs:text-5xl xs:leading-[1.15] xs:tracking-tight">
           {title}
         </h2>
-        <div className="w-full flex justify-end xs:justify-start">
-          <p className="max-w-45.5 self-end text-sm leading-[1.39] text-olive xs:max-w-100 xs:self-start xs:pb-1 xs:text-base">
+        <div className="w-full flex justify-center xs:justify-start">
+          <p className="max-w-80 text-sm leading-[1.39] text-olive xs:max-w-100 xs:self-start xs:pb-1 xs:text-base">
             {description}
           </p>
         </div>
@@ -258,6 +256,7 @@ export default function MenuSlider({
         </div>
       </div>
 
+      {/* Slider hidden for now — uncomment to restore
       <div className="order-3 overflow-hidden mt-6 xs:mt-12">
         {isDesktop ? (
           <Swiper
@@ -368,6 +367,7 @@ export default function MenuSlider({
           </Swiper>
         )}
       </div>
+      */}
 
       <div className="order-4 mt-8 flex justify-center px-6 xs:hidden">
         <Button

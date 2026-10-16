@@ -4,7 +4,7 @@ import AppLink from '@/components/common/app-link'
 import { Paren } from '@/components/svgs'
 import {
   bgColorClass,
-  groupHoverTextColorClass,
+  groupInteractTextColorClass,
   textColorClass,
   type Color,
 } from '@/lib/constants/colors'
@@ -14,7 +14,7 @@ type ButtonBaseProps = {
   label: string
   /** Paren + text color; also the hover fill */
   color?: Color
-  /** Text color on hover */
+  /** Text color on hover / tap */
   hoverColor?: Color
   className?: string
 }
@@ -51,13 +51,13 @@ export default function Button(props: ButtonProps) {
       >
         <span
           className={cn(
-            'absolute inset-y-0 left-0 w-[60%] origin-left scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
+            'absolute inset-y-0 left-0 w-[60%] origin-left scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100 group-active:scale-x-100',
             bgColorClass[color],
           )}
         />
         <span
           className={cn(
-            'absolute inset-y-0 right-0 w-[60%] origin-right scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100',
+            'absolute inset-y-0 right-0 w-[60%] origin-right scale-x-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-x-100 group-active:scale-x-100',
             bgColorClass[color],
           )}
         />
@@ -66,13 +66,13 @@ export default function Button(props: ButtonProps) {
       <Paren
         side="left"
         color={color}
-        className="relative z-10 transition-opacity duration-300 group-hover:opacity-0"
+        className="relative z-10 transition-opacity duration-300 group-hover:opacity-0 group-active:opacity-0"
       />
       <span
         className={cn(
           'relative z-10 whitespace-nowrap px-4 text-sm font-bold uppercase leading-[1.6] tracking-[0.02em] transition-colors duration-300 xs:px-6 xs:text-base',
           textColorClass[color],
-          groupHoverTextColorClass[hoverColor],
+          groupInteractTextColorClass[hoverColor],
         )}
       >
         {label}
@@ -80,7 +80,7 @@ export default function Button(props: ButtonProps) {
       <Paren
         side="right"
         color={color}
-        className="relative z-10 transition-opacity duration-300 group-hover:opacity-0"
+        className="relative z-10 transition-opacity duration-300 group-hover:opacity-0 group-active:opacity-0"
       />
     </>
   )

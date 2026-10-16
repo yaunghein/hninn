@@ -62,17 +62,11 @@ export const CONCEPT_PAGE_QUERY = defineQuery(/* groq */ `
       quoteAttribution,
       contentSide,
       tone,
-      image{
+      images[]{
         asset->{
           _id,
           url,
-          metadata{
-            lqip,
-            dimensions{
-              width,
-              height
-            }
-          }
+          metadata{ lqip }
         },
         hotspot,
         crop,

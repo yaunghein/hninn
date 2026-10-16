@@ -60,17 +60,17 @@ function NavCta({
       )}
     >
       <span
-        className="pointer-events-none absolute inset-y-0 left-0 w-[65%] origin-left scale-x-0 rounded-full bg-olive-dark transition-transform duration-300 ease-out group-hover:scale-x-100"
+        className="pointer-events-none absolute inset-y-0 left-0 w-[65%] origin-left scale-x-0 rounded-full bg-olive-dark transition-transform duration-300 ease-out group-hover:scale-x-100 group-active:scale-x-100"
         aria-hidden
       />
       <span
-        className="pointer-events-none absolute inset-y-0 right-0 w-[65%] origin-right scale-x-0 rounded-full bg-olive-dark transition-transform duration-300 ease-out group-hover:scale-x-100"
+        className="pointer-events-none absolute inset-y-0 right-0 w-[65%] origin-right scale-x-0 rounded-full bg-olive-dark transition-transform duration-300 ease-out group-hover:scale-x-100 group-active:scale-x-100"
         aria-hidden
       />
       <span
         className={cn(
           'relative z-10 whitespace-nowrap transition-colors duration-300',
-          filled ? 'text-sand' : 'text-olive group-hover:text-sand',
+          filled ? 'text-sand' : 'text-olive group-hover:text-sand group-active:text-sand',
         )}
       >
         {label}
